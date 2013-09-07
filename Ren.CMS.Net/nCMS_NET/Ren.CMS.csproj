@@ -207,9 +207,6 @@
     <Content Include="Content\nftheme\videojs\video-js-skins\vim.css" />
     <Content Include="Content\nftheme\videojs\video-js.css" />
     <Content Include="log4net.config" />
-    <Content Include="INSTALL\INSTALL_NEW.sql">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.woff" />
@@ -513,10 +510,6 @@
     <None Include="Properties\PublishProfiles\ToBeta.pubxml" />
     <Content Include="Global.asax" />
     <Content Include="HtmlPage1.html" />
-    <Content Include="INSTALL\SQL_INSTALL_0-204.sql" />
-    <Content Include="INSTALL\SQL_INSTALL_0-203.sql" />
-    <Content Include="INSTALL\SQL_INSTALL_0-202.sql" />
-    <Content Include="INSTALL\SQL_INSTALL_0-201.sql" />
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -545,7 +538,6 @@
     <Content Include="Scripts\Backend\gui\js\jquery-ui-1.10.1.custom.js" />
     <Content Include="Scripts\Backend\gui\js\jquery-ui-1.10.1.custom.min.js" />
     <None Include="Scripts\jquery-1.7.2-vsdoc.js" />
-    <Content Include="INSTALL\SQL_INSTALL_0-200.sql" />
     <Content Include="Scripts\Account\change_profile.js" />
     <Content Include="Scripts\Backend\backend-gui.js" />
     <Content Include="Scripts\Backend\backend-widgets.js" />
@@ -1073,6 +1065,7 @@
     <Folder Include="BackendFileHandler\Icons\" />
     <Folder Include="Content\nftheme\img\" />
     <Folder Include="FileSystemCache\" />
+    <Folder Include="INSTALL\" />
     <Folder Include="Modules\" />
     <Folder Include="Storage\eArticle\" />
     <Folder Include="Storage\Users\" />
