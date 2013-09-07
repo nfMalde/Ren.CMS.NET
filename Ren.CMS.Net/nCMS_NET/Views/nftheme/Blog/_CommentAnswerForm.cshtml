@@ -1,0 +1,49 @@
+﻿@model Ren.CMS.Blog.Models.NewsComment
+@using Recaptcha
+
+
+@using (Html.BeginForm(routeValues: Model.RouteValues, controllerName: "News", actionName: Model.TargetAction, method: FormMethod.Post, htmlAttributes: new { name = "Form-" + Model.FormID, id  = "Form-" + Model.FormID }))
+{
+ 
+    <fieldset>
+         <legend><small>Antworten</small></legend>
+      
+           <div class="pull-left span3">
+       
+         <label>Nickname</label>
+        @Html.TextBoxFor(m => m.Nickname, htmlAttributes: new { id = Model.FormID + "-Nickname" })
+        <label>Deine Antwort</label>
+        @Html.TextAreaFor(m => m.Comment, htmlAttributes: new { id = Model.FormID + "-Comment" })
+
+        @Html.HiddenFor(m => m.Reference, htmlAttributes: new { id = Model.FormID + "-Reference" })
+        @Html.HiddenFor(m => m.NewsID, htmlAttributes: new { id = Model.FormID + "-NewsID" })
+        @Html.HiddenFor(m => m.FormID, htmlAttributes: new { id = Model.FormID + "-FormID" })
+    
+   
+        </div>
+    <div class="pull-right">
+      
+                           @if (!Request.IsAuthenticated)
+                           {
+                          <p>
+                            <small><strong>Captcha eingeben</strong> oder <a href="/Account/LogOn" class="registermodal"><strong>Anmelden</strong></a></small>  
+                          </p>
+                              <div class="answer-captcha" id="@Model.Reference-answercaptcha">
+
+                              </div>
+                               <script type="text/javascript">
+                                   $(function () {
+
+                                       $('#@Model.Reference-answercaptcha').html($('#add-comment-captcha').clone(true, true));
+
+                                   });
+                               </script>
+                           }
+    </div>
+            <div class="span3 blog-comment-answer-post">
+                  <p>
+                  <button type="submit" class="btn">Posten</button>
+                  </p>
+        </div>
+ </fieldset>
+}

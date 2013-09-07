@@ -1,0 +1,7 @@
+CREATE TABLE nfcms_Language (
+		Code VARCHAR (128) NOT NULL 
+		, Content TEXT NOT NULL 
+		, Name VARCHAR (255) NOT NULL 
+		, Package VARCHAR (255) NOT NULL 
+)
+ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

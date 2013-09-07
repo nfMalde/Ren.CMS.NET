@@ -1,0 +1,31 @@
+﻿@model nfCMS_NET.Models.Backend.Layout.MenuModel
+@{
+    Layout = null;
+}
+
+
+
+  <li>
+             <a href="#"><span class="ui-icon ui-icon-newwin"></span>Start</a>
+             <ul id="menumenu">
+                 <li class="ui-state-active">
+
+                     
+                         <a href="#"><span class="ui-icon ui-icon-home"></span>Willkommen <b>@Model.UserName</b>!</a>
+                     
+                 </li>
+              
+                 @Html.Raw(Model.LiElements)
+
+                 <li>
+
+                     <a href="#" style="font-weight:bold"><span class="ui-icon ui-icon-cancel ui-state-alert"></span>Abmelden</a>
+
+                 </li>
+
+
+
+             </ul>
+
+         </li>
+

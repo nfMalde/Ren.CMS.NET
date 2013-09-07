@@ -1,0 +1,712 @@
+﻿ 
+ @model nfCMS_NET.News.Models.NewsComment
+       
+ 
+ 
+  <div id="content">
+<style>
+     #galleryv li
+{
+display: inline;
+list-style-type: none;
+padding-right: 20px;
+}   
+    
+    #gallery li
+{
+display: inline;
+list-style-type: none;
+padding-right: 20px;
+}
+    #tabs
+    {
+        clear:both;
+        margin:10px 0;
+        
+        
+        
+        }
+.ui-tabs-nav
+{
+    
+    clear:both !important;
+    background:transparent;
+    border:0;
+    
+    
+    }
+.ui-tabs-panel:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.ui-tabs-panel {
+	display: inline-block;
+}
+ 
+html[xmlns] .ui-tabs-panel {
+	display: block;
+}
+ 
+* html .ui-tabs-panel {
+	height: 1%;
+}
+
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
+    
+    
+    });
+ 
+</script>
+<script type="text/javascript">
+
+
+    $(function () {
+
+
+        $('#tabs').tabs();
+
+
+    });
+
+
+</script>
+<script type="text/javascript">
+
+
+    $(function () {
+        $('.scrollUP').click(function () {
+
+            $('html,body').animate({
+                scrollTop: 0
+            },
+        'slow');
+        
+        
+        
+        
+         });
+
+        $('#gall').click(function () {
+
+
+
+
+            $('html,body').animate({
+                scrollTop: $("#scroll2g").offset().top
+            },
+        'slow');
+
+
+        });
+        $('#vid').click(function () {
+
+
+
+
+            $('html,body').animate({
+                scrollTop: $("#scroll2v").offset().top
+            },
+        'slow');
+
+
+        });
+
+
+    });
+
+</script>
+
+
+@{
+   
+    nfCMS_NET.Content.nContent News = (nfCMS_NET.Content.nContent)ViewData["Entry"];
+
+    nfCMS_NET.Content.nContentClickCounter ClickCounter = new nfCMS_NET.Content.nContentClickCounter(News);
+    ClickCounter.enableClickCounter(true);
+
+    List<nfCMS_NET.Content.nContentTag> Tags = News.getTags();
+
+    string readyTags = "";
+    string readyTagsHTML = "";
+    foreach(nfCMS_NET.Content.nContentTag Tag in Tags){
+
+        readyTags += Tag.Name + ", ";
+        readyTagsHTML += (Tag.BrowsingEnabled ? "<a class=\"tagLink\" href=\"/News/Tag/" + Tag.UrlOptimizedName + "\">" : "") + Tag.Name + (Tag.BrowsingEnabled ? "</a>" : "") +", ";
+    
+    
+    
+    }
+    if(readyTags.EndsWith(", ")){
+        readyTags = readyTags.Remove(readyTags.LastIndexOf(","));
+    }
+    if (readyTagsHTML.EndsWith(", "))
+    {
+        readyTagsHTML = readyTagsHTML.Remove(readyTagsHTML.LastIndexOf(","));
+    }
+    List<nfCMS_NET.Content.nContent> Comments = (List<nfCMS_NET.Content.nContent>)ViewData["Comments"];
+    ViewBag.Title = News.Title;
+    ViewBag.KeyWords = readyTags;
+    readyTags = readyTagsHTML;
+    ViewBag.Description = News.PreviewText;
+    nfCMS_NET.CORE.Helper.LinkHelper.LinkHelper LinkHelper1 = new nfCMS_NET.CORE.Helper.LinkHelper.LinkHelper();
+    
+    nfCMS_NET.Pagination.nPagingCollection PSC = (nfCMS_NET.Pagination.nPagingCollection)ViewData["Pages"];
+
+    string path = LinkHelper1.generateUniqueURL(News);
+    
+    
+    nfCMS_NET.CORE.SettingsHelper.GlobalSettingsHelper GS = new nfCMS_NET.CORE.SettingsHelper.GlobalSettingsHelper();
+    string LIMIT_JS_IMAGES = GS.Read("GLOBAL_NEWS_MAX_GALLERY_IMAGES") +";";
+    string LIMIT_JS_VIDEOS = GS.Read("GLOBAL_NEWS_MAX_GALLERY_VIDEOS") +";";
+
+    int LIMIT_I_IMAGES = Convert.ToInt32(GS.Read("GLOBAL_NEWS_MAX_GALLERY_IMAGES"));
+    int LIMIT_I_VIDEOS = Convert.ToInt32(GS.Read("GLOBAL_NEWS_MAX_GALLERY_VIDEOS"));
+    
+    bool fb_enabled = false;
+    string APPID = GS.Read("GLOBAL_SOCIAL_FB_APPID");
+
+    Boolean.TryParse(GS.Read("GLOBAL_SOCIAL_FB_ENABLED"), out fb_enabled);
+        
+   string guestid = GS.Read("GLOBAL_GUESTPKID").ToLower();
+
+   string FB_APPID = GS.Read("GLOBAL_SOCIAL_FB_APPID");
+     News.GenerateLink();
+     List<nfCMS_NET.Content.nContent.nAttachment> Att = News.Attachments("image", "indeximg");
+     }
+     <script type="text/javascript">
+         $(function () {
+             $('#toogleComment').click(function () {
+
+
+                 var c = document.getElementById('commentfield');
+              
+                 if (c.style.display != "block") $(c).slideDown();
+                 else $(c).slideUp();
+
+
+             });
+         });
+     </script>
+     
+@if(Request.QueryString["fb_comment_id"] != null && fb_enabled){
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+
+        $('#tabs-1').addClass("ui-tabs-hide");
+        $('#tabs-2').removeClass("ui-tabs-hide");
+        $('#tabnav1').removeClass("ui-tabs-selected");
+        $('#tabnav1').removeClass("ui-state-active");
+
+        $('#tabnav2').addClass("ui-tabs-selected");
+        $('#tabnav2').addClass("ui-state-active");
+
+
+    });
+
+</script>
+
+}
+
+     <div class="listentry">
+ <div class="listentry_left">
+ @if (Att.Count > 0)
+ {
+     
+ <img src="@Att[0].Path" alt="@News.Title"  style="border:0;"/>
+ }
+  @{
+     
+
+     Html.RenderPartial("_AddThisButtonsForContent");
+     
+     }
+     </div>
+ <div class="listentry_right">
+  <div class="listentry_top">
+ 
+ <h2> <a href="@News.FullLink">  @News.Title</a></h2>
+ 
+ </div>
+ <div class="listentry_middle">
+ 
+  
+ Von&nbsp;@Html.ActionLink(News.CreatorName,"u/"+ News.CreatorName,"Profile") am&nbsp;<span>@News.CreationDate.ToString().Substring(0,10)</span>&nbsp;in <a href="/News/Category/@News.CategoryName">@News.CategoryName</a>&nbsp;
+<span class="ui-icon ui-icon-comment" style="display:inline-block" title="Kommentare"></span>@Comments.Count
+<span class="ui-icon ui-icon-lightbulb" style="display:inline-block" title="Klicks"></span>@News.ClickCount
+ 
+ </div>
+ <div class="listentry_bottom">
+ <p>
+ @News.LongText
+ </p>
+
+
+<p style="font-size:9pt; color:#aaa">
+Tags:&nbsp;<i>@Html.Raw(readyTagsHTML)</i>
+</p>
+
+ </div>
+ </div>
+ </div>
+ <div class="content_hr" style="margin-bottom:10px"></div>
+ <div class="listentry">
+  <div style="float:left; clear:both">
+ <h3 id="scroll2g">Galerie</h3>
+ </div>
+ <div style="float:right; text-align:right">
+ <a class="scrollUP" href="javascript:void(0)">
+ <img src="/Content/themes/nftheme/images/btnUp.png" alt="Nach oben" title="Nach oben"  style="border:0"/>
+ </a>
+ 
+ </div>
+  @{
+     
+     List<nfCMS_NET.Content.nContent.nAttachment> Gallery = News.Attachments("image", "gallery");
+     List<nfCMS_NET.Content.nContent.nAttachment> Videos = News.Attachments("flv", "video");
+     if(Gallery.Count > LIMIT_I_IMAGES){
+         Gallery.RemoveRange(1, Gallery.Count - LIMIT_I_IMAGES);
+     
+     
+     }
+     
+     if(Videos.Count > LIMIT_I_VIDEOS){
+
+         Videos.RemoveRange(1, Videos.Count - LIMIT_I_VIDEOS);
+     
+     
+     }
+     
+     }
+
+     @if (Gallery.Count > 0)
+     {
+ <ul id="gallery" style="width:678px; list-style:none; list-style-image:none; display:inline-table">
+
+ 
+ 
+ @foreach (nfCMS_NET.Content.nContent.nAttachment Img in Gallery)
+ { 
+ <li class="gitem">
+ <a href="@Img.Path"  rel="shadowbox[news]"><img src="@Img.Path" alt="@News.Title Bild" style="max-width:64px; max-height:64px"/></a> 
+
+ </li>
+ 
+ 
+ 
+ }
+ 
+ </ul>
+  <div id="noimages" class="ui-state-highlight ui-corner-all" style="background:transparent; border:0; float:left;display:none; clear:both; width:300px;"> 
+		 		 <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+			Keine weiteren Bilder gefunden 
+				</div>       
+ <div style="float:right;  margin:5px;">
+ <div style="float:left">
+ <img alt="Loading..." title="Loading..." id="load_images" src="/Content/Themes/nftheme/images/ajax-loader.gif" style="border:0; display:none" />
+ 
+ <script type="text/javascript">
+     var xpage = 0;
+     $(function () {
+
+         $('#moreImages').click(function () {
+             $('#load_images').fadeIn('slow', function () {
+                 $.post("/News/GalleryAjaxadapter", { newsID: "@News.ID", atype: "images", startIndex: xpage },
+                                   function (data) {
+                                       $('#load_images').fadeOut('slow');
+                                       if (data != "") {
+                                           $('#gallery').append(data);
+                                           Shadowbox.init({ skipSetup: true }); Shadowbox.setup();
+                                           xpage = xpage + @LIMIT_JS_IMAGES+";"
+
+                                       } else {
+
+                                           $('#noimages').fadeIn('slow');
+
+
+
+                                       }
+
+                                   });
+             });
+
+
+         });
+
+
+
+
+     });
+ 
+ </script>
+ @if (Gallery.Count > LIMIT_I_IMAGES)
+ {
+ <a href="javascript: void(0)" id="moreImages"><img src="/Content/themes/nftheme/images/empty.png" class="read_more" title="Mehr Anzeigen" alt="Mehr Anzeigen" /></a>
+ }
+ </div>        
+  </div>
+     }
+     else
+     { 
+     
+     
+     <div class="ui-widget">
+				<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+					<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+					<strong>Keine Bilder:</strong> Diese Gallerie ist leider leer.</p>
+				</div>
+			</div>
+     
+     
+     
+     
+     }
+     </div>
+ <div class="content_hr" style="margin-bottom:10px"></div>
+ <div class="listentry">
+ <div style="float:left; clear:both">
+ <h3 id="scroll2v">Videos</h3>
+ </div>
+ <div style="float:right; text-align:right">
+ <a  class="scrollUP" href="javascript:void(0)">
+ <img src="/Content/themes/nftheme/images/btnUp.png" alt="Nach oben" title="Nach oben"  style="border:0"/>
+ </a>
+ 
+ </div>
+
+  @if (Videos.Count > 0)
+  {
+ <ul id="galleryv" style="width:678px; list-style:none; clear:both; list-style-image:none; display:inline-table">
+
+ 
+ 
+ @foreach (nfCMS_NET.Content.nContent.nAttachment V in Videos)
+ { 
+  
+ <li class="gitem">
+ <div>
+ 
+ <a href="@V.Path"  rel="shadowbox[newsv]" class="videolink">
+
+ <img src="/Content/themes/nftheme/images/btnPlay.png" style="border:0" alt="@V.Title abspielen" title="@V.Title abspielen" /></a> 
+ 
+<br />
+
+<b>@V.Title</b>
+</div>
+ </li>
+ 
+ 
+ 
+ }
+ 
+ </ul>
+      
+   <div id="novids" class="ui-state-highlight ui-corner-all" style="background:transparent; border:0; float:left;display:none; clear:both; width:300px;"> 
+		 		 <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+			Keine weiteren Videos gefunden 
+				</div>       
+ <div style="float:right;  margin:5px;">
+ <div style="float:left">
+ <img alt="Loading..." title="Loading..." id="load_vids" src="/Content/Themes/nftheme/images/ajax-loader.gif" style="border:0; display:none" />
+ 
+ <script type="text/javascript">
+     var xpage = 0;
+     $(function () {
+
+         $('#moreVids').click(function () {
+             $('#load_vids').fadeIn('slow', function () {
+                 $.post("/News/GalleryAjaxadapter", { newsID: "@News.ID", atype: "videos", startIndex: xpage },
+                                   function (data) {
+                                       $('#load_vids').fadeOut('slow');
+                                       if (data != "") {
+                                           $('#galleryv').append(data);
+                                           Shadowbox.init({ skipSetup: true }); Shadowbox.setup();
+                                           xpage = xpage + @LIMIT_JS_VIDEOS+";"
+
+                                       } else {
+
+                                           $('#novids').fadeIn('slow');
+
+
+
+                                       }
+
+                                   });
+             });
+
+
+         });
+
+
+
+
+     });
+ 
+ </script>
+ @if (Videos.Count > LIMIT_I_VIDEOS)
+ {
+ <a href="javascript: void(0)" id="moreVids"><img src="/Content/themes/nftheme/images/empty.png" class="read_more" title="Mehr Anzeigen" alt="Mehr Anzeigen" /></a>
+ }
+ </div>        
+  </div>
+  }
+  else
+  { 
+     
+     
+     <div class="ui-widget">
+				<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+					<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+					<strong>Keine Videos:</strong> Diese Gallerie beinhaltet leider keine Videos.</p>
+				</div>
+			</div>
+     
+     
+     
+     
+  }
+
+
+
+ </div>
+ <div class="content_hr" style="margin-bottom:10px; margin-top:10px"></div>
+  <div id="tabs">
+	<ul>
+		<li id="tabnav1"><a href="#tabs-1">Kommentare auf NetworkFreaks.de</a></li>
+		@if(fb_enabled){
+        
+        <li id="tabnav2"><a href="#tabs-2">Kommentare auf FaceBook</a></li>
+      }
+	</ul>
+	<div id="tabs-1">
+    <div style="clear:both">
+    @Html.ValidationSummary(true, "Kommentar gespeichert.")
+    </div>
+  <div class="listentry_middle">Kommentare: @Comments.Count&nbsp;|&nbsp;<a href="javascript:void(0)" id="toogleComment"><b>Kommentar schreiben</b></a></div>
+  
+  <div class="commentfield" id="commentfield">
+  @{
+      
+      nfCMS_NET.CORE.Permissions.nPermissions PM = new nfCMS_NET.CORE.Permissions.nPermissions();
+      nfCMS_NET.MemberShip.nProvider.CurrentUser CU = new nfCMS_NET.MemberShip.nProvider.CurrentUser();
+      }
+  @if (PM.hasPermission("write_comments"))
+  {
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+ 
+      using (Html.BeginForm("Comment/" + News.ID, "News"))
+      {
+       
+            
+  <fieldset style="width:640px"><legend>Eingabe</legend>
+
+  Nickname:  
+  
+  
+  @(CU.isGuest() ? Html.TextBoxFor(m => m.nickname, new { @class = "commentTextBox" }) : Html.TextBoxFor(m => m.nickname, new { @class = "commentTextBox", @value = CU.nUser.UserName })) 
+  
+ 
+
+  @Html.TextAreaFor(m => m.text, new { @class = "commentTextField", rows = 4 })
+  <br />
+   @Html.ValidationMessageFor(m => m.text)
+    <br />
+    <div style="clear:left; float:left">
+        @Html.GenerateCaptcha()
+  </div>
+  <div class="comment_btn">
+  <input type="submit" class="btnPosten" value="Posten" />
+ 
+  </div>
+  
+  </fieldset>
+      }
+
+  }
+  else
+  {
+  
+  <div class="ui-widget">
+				<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+					<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
+					<strong>Fehler:</strong> Du musst @Html.ActionLink("angemeldet", "LogOn", "Account") sein, um Kommentare zu schreiben.
+             
+           
+             
+                    </p>
+                     
+				</div>
+			</div>
+  
+  }
+  
+ 
+
+
+  </div>
+ 
+     <div style="float:left; font-size:8pt; margin:10px 0; clear:both">
+     <b>Seite(@PSC.MaxPages):</b>
+    
+    
+      @((int)ViewData["Page"] > 6 ? Html.ActionLink("[...]", News.TargetAction) : null)
+    @foreach (nfCMS_NET.Pagination.nPage n_Page in PSC)
+    {
+
+        if (n_Page.Index <= ((int)ViewData["Page"] + 5) || n_Page.Index >= ((int)ViewData["Page"] - 5))
+        {
+    <span style="margin-right:5px;">
+    @if ((int)ViewData["Page"] == n_Page.Index)
+    { 
+    
+    
+    <strong>[@n_Page.Index]</strong>
+    
+    }
+    else
+    {
+   @Html.ActionLink("[" + n_Page.Index + "]", News.TargetAction + n_Page.Index)
+    }
+        </span>
+    
+ 
+        }
+    }
+    
+    @if ((PSC.MaxPages - (int)ViewData["Page"]) > 5)
+    { 
+    
+       @Html.ActionLink("[...]", News.TargetAction + ((int)ViewData["Page"] + 5))
+    
+    }
+     </div>
+ <div style="float:right; font-size:8pt; margin:10px 0;">
+ <i>Zeige Einträge @ViewData["Show"] von @ViewData["TotalRows"]</i>
+ </div>		 
+ @foreach (nfCMS_NET.Content.nContent Comment in Comments)
+ {
+
+
+
+     nfCMS_NET.MemberShip.ProfileManagement P = new nfCMS_NET.MemberShip.ProfileManagement();
+     string avatarname = P.GetProfileVarByName("AVATAR").getUserValue();
+      
+      
+    
+     
+ <div class="listentry">
+ <div class="listentry_left" style="width:130px">
+ 
+ <div class="avatar">
+ @if (!GS.empty(avatarname))
+ { 
+ 
+ 
+ <img src="@avatarname"  alt="@Comment.CreatorName´s Avatar" title="@Comment.CreatorName´s Avatar"/>
+ 
+ 
+ }
+ else
+ { 
+ 
+ <b style="color:#bababa">Kein Avatar</b>
+ 
+ 
+ }
+ 
+ </div>
+ 
+ 
+ 
+ 
+ </div>
+ <div class="listentry_right">
+ 
+  <div class="listentry_middle">
+ @if (Comment.CreatorPKID.ToString().ToLower() != guestid)
+ {
+     
+
+
+
+     <span></span>
+ @Html.ActionLink(Comment.CreatorName, "u/" + Comment.CreatorName, "Profile")  <span></span>
+ }
+
+
+ else
+ {
+ 
+ 
+ 
+ 
+ @Comment.CreatorSpecialName
+ 
+ 
+ }
+  &nbsp;|&nbsp;@Comment.CreationDate.ToString().Substring(0, 10)
+   
+     </div>
+ <div class="listentry_bottom">
+ <p>
+ 
+ 
+    @Comment.LongText
+ 
+ </p>
+ 
+ 
+ 
+ </div>
+ 
+ 
+ 
+ </div>
+ 
+ 
+ 
+ 
+ 
+ </div>
+ <div class="content_spacer_20px" style="width:100%;border-top:1px solid #EaEaEa"></div>
+ 
+ 
+ }
+
+
+ </div>
+ @if (fb_enabled)
+ {
+	<div id="tabs-2">
+	
+    <div id="fb-root"></div>
+<script>    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/de_DE/all.js#xfbml=1&appId=@GS.Read("GLOBAL_SOCIAL_FB_APPID")";
+        fjs.parentNode.insertBefore(js, fjs);
+    } (document, 'script', 'facebook-jssdk'));</script>
+
+    <div class="fb-comments" data-href="@path" data-num-posts="2" data-width="624"></div>
+
+	 </div>
+ }
+ 
+</div>
+  <div class="content_spacer_20px"></div>
+  </div>

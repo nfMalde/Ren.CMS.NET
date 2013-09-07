@@ -1,0 +1,6 @@
+CREATE TABLE nfcms_Profile_User_Values (
+		PKID VARCHAR (250) NULL 
+		, VarName VARCHAR (150) NULL 
+		, VarValue TEXT NULL 
+)
+ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

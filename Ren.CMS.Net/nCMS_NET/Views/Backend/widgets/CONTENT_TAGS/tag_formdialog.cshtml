@@ -1,0 +1,104 @@
+﻿@using Ren.CMS.CORE.Language.LanguageDefaults
+@{
+    
+    Ren.CMS.Models.Backend.Content.ContentTypes CT = new Ren.CMS.Models.Backend.Content.ContentTypes();
+
+    LanguageDefaultsShared SharedLang = new LanguageDefaultsShared();
+    LanguageDefaultsContentTags TagLang = new LanguageDefaultsContentTags();
+    
+    
+    
+    
+    List<object> CTs = CT.ObjectList();
+    string v = "";
+    foreach (object c in CTs)
+    {
+
+        string name = c.GetType().GetProperty("name").GetValue(c, null).ToString();
+        string ctype = c.GetType().GetProperty("ctype").GetValue(c, null).ToString();
+                
+                  v+=      ("{ value: \"" + ctype + "\", label: '" + name + "' },");
+
+
+    }
+    if (v.EndsWith(",")){
+        v = v.Remove(v.LastIndexOf(","));
+    }
+    }
+@model Ren.CMS.Models.Backend.Content.ContentTagFormDialog
+
+
+
+
+<script>
+
+    $(function () {
+        $('#@Html.ProtectID(Model.elID)').formDialog({
+            title: "@Model.title",
+            autoOpen: false,
+            modal: true,
+            saveText: '@Html.LanguageLine("LANG_SHARED_SAVE","Root",SharedLang.LANG_SHARED_SAVE)',
+            abortText: '@Html.LanguageLine("LANG_SHARED_ABORT", "Root", SharedLang.LANG_SHARED_ABORT)',
+            url: '@Model.url',
+            method: '@Model.method',
+            success: function (data) {
+
+                if (data.success == true) {
+
+                    $('#@Model.gridID').flexReload();
+
+                    
+
+                    $('#@Html.ProtectID(Model.elID)').dialog("close");
+                }
+            },
+            elements: [
+                {   type: 'hidden', name: 'id', value:'0', id: '@Html.ProtectID("id")'},
+                {
+                    type: 'combobox', name: 'contentType', id: '@Html.ProtectID("contentType")', label: '@Html.LanguageLine("LANG_CT_GRID_CONTENTTYPE","CONTENT_TAGS", TagLang.LANG_CT_GRID_CONTENTTYPE)', value: '', required: true, dataStore: [
+
+                        
+                        @Html.Raw(v)
+
+
+                    ]
+                },
+                { type: 'textbox', name: 'tagName', label: '@Html.LanguageLine("LANG_CT_GRID_TAGNAME","CONTENT_TAGS", TagLang.LANG_CT_GRID_TAGNAME)', required: true, value: '' },
+                { type: 'radiobutton', name: 'enableBrowsing', label: '@Html.LanguageLine("LANG_CT_GRID_BROWSING","CONTENT_TAGS", TagLang.LANG_CT_GRID_BROWSING)', value: "", checked: true, store: [{ label: 'Ja', value: '1' }, { label: 'Nein', value: '0' }] }
+
+
+
+            ]
+        });
+    });
+</script>
+<style>
+
+    #@Html.ProtectID("tag_create_tbl")
+    {
+        width:100%;
+    
+    }
+     #@Html.ProtectID("tag_create_tbl") td{
+    
+        padding:2px;
+    
+    }
+    #@Html.ProtectID("tag_create_tbl") td:first-child
+    {
+        width:60%;
+        text-align:left;
+        font-weight:bold;
+    }
+
+    
+    #@Html.ProtectID("tag_create_tbl") td:last-child
+    {
+        width:40%;
+        text-align:right;
+    }
+</style>
+<div style="font-size:10pt;" id="@Html.ProtectID(Model.elID)">
+ 
+   
+ </div>

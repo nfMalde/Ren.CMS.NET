@@ -1,0 +1,5 @@
+<config>
+  <connectionString>Data Source=X1X2X34\SQLEXPRESS;Initial Catalog=ncms_net;Integrated Security=True</connectionString>
+  <exportData>True</exportData>
+  <exportSchema>True</exportSchema>
+</config>

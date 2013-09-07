@@ -1,0 +1,82 @@
+﻿
+
+@{
+    ViewBag.Title = "Übersicht";
+
+    nfCMS_NET.Content.ContentManagement.GetContent G = new nfCMS_NET.Content.ContentManagement.GetContent(new string[]{
+                "eNews",
+                "eArticle"
+                
+                }, null, null, "{prefix}Content.cDate", "DESC", false, 1, 3);
+
+
+
+
+    List<nfCMS_NET.Content.nContent.nAttachment> Thump = new List<nfCMS_NET.Content.nContent.nAttachment>();
+
+    List<nfCMS_NET.Content.nContent> CC = G.getList();
+  
+    nfCMS_NET.Models.Core.nSliderModel Slider = new nfCMS_NET.Models.Core.nSliderModel();
+    Slider.ContentCollection = CC;
+    Slider.SliderSize = 4;
+    
+    }
+   @{
+       
+       Html.RenderPartial("Slider", Slider);
+       
+       }
+  <div id="content">
+  
+      
+      @{Html.RenderPartial("../Shared/_LocationBar", ViewData);}
+      
+ 
+ 
+
+ @foreach(nfCMS_NET.Content.nContent News in ViewData["News"] as List<nfCMS_NET.Content.nContent>){
+     News.GenerateLink();
+     List<nfCMS_NET.Content.nContent.nAttachment> Att = News.Attachments("image", "indeximg");
+     nfCMS_NET.Models.Core.nContentIncludedModel MDLx = new nfCMS_NET.Models.Core.nContentIncludedModel();
+     MDLx.Entry = News;
+
+     if (News.ContentType == "eNews")
+     {
+
+         Html.RenderPartial("../News/_NewsListRow", MDLx);
+
+
+     }
+     else
+     {
+         Html.RenderPartial("../Article/_NewsListRow", MDLx);
+
+     }
+     }
+     <div style="float:left; font-size:8pt; margin:10px 0; clear:both">
+     <b>Seite:</b>&nbsp;
+    @foreach(nfCMS_NET.Pagination.nPage n_Page in ViewData["Pages"] as nfCMS_NET.Pagination.nPagingCollection)
+    {
+    <span style="margin-right:5px;">
+    @if ((int)ViewData["Page"] == n_Page.Index)
+    { 
+    
+    
+    <strong>[@n_Page.Index]</strong>
+    
+    }
+    else
+    {
+   @Html.ActionLink("[" + n_Page.Index + "]", "Index/" + n_Page.Index)
+    }
+        </span>
+    
+ 
+    }
+     </div>
+ <div style="float:right; font-size:8pt; margin:10px 0;">
+ <i>Zeige Einträge @ViewData["Show"] von @ViewData["TotalRows"]</i>
+ </div>
+
+
+ </div>

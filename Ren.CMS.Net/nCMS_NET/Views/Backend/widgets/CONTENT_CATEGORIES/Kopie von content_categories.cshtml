@@ -1,0 +1,122 @@
+﻿
+
+ 
+ 
+<script>
+    
+    $(function () {
+
+        $('#delete-category').dialog({
+            resizable: false,
+            height: 240,
+            autoOpen:false,
+            modal: true,
+            buttons: {
+                "Kategorie jetzt löschen": function () {
+                    var idEl = $('#catlist').flexReturnSelected();
+                    var id = idEl[0].toString().substring(3);
+                    
+                    $.post("/BackendHandler/Content/RemoveCat", { ID: id },
+                        function (data) {
+                            $('#catlist').flexReload();
+                            $('#delete-category').dialog("close");
+                        });
+
+                    
+
+                
+                },
+                "Nein": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+
+    });
+</script>
+    <div id="delete-category" style="font-size:10px !important;">
+
+        <span style="font-size:10px !important;">
+
+            Möchten Sie diese Kategorie wirklich löschen? Damit verknüpfte Inhalte werden eventuell dadurch nicht abrufbar und müssen neu zugeordnet werden.
+            Dies können Sie unter  &quot;Inhalte verwalten => Inhalt bearbeiten. &quot;
+
+
+        </span>
+
+
+    </div>
+    <table style="display:none; " id="catlist">
+
+
+
+    </table>
+
+    <script>
+        $(function () {
+            console.log("Flexi Grid launched");
+            $("#catlist").flexigrid({
+                url: '/BackendHandler/Content/Catlist',
+                dataType: 'json',
+                colModel: [
+                    { display: 'Kategorie Name(Kurz)', name: 'shortName', width: 150, sortable: true, align: 'left' },
+                    { display: 'Kategorie Name(Lang)', name: 'longName', width: 150, sortable: true, align: 'left' },
+                    { display: 'Unterkategorie von', name: 'subFrom', width: 100, sortable: true, align: 'left' },
+                    { display: 'Inhalts-Typ', name: 'contentType', width: 50, sortable: true, align: 'left' }
+                ],
+                buttons: [
+                    {
+                        name: 'Hinzufügen', bclass: 'add', onpress: function () {
+
+                          
+                            new widgetAction('widget:NEW_CATEGORY:open');
+                            new widgetAction('widget:CONTENT_CATEGORIES:hide');
+                        }
+                    },
+                    {
+                        name: 'Editieren', bclass: 'edit', onpress: function () {
+                            var idEl = $('#catlist').flexReturnSelected();
+                            var id = idEl.toString().substring(3);
+                            if (id != null && id != "")
+                                new widgetAction('widget:EDIT_CATEGORY:open', { id: id });
+                            new widgetAction('widget:CONTENT_CATEGORIES:hide');
+                        }
+                    },
+
+
+                    {
+                        name: 'Löschen', bclass: 'delete', onpress: function (com, grid) {
+
+                            var idEl = $('#catlist').flexReturnSelected();
+                            var id = idEl.toString().substring(3);
+                            if(id != null && id!= "")
+                                $('#delete-category').dialog('open');
+                         
+                        }
+                    },
+                    { separator: true }
+                ],
+                searchitems: [
+                    { display: 'Kategorie Name', name: 'longName' },
+                    { display: 'Unterkategorie von', name: 'subFrom', isdefault: true }
+                ],
+                sortname: "longName",
+                sortorder: "asc",
+                usepager: true,
+                title: 'Kategorien',
+                useRp: true,
+                rp: 15,
+                showTableToggleBtn: false,
+                width: 'auto',
+               
+                singleSelect: true
+             
+            });
+
+
+        });
+
+    </script>
+ 

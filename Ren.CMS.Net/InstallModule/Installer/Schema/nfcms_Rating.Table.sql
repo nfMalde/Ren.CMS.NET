@@ -1,0 +1,6 @@
+CREATE TABLE nfcms_Rating (
+		GroupID INT NOT NULL 
+		, id INT IDENTITY(1111,1212) NOT NULL 
+		, langCode VARCHAR (55) NOT NULL 
+		, Name VARCHAR (255) NOT NULL 
+)

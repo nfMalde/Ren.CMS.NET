@@ -1,0 +1,51 @@
+﻿ @model Ren.CMS.Blog.Models.NewsComment     
+@using Recaptcha
+
+
+
+@using (Html.BeginForm(routeValues: Model.RouteValues, controllerName: "News", actionName: Model.TargetAction, method: FormMethod.Post, htmlAttributes: new { name = "Form-" + Model.FormID, id = "Form-" + Model.FormID }))
+{
+                  @Html.HiddenFor(m => m.FormID, htmlAttributes: new { id = Model.FormID + "-FormID" })
+                  @Html.HiddenFor(m => m.NewsID, htmlAttributes: new { id = Model.FormID + "-NewsID" })
+                  <fieldset>
+                      <legend>Kommentieren</legend>
+                        <div class="span3">
+                          <label>Nickname</label>
+                            @if (!Request.IsAuthenticated)
+                            {
+                                @Html.TextBoxFor(m => m.Nickname,htmlAttributes: new { id = Model.FormID + "-Nickname" })
+                            }
+                            else
+                            {
+                            
+                                <strong>@User.Identity.Name</strong>
+                            
+                            }
+                          <label>
+                              Dein Kommentar
+                          </label>
+                          @Html.TextAreaFor(m => m.Comment, htmlAttributes: new { id = Model.FormID + "-Comment" })
+                          </div>
+                      <div class="span4 pull-right">
+                           @if (!Request.IsAuthenticated)
+                           {
+                          <p>
+                              <strong>Captcha eingeben</strong> oder <a href="/Account/LogOn" class="registermodal"><strong>Anmelden</strong></a>
+                          </p>
+                              <div id="add-comment-captcha">
+                               @Html.Raw(Html.GenerateCaptcha("cap-main-comment", "blackglass"))
+                                  </div>
+                           }
+
+                      </div>
+                      <div class="span7">
+
+                          <p>
+                  <button type="submit" class="btn">Posten</button>
+                  </p>
+                      </div>
+
+
+                          </fieldset>
+}
+ 

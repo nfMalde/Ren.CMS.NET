@@ -1,0 +1,74 @@
+﻿@model GalleryModule.Gallery.Models.GalleryView
+
+@{
+     
+    ViewBag.Title = Model.Content.Texts.First().Title + " - Gallerie: " + Model.CurrentView.Title + "(" + System.IO.Path.GetFileName(Model.CurrentView.Path) + ")";    
+}
+
+
+@Styles.Render("~/Content/nftheme/css/shared/blog-gallery.css")
+@Scripts.Render("~/Scripts/nftheme/shared/blog/Gallery.js")
+<div class="span-8">
+<h1>@Model.Content.Texts.First().Title <small>Gallerie: @Model.LocaleType</small></h1>
+
+<div class="blog-gallery-view">
+
+
+    <h2 class="gheader"><small>@Model.CurrentView.Title (@System.IO.Path.GetFileName(Model.CurrentView.Path)) </small></h2>
+    <div class="blog-gallery-content">
+
+        @if (Model.Type == "video")
+        {
+            Html.Hidden("video-path", new { id = "video-path", value = Model.CurrentView.Path });
+            Html.RenderPartial("~/Views/nftheme/SharedElements/Jplayer/jplayer.partial.cshtml", new Ren.CMS.Models.SharedElements.jplayer() {
+                FilePath = Model.CurrentView.Path,
+                Poster = Model.CurrentView.ThumpnailPath.Remove(Model.CurrentView.ThumpnailPath.LastIndexOf('.')) +"640-264.jpg",
+                Width = 640,
+                Height = 264
+            
+            });
+        }
+        else{
+        <img src="@Model.CurrentView.Path" class="gmain-img"  title="@Model.CurrentView.Title" alt="@Model.CurrentView.Title"/>
+        }
+
+    </div>
+    @if(Model.Page > Model.MinPage){
+    <div class="pull-left gprev">
+        <a href="@Url.Action(Model.Reference+"/Gallery/" + Model.Content.ID + "/" + Model.Type + "/" + (Model.Page - 1), routeValues: new {area="" })" class="btn">Vorherige Seite</a>
+    </div>
+    }
+
+    @if(Model.Page < Model.MaxPage){
+    <div class="pull-right gnext">
+        <a href="@Url.Action(Model.Reference+"/Gallery/"+ Model.Content.ID +"/"+ Model.Type +"/"+ (Model.Page +1),  routeValues: new {area="" })" class="btn">Nächste Seite</a>
+    </div>
+    }
+ 
+    <p><h3>Remarks/Informationen</h3>
+
+        <span class="remarks">
+            @Model.CurrentView.AttachmentRemark
+        </span>
+
+
+    </p>
+
+    </div>
+
+</div>
+    <div class="pull-right span3 gallery-navbar-container">
+     
+     <div id="g-nav">
+     <a class="btn btn-mini btn-inverse pull-left disabled" data-slide="prev">&lsaquo;</a>
+     <a class="btn  btn-mini btn-inverse pull-right disabled" data-slide="next">&rsaquo;</a>
+
+    </div>
+
+    <div id="navbar-gallery pull-left" class="media-navbar-contents" data-ct="@Model.Reference" data-id="@Model.Content.ID" data-page="@Model.Page" data-type="@Model.Type">
+        
+
+        <p>Lade...</p>
+
+    </div>
+</div>

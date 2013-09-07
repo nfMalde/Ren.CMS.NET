@@ -1,0 +1,8 @@
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Gute Grafik', 'pro', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Guter Sound', 'pro', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Gameplay ist nicht vorteilhaft', 'contra', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Multiplayer dünn', 'contra', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Gute Grafik', 'pro', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Guter Sound', 'pro', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Gameplay ist nicht vorteilhaft', 'contra', '1212')
+INSERT INTO nfcms_Internal_Pro_Contra (pText, pType, refid) VALUES( 'Multiplayer dünn', 'contra', '1212')

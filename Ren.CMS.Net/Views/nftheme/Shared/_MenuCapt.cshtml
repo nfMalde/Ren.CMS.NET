@@ -1,0 +1,170 @@
+﻿ @model nfCMS_NET.Models.Core.MenuModel
+
+
+
+<!---
+
+TEMPLATE EDITED >>>>>
+
+--->
+@{
+    
+    List<nfCMS_NET.CORE.Links.LinkCollection> SubLinks = new List<nfCMS_NET.CORE.Links.LinkCollection>();
+    string submenu = "";
+    HtmlString SUBMENU = new HtmlString(submenu);
+    
+    nfCMS_NET.CORE.SettingsHelper.GlobalSettingsHelper GS = new nfCMS_NET.CORE.SettingsHelper.GlobalSettingsHelper();
+    
+    }
+
+<nav>
+            <div id="nav">
+
+
+            @foreach(nfCMS_NET.CORE.Links.Link Lnk in Model.Links){
+     
+            <script type="text/javascript">
+            $(function () {
+
+
+
+                    $('#@Lnk.ID').hover(function () {
+
+                      $('.active').each(function(){
+                       
+                        this.className = this.className.replace('_hover','');
+                        $(this).addClass('inactive');
+                        $(this).removeClass('active');
+                        
+                        
+                        
+                        });
+                        $(this).removeClass('inactive');
+
+                        $(this).addClass('active');
+                        $(this).removeClass('@Lnk.NormalStateClass');
+                        $(this).addClass('@Lnk.HoverStateClass');
+                       $('.sub_active').each(function(){
+                       
+                        this.className = "sub_inactive";
+                       
+                       
+                       
+                       });
+                  
+                       
+                      var newsub =  document.getElementById( @(new HtmlString("'sub_"+ Lnk.ID +"'")) );
+                      newsub.className = 'sub_active';
+                     
+                });
+            });
+                $(function () {
+
+
+
+                    $('#@Lnk.ID').click(function () {
+
+                      $('.active').each(function(){
+                       
+                        this.className = this.className.replace('_hover','');
+                        $(this).addClass('inactive');
+                        $(this).removeClass('active');
+                        
+                        
+                        
+                        });
+                        $(this).removeClass('inactive');
+
+                        $(this).addClass('active');
+                        $(this).removeClass('@Lnk.NormalStateClass');
+                        $(this).addClass('@Lnk.HoverStateClass');
+                       $('.sub_active').each(function(){
+                       
+                        this.className = "sub_inactive";
+                       
+                       
+                       
+                       });
+                  
+                       
+                      var newsub =  document.getElementById( @(new HtmlString("'sub_"+ Lnk.ID +"'")) );
+                      newsub.className = 'sub_active';
+                     
+                });
+            });
+            </script>
+           
+
+                    
+                    
+                   
+                        
+                         
+                submenu += "<div id=\"sub_" + Lnk.ID + "\" class=\"sub_" + (Model.isLinkAcitve(ViewContext.Controller.ControllerContext, Lnk) ? "active" : "inactive") + "\">";
+
+
+
+
+
+                if (Lnk.SubLinks != null)
+                {
+
+
+
+                    foreach (nfCMS_NET.CORE.Links.Link SUB in Lnk.SubLinks)
+                    {
+
+
+
+                        submenu += "<a href=\"" + SUB.Href + "\" title=\"" + SUB.Text + "\" class=\"nav_sub sub_item_" + (Model.isLinkAcitve(ViewContext.Controller.ControllerContext, SUB) ? "active" : "inactive") + "\">" + SUB.Text + "</a>&nbsp;-&nbsp;";
+
+
+
+
+
+
+
+
+
+
+
+                    }
+
+
+
+
+                }
+                submenu += "</div>";
+                    
+                    
+                    
+                    
+                  
+                
+                
+                
+                
+             
+            <div id="@Lnk.ID" title="@Lnk.Text" class="@Model.getCorrectCSSClass(ViewContext.Controller.ControllerContext, Lnk) @(Model.isLinkAcitve(ViewContext.Controller.ControllerContext, Lnk) ? "active" : "inactive")">
+
+            
+            </div>
+            }
+            
+            </div>
+            <div id="nav_sub">
+       
+            @{
+                
+                
+                SUBMENU = new HtmlString(submenu);
+                
+                }
+            @SUBMENU
+            
+            
+            </div>
+
+
+
+</nav>

@@ -1,0 +1,205 @@
+﻿@model Ren.CMS.Blog.Models.NewsDetail
+@using Ren.CMS.Helpers.Content
+@using Ren.CMS.Helpers
+
+<div class="row">
+
+    <div class="span8">
+
+        <article>
+             <div class="media-body blog-body">
+                <hgroup>
+					<h1 class="blog-header">@Model.NewsEntry.Title
+                        <small>
+                            <a href="/News/Category/@HttpUtility.UrlEncode(Model.NewsEntry.CategoryName)">
+                            @Model.NewsEntry.CategoryName
+                                </a>
+                                
+                        </small>
+					</h1>
+                    <span class="subheader">
+                        <time datetime="@(Model.NewsEntry.CreationDate.ToString("yyyy-MM-dd")+"T"+Model.NewsEntry.CreationDate.ToString("hh:mm"))+02:00" title="Veröffentlicht am @Model.NewsEntry.CreationDate.ToString() Uhr">@Model.NewsEntry.CreationDate.ToString("dd.MM.yyyy, HH:mm") Uhr</time>
+
+                        von
+
+						<a title="Profil des Autors" href="/Profile/@Model.NewsEntry.CreatorName" rel="author">@Model.NewsEntry.CreatorName</a>	&nbsp;					
+                        <a title="Jetzt kommentieren!" href="#Comments"><i class="icon-comment"></i>
+                        @Model.TotalComments</a>
+                    </span>
+				</hgroup>
+             @if (Model.NewsEntry.Attachments("image", "indeximg").Count > 0)
+             {
+             <div class="blog-image">
+                
+                     <img class="blog-image" src="@Model.NewsEntry.Attachments("image", "indeximg").First().Path" title="@Model.NewsEntry.Texts.First().Title" />  
+               
+
+
+
+             </div>  
+             }
+
+             @Html.Raw(Model.NewsEntry.Texts.First().LongText)
+
+              <p>
+                <small>
+                <strong>
+                    Getaggt mit:
+                </strong>
+                    <i>A, B, C, D, E, F</i>
+                    </small>
+            </p>
+             </div>
+          
+
+
+
+        </article>
+
+        <div class="row">
+
+            <div class="span8">
+              
+                <ul id="Comments" class="nav nav-tabs">
+                
+                    <li class="active">
+                        <a href="#nf-comments">Kommentare zu diesem Artikel</a>
+                    </li>
+
+                    <li>
+                        <a href="#fb-comments">Facebook Kommentare</a>
+                    </li>
+                
+                </ul>
+                <div id="CommentsContent" class="tab-content">
+              <div class="tab-pane fade in active" id="nf-comments">
+
+ 
+
+
+              <section id="GeneralAddForm">
+           
+                  @{
+                      var FormVal = new Ren.CMS.Blog.Models.NewsComment() { NewsID = Model.NewsEntry.ID };
+
+                      if (Model.mode == "all")
+                      {
+                          FormVal.TargetAction = Model.NewsEntry.actionpath;
+                          FormVal.TargetController = Model.NewsEntry.TargetController;
+
+                      }
+    
+                      FormVal.FormID = "GeneralAddForm";
+                      Html.RenderPartial("AddComment", FormVal);
+                      
+                  }
+
+              </section>  
+               <section id="toolbar"> 
+                  <p class="blog-show-all-comments pull-right">
+ 
+                      <a href="@Url.Action( "/News/Comments/" + Model.NewsEntry.ID , "Blog", routeValues: new { area = "" })" class="btn btn-inverse show-more-comments" data-eid="@Model.NewsEntry.ID">
+                          Alle Kommentare anzeigen
+                      </a>
+                  </p>  
+                   </section>
+              <section id="CommentTree">
+ 
+
+                  @if (Model.TotalComments == 0)
+                  { 
+                  
+                  <div class="alert alert-success">
+                    <p>Es sind keine Kommentare vorhanden :(</p>
+                  </div>
+                  
+                  
+                  }
+                  else
+                  {
+
+
+                      Html.RenderPartial("CommentTree", Model);
+      
+
+
+                  }
+
+
+
+              </section>  
+                  
+              </div>
+              <div class="tab-pane fade" id="fb-comments">
+                
+              <p>Facebook Kommentare sind derzeit nicht aktiviert.</p>    
+                  
+              </div>
+          
+            </div>
+            
+           
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+    <div class="span3 blog-sidebar pull-right">
+       
+        <div class="well well-small index-content-header"><strong>Weitere Bilder zum Beitrag</strong></div>
+         @if (Model.NewsEntry.Attachments("image", "gallery").Count() > 0)
+         {
+        <ul class="thumbnails helper-relative">    
+      <li>
+        <div class="thumbnail clearfix" style="">
+            <a href="/Gallery/News/@Model.NewsEntry.ID/Images" class="helper-block">
+          <img data-src="holder.js/300x200" alt="" src="@Model.NewsEntry.Attachments("image", "gallery").First().Path">
+     
+           </a>
+        </div>
+      </li>
+        </ul>
+         }
+         else
+         {
+             <div class="thumbnail">
+                 <div class="alert alert-success">
+<strong>Es sind leider noch keine weiteren Bilder vorhanden.</strong>
+</div>
+             </div>
+         }
+         <div class="well well-small index-content-header"><strong>Videos zum Beitrag</strong></div>
+                 @if (Model.NewsEntry.Attachments("video", "gallery").Count() > 0)
+                 {
+               <ul class="thumbnails helper-relative">    
+      <li>
+        <div class="thumbnail clearfix" style="">
+            <a href="/News/Gallery/Images" class="helper-block">
+          <img data-src="holder.js/300x200" alt="" src="@Model.NewsEntry.Attachments("video", "gallery").First().Path">
+     
+           </a>
+        </div>
+      </li>
+        </ul>
+                 }
+                 else
+                 {
+                   <div class="thumbnail">
+                 <div class="alert alert-success">
+<strong>Es sind leider noch keine weiteren Videos vorhanden.</strong>
+</div>
+             </div>   
+        }
+    </div>
+
+
+
+
+</div>

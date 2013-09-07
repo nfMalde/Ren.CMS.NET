@@ -1,0 +1,1 @@
+INSERT INTO nfcms_Backend_Desktop_Backgrounds (backgroundAlign, backgroundColor, backgroundImage, backgroundRepeat, userid) VALUES( 'center', '#18a82b', 'none', 'no-repeat', '8cbbfe36-c96e-46fc-a8af-b6757181e799')

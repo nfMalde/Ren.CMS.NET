@@ -1,0 +1,85 @@
+﻿@model Ren.CMS.Blog.Models.NewsDetail
+@using Ren.CMS.Blog.Models
+@using Recaptcha
+@using Ren.CMS.Helpers.Content
+
+
+
+<div class="">
+ @foreach (Ren.CMS.Content.nContent Cont in Model.Comments)
+ {
+     
+
+         var AnswerFormVal = new NewsComment() { NewsID = Model.NewsEntry.ID, Reference = Cont.ID };
+         
+         if(Model.mode == "all")
+         {
+            AnswerFormVal.TargetController = Model.NewsEntry.TargetController;
+            AnswerFormVal.TargetAction = Model.NewsEntry.actionpath;
+         
+         }
+         
+         
+     <div class="media well well-small" id="comment-@Cont.ID">
+         <div class="pull-left  blog-comment-leftcol">
+        @if(Cont.CreatedByregistieredUser()){
+         <a href="/Profile/@HttpUtility.UrlEncode(Cont.CreatorName)" class="pull-left">
+             <small>@Cont.CreatorName</small>
+
+             <img class="media-object blog-comment-avatar" data-src="holder.js/64x64">
+         </a>
+        }
+        else{
+       <small>@Cont.CreatorSpecialName</small>  
+        <img class="media-object blog-comment-avatar" data-src="holder.js/64x64">
+        
+        }
+
+         </div>
+         <div class="media-body">
+
+
+
+
+             @Html.Raw(Cont.Texts.First().LongText)
+
+
+          <div class="blog-answer-line">
+
+              <span class="pull-left">
+
+                  <small>
+
+                      Am @Cont.CreationDate.ToString("dd.MM.yyyy") um @Cont.CreationDate.ToString("HH:mm") Uhr
+
+
+                  </small>
+
+              </span>
+
+              <a href="javascript:void(0)" data-target="answer-@Cont.ID" class="btn btn-primary pull-right CommentTreeAnswer">
+               Antworten
+              </a>
+              <div id="answer-@Cont.ID" class="blog-comment-answer pull-right">
+                  
+@{
+     AnswerFormVal.FormID = "answer-" + Cont.ID;
+     Html.RenderPartial("_CommentAnswerForm", AnswerFormVal);
+}
+                  </div>
+            
+
+     
+        
+          
+          </div>
+
+         </div>
+    @{
+       
+        Html.RenderAction("PartialCommentAnswers", new { NewsID = Model.NewsEntry.ID, CommentID = Cont.ID, Page =(Model.mode == "all" ? 0 : 1), area = "" });
+}
+     </div>
+ }
+
+ </div>

@@ -1,0 +1,61 @@
+﻿ @model Ren.CMS.Models.Core.nSliderModel
+ @using Ren.CMS.Content
+
+@{
+    List<nContent> MenuBar = new List<nContent>();
+    }
+
+
+     @{
+    int id = 0;
+    }
+
+ <div id="myCarousel" class="carousel slide">
+                <ol class="carousel-indicators">
+                    @foreach(nContent Content in Model.ContentCollection){
+
+                    var Attachments = Content.Attachments("image", "indeximg");
+                    if(Attachments.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var previewIMG = Attachments.First();
+                    if (previewIMG == null)
+                    {
+                        continue;
+                    }
+                    Content.GenerateLink();
+                    MenuBar.Add(Content);
+                  <li data-target="#myCarousel" data-slide-to="@(id == Model.ContentCollection.Count -1 ? 0 : id)" class="@(id == 0 ? "active" : "")"></li>
+                        id++;
+                    }
+                    
+                </ol>
+                <div class="carousel-inner">
+
+                    @{
+                        id = 0;
+                        
+                        
+                        }
+                  @foreach(nContent C in MenuBar)
+                  {
+                  <div class="item @(id == 0? "active" : "")">
+                    <img src="@C.Attachments("image","indeximg").First().Path" alt="">
+                    <div class="carousel-caption">
+                      <h4>@C.Title</h4>
+                      <p>@C.PreviewText</p>
+                    </div>
+                  </div>
+                      id++;
+                  }
+                
+
+              </div>
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+     </div>
+
+
+

@@ -1,0 +1,31 @@
+using System;
+using System.Text;
+using System.Collections.Generic;
+
+
+namespace Ren.CMS.CORE.nhibernate.Domain {
+    
+    //Hierbei handelt es sich um eine Entity
+
+    //Diese Klasse repräsentiert die Komplette Tabellenstruktur e.g. genau eine Zeile einer Tabelle. In unserem Fall "Content".
+
+    public class TContent {
+        public virtual Category Category { get; set; }
+        public virtual User User { get; set; }
+        public virtual IEnumerable<Persistence.Domain.ContentText> Texts { get; set; }
+
+        public virtual int Id { get; set; }
+        
+ 
+        public virtual System.Guid Cid { get; set; }
+        public virtual System.Guid CreatorPKID { get; set; }
+        public virtual bool Locked { get; set; }
+        
+        public virtual System.Nullable<int> RatingGroupID { get; set; }
+        public virtual System.Nullable<System.DateTime> CDate { get; set; }
+
+        public virtual string ContentType { get; set; }
+        public virtual System.Nullable<int> ContentRef { get; set; }
+        public virtual string CreatorSpecialName { get; set; }
+    }
+}

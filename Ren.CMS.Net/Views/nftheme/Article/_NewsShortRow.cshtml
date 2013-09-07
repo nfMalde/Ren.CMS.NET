@@ -1,0 +1,15 @@
+﻿@model nfCMS_NET.Models.Core.nContentIncludedModel
+
+@{
+    
+    nfCMS_NET.Content.nContent News = Model.Entry;
+ 
+     
+     }
+ 
+ 
+ <a href="/News/@News.actionpath">   
+ <h3>@News.Title</h3>
+ </a>
+  
+ <div class="content_hr"></div>

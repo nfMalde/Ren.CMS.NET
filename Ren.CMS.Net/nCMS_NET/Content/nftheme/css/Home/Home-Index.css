@@ -1,0 +1,444 @@
+﻿
+/***Helper*/
+.helper-relative
+{
+    position:relative !important;
+}
+
+.helper-align-right
+{
+    text-align:right;
+}
+.helper-block
+{
+    display:block !important;
+}
+.helper-clear
+{
+  float:right;
+  clear:both;
+}
+
+/*******Content-Box**********/
+
+div.Col-Left
+{
+    width:650px;
+    float:left;
+    margin-top:20px;
+}
+
+
+
+
+    div.Content-Box-Row
+    {
+        width:300px;
+        float:right;
+        height:auto;
+        margin-right:15px;
+      
+    }
+
+li.span-media
+{   
+    
+    width:303px;
+}
+    li.span-media div
+    {
+
+    position: relative;
+    padding-bottom: 65px;
+    }
+    div.Media-Box-Col
+{
+    width:660px;
+    clear:both;
+    margin-top:20px;
+}
+
+.item
+{
+    height:250px;
+}
+
+.carousel
+{
+    margin-bottom:0px;
+}
+div.Col-Right
+{
+    width:303px;
+    float:right;
+
+
+}
+img.mediax
+{
+    max-width:160px;
+    max-height:120px;
+}
+li.index-media-list
+{
+    width:660px;
+}
+
+
+
+    div.Content-Box {
+        width:295px;
+        padding-top:0px;
+        padding-left:5px;
+        padding-right:5px;
+        padding-bottom:5px;
+        margin-top:15px;
+
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        background: #fff;
+        background: -moz-linear-gradient(top,rgba(255,255,255,1) 0, rgba(0, 77, 34, 1) 740%);
+        background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,rgba(255,255,255,1)),color-stop(740%,rgba(0, 77, 34, 1)));
+        background: -webkit-linear-gradient(top,rgba(255,255,255,1) 0,rgba(0, 77, 34, 1) 740%);
+        background: -o-linear-gradient(top,rgba(255,255,255,1) 0,rgba(0, 77, 34, 1) 740%);
+        background: -ms-linear-gradient(top,rgba(255,255,255,1) 0,rgba(0, 77, 34, 1) 740%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#146729',GradientType=0);
+        background: linear-gradient(top,rgba(255,255,255,1) 0,rgba(239,245,251,1) 740%);
+       
+    
+    }
+
+    div.Content-Box h2 {
+        margin: 10px 0;
+        font-size: 22px;
+        color: #717171;
+        font-weight: 600;
+    }
+
+
+    div.Content-Box-First {
+        width:295px;
+        height:95px;
+        overflow:hidden;
+    }
+    div.Content-Box-NoData
+    {
+        font-size:12x;
+        margin-top:25px;
+        margin-bottom:25px;
+
+    }
+    div.Content-Box-Image {
+        width:128px;
+        height: 95px;
+        padding: 0px;
+        margin-right:10px;
+        float:left;
+        clear:both;
+
+    }
+
+    div.Content-Box-Image img {
+        
+        max-width:128px;
+        max-height:95px;
+        border: none;
+        
+            
+        
+    }
+
+    div.Content-Box-Text {
+        width: 160px;
+        height: 95px;
+        float: left;
+        word-wrap:break-word;
+
+    }
+
+    div.Content-Box-Text a:link,
+    div.Content-Box-Text a:visited,
+    div.Content-Box-Text a:active {
+        display:block !important;
+        text-decoration:none;
+        height:113px;
+    }
+
+    div.Content-Box-Text a:link h3,
+    div.Content-Box-Text a:visited h3,
+    div.Content-Box-Text a:active h3 {
+        display:block !important;
+        color:#242424;
+        font-size: 12px;
+        margin:0 0 10px 0;
+
+         
+    }
+
+    div.Content-Box-Text a:hover h3,
+    div.Content-Box-Text a:hover
+    {
+        text-decoration:underline;
+
+    }
+    div.Content-Box-Text a:link span,
+    div.Content-Box-Text a:visited span,
+    div.Content-Box-Text a:active span {
+        display:block !important;
+        color:#242424;
+        font-size: 12px;
+         
+    }
+
+    div.Content-Box-List {
+       width:295px;
+       margin-top:5px;
+       font-size:12px;
+    }
+
+
+    div.Content-Box-List ul {
+       margin:0px;
+       padding:0px;
+       list-style:none;
+    }
+
+    div.Content-Box-List ul li {
+        width: 295px;
+        margin-top: 5px;
+        list-style: none;
+        float: left;
+
+        clear: both;
+      
+
+    }
+    div.Content-List-Text a,
+    div.Content-List-Text a:link,
+    div.Content-List-Text a:active,
+    div.Content-List-Text a span {
+        font-size:12px;
+        color: #242424;
+        text-decoration:none;
+
+    }
+    
+    div.Content-List-Text a:hover span,
+    div.Content-List-Text a:hover span b
+    
+     {
+        font-size:12px;
+        color: #146729;
+   
+
+    }
+    div.Content-Box-List ul li a span b {
+        color: #717171;
+    }
+
+    div.Content-Box-List-NoData {
+        width:295px;
+        font-size:12px;
+        text-align:center;
+        color: #bababa;
+
+    }
+
+
+    div.Content-Box-List-End {
+        width: 295px;
+        height: 25px;
+        text-align: right;
+        float:left; 
+        clear:both;
+        margin:5px 0;
+        font-size:12px;
+
+    }
+    div.Content-Box-List-End a,
+    div.Content-Box-List-End a:link,
+    div.Content-Box-List-End a:visited,
+    div.Content-Box-List-End a:active {
+        font-size:12px;
+        color:#146729;
+        text-decoration:none;
+    }
+
+    div.Content-Box-List-End a:hover {
+        color: #242424;
+        text-decoration: none;
+    
+    }
+
+
+div.Content-List-Date
+{
+    float:left;
+    font-size:12px;
+    color:#242424;
+}
+
+div.Content-List-Text
+{
+
+    float: left;
+    font-size: 12px;
+    color: #242424;
+    display: inline;
+    width: 225px;
+    padding-left: 5px;
+}
+/*******Slider**********/
+    /*Frame*/
+    div.slider_frame {
+    width: 970px;
+    height: 220px;
+    overflow: hidden;
+    }
+
+    div.slider_frame ul {
+    
+    list-style:none;
+    padding:0;
+    margin:0;
+
+    }
+    
+    div.slider_frame ul li {
+        position: relative;
+        width: 970px;
+        height: 220px;
+        list-style:none;
+        margin:0;
+        padding:0;
+        float:left;
+        cursor:pointer;
+
+    }
+
+    div.slider_frame ul li img
+    {
+        border:none;
+
+        max-width:980px;
+        min-height:220px;
+    }
+
+
+
+
+    /*OverLay*/
+    div.slider-overlay {
+        background: url("../../img/slider-overlay.png") no-repeat;
+        width: 418px;
+        height: 192px;
+        overflow: hidden;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        padding:10px;
+        z-index:3;
+    }
+
+    div.slider-overlay a {
+        display: block;
+        text-decoration: none;
+    }
+
+    div.slider-overlay a h1 {
+        color: #146729;
+        font-size: 20pt;
+        margin:0px;
+    }
+
+    div.slider-overlay a span {
+        
+        color:#fff;
+        font-size:14px;
+        font-style:normal;
+        font-weight:lighter;
+
+
+        
+    }
+
+    div.slider-blender
+    {
+        background: url("../../img/slider-blender.png");
+        position:absolute;
+        z-index:2;
+        display:none;
+        width:970px;
+        height:220px;
+        top:0px;
+    }
+    div.slider-overlay div {
+    
+        width:418px;
+        height:22px;
+        text-align:right;
+
+    }
+    div.slider-overlay div span {
+        font-size:10pt;
+        color:#ddd;
+
+    }
+
+
+   
+   /*Menu Bar*/
+    div.slider-menu-bar {
+
+
+        float: left;
+        height: 30px;
+        width: 183.5px;
+        background: #5f8261;
+        color: #fff;
+        border: 1px solid #5f8261;
+        overflow: hidden;
+        margin-left: 5px;
+        margin-top: 5px;
+        font-size: 14px;
+        padding-top: 9.5px;
+        padding-left: 5px;
+
+
+
+    }
+    div.slider-menu-bar-first
+    {
+        margin-left:0px !important;
+        clear:both;
+    }
+
+    div.slider-menu-bar:hover, div.slider-active
+    {
+        background: transparent !important;
+        border-color: #146729 !important;
+        color: #146729 !important;
+
+    }
+
+    div.slider-menu-bar a:link
+    , div.slider-menu-bar a:visited
+    , div.slider-menu-bar a:active
+    {
+        color:#FFF;
+        text-decoration: none;
+        display:block;
+
+    }
+
+   div.slider-menu-bar:hover a:link
+    , div.slider-menu-bar:hover a:visited
+    , div.slider-menu-bar:hover a:active
+    , div.slider-active a:link
+    , div.slider-active a:visited
+    , div.slider-active a:active
+    {
+        color:#146729 !important;
+
+    }

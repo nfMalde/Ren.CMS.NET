@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "ffmeg", "ffmeg.exe", "{0CC5A2E8-2CB7-432C-8241-81B115F3EEE9}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\nCMS_NET\Binaries\Converter\ffmeg.exe
+		RemoteMachine = X1X2X34
+		StartingDirectory = C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\nCMS_NET\Binaries\Converter
+		Environment = Standard
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CC5A2E8-2CB7-432C-8241-81B115F3EEE9}.Debug|x86.ActiveCfg = Debug|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
