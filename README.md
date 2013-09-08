@@ -2,7 +2,7 @@ Ren.CMS.NET
 ===========
 
 Ren.CMS.Net Open Source .NET 4 (MVC4) CMS
-
+===============
 How to:
 
 1. Connect to you local SQL Server (MSSQL 2008+)
@@ -15,3 +15,27 @@ How to:
 8. Please >dont< Change the connection Sting. Just Copy it and comment it out (better for other developers)
 9. Create your Connectionstring regarding to you local sql server settings. (For security use Windows Authentifikation and Integrated Security)
 10.Now Build the Solution and have fun with coding :)
+
+
+Important URLs:
+===============
+
+Url Syntax
+* {localhost}/{ISO LangCode}/
+ 
+ Example
+ localhost:7999/en-US/Home/Index
+ 
+ List of Language Codes included in DB_Setup.sql
+ * de-DE
+ * en-US
+
+ Backend
+ * {url} /Backend/OS
+
+Admin Login (Default)
+
+Username: admin
+Password: admin
+
+  
