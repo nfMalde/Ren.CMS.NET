@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ren.CMS.Content;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.CORE.ThisApplication;
-
-
-namespace Ren.CMS.ContentHelpers.Blog
+﻿namespace Ren.CMS.ContentHelpers.Blog
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Ren.CMS.Content;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.CORE.ThisApplication;
+
     public static class BlogHelpers
     {
+        #region Methods
+
         public static int GetCommentsCount(this nContent content)
         {
             int TOTALROWS = 0;
@@ -26,7 +28,7 @@ namespace Ren.CMS.ContentHelpers.Blog
             PCOL.Add("@id", content.ID);
 
             SQL.SysConnect();
-           
+
             SqlDataReader R = SQL.SysReader(sqlquery, PCOL);
             if (R.HasRows)
             {
@@ -38,8 +40,9 @@ namespace Ren.CMS.ContentHelpers.Blog
 
             SQL.SysDisconnect();
 
-            return TOTALROWS; 
-        
+            return TOTALROWS;
         }
+
+        #endregion Methods
     }
 }

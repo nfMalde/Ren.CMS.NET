@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Ren.CMS.CORE.Security;
-using System.Web.Mvc;
- 
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.CORE.Security;
+
     public static class UniqueIdentifierHelper
     {
-        private static string uniqueID =  Guid.NewGuid().ToString();
-      
+        #region Fields
+
+        private static string uniqueID = Guid.NewGuid().ToString();
+
+        #endregion Fields
+
+        #region Methods
+
         /// <summary>
         /// Generates with the gived original ID Name an unique ID Name in the whole system.
         /// </summary>
@@ -23,17 +30,15 @@ namespace Ren.CMS.Helpers
 
             string newID = "uID-"+CS.ConvertToSHA1(uniqueID + ElementID);
 
-
-
-
             return newID;
         }
+
         public static string ProtectJSFunc(this HtmlHelper helper, string funcName)
         {
             CryptoServices CS = new CryptoServices();
             return funcName + CS.ConvertToSHA1(funcName+uniqueID);
-            
-        
         }
+
+        #endregion Methods
     }
 }

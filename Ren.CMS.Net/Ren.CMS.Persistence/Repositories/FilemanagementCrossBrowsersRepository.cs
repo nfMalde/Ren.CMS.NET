@@ -1,51 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ren.CMS.CORE.nhibernate.Base;
-using Ren.CMS.Persistence.Domain;
-using System.Web;
-using Ren.CMS.CORE.nhibernate;
-using NHibernate;
-
-namespace Ren.CMS.Persistence.Repositories
+﻿namespace Ren.CMS.Persistence.Repositories
 {
-    
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web;
 
-    public class FilemanagementCrossBrowsersRepository:BaseRepository<FilemanagementCrossBrowsers>
+    using NHibernate;
+
+    using Ren.CMS.CORE.nhibernate;
+    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.Persistence.Domain;
+
+    public class FilemanagementCrossBrowsersRepository : BaseRepository<FilemanagementCrossBrowsers>
     {
+        #region Fields
+
         private string filetype = "video";
-        
+
+        #endregion Fields
+
+        #region Constructors
+
         public FilemanagementCrossBrowsersRepository(string filetype = "video")
         {
             this.filetype = filetype;
         }
 
-        public FilemanagementCrossBrowsers GetForCurrentBrowser()
-        {
+        #endregion Constructors
 
-           return  this.GetOne(NHibernate.Criterion.Expression.Where<FilemanagementCrossBrowsers>(
-                w => w.browserID == HttpContext.Current.Request.Browser.Browser.ToLower() ||w.browserID == "default"));
-        }
-
-
+        #region Methods
 
         public IEnumerable<FilemanagementCrossBrowsers> GetAll()
         {
-
             using (ISession session = NHibernateHelper.OpenSession())
             {
                 var list = session.QueryOver<FilemanagementCrossBrowsers>();
                 list = list.Where(NHibernate.Criterion.Expression.Where<FilemanagementCrossBrowsers>(e => e.FileType == filetype));
-
 
                 var LIST = list.List();
 
                 return LIST;
 
             }
-
         }
 
         public FilemanagementCrossBrowsers GetByBrowserID(string browserID)
@@ -53,7 +51,6 @@ namespace Ren.CMS.Persistence.Repositories
             browserID = browserID.ToLower();
 
             return base.GetOne(NHibernate.Criterion.Expression.Where<FilemanagementCrossBrowsers>(e => e.browserID == browserID && e.FileType == this.filetype)) ?? null;
-        
         }
 
         public FilemanagementCrossBrowsers GetDefault()
@@ -68,5 +65,12 @@ namespace Ren.CMS.Persistence.Repositories
                 };
         }
 
+        public FilemanagementCrossBrowsers GetForCurrentBrowser()
+        {
+            return  this.GetOne(NHibernate.Criterion.Expression.Where<FilemanagementCrossBrowsers>(
+                w => w.browserID == HttpContext.Current.Request.Browser.Browser.ToLower() ||w.browserID == "default"));
+        }
+
+        #endregion Methods
     }
 }

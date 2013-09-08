@@ -1,119 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
-
-namespace Ren.CMS.CORE.Permissions
+﻿namespace Ren.CMS.CORE.Permissions
 {
-
-
-    public class nPermissionValAttribute : AuthorizeAttribute
-    {
-        public string NeededPermissionKeys { get; set; }
-
-
-
-        private bool validateRights(string input)
-        {
-
-
-            if (input != null && input != String.Empty)
-            {
-                if (input.Contains('|'))
-                {
-                    //OR!
-
-                  return OR(input.Split('|'));
-                }
-                else if (input.Contains('&'))
-                {
-                    return AND(input.Split('&'));
-                }
-                else
-                {
-                    return nPermissions.hasPermission(input);
-                }
-
-            }
-
-            return false;
-        }
-     
-     
-        private bool OR(string[] k)
-        {
-
-            foreach (string v in k)
-            {
-                if (nPermissions.hasPermission(v.Replace(" ","").Replace("  ","")))
-                    return true;
-            
-            
-            }
-
-            return false;
-        
-        
-        }
-
-
-        private bool AND(string[] k)
-        {
-
-            foreach (string v in k)
-            {
-                if (!nPermissions.hasPermission(v.Replace(" ", "").Replace("  ", "")))
-                    return false;
-
-
-            }
-
-
-            return true;
-        }
-
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
-        {
-
-            bool ok = validateRights(NeededPermissionKeys);
-
-            return ok;
-        }
-
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            throw new HttpException(403, "Error: You don´t have the permission to do that!");
-        }
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
 
     public static class nPermissions
     {
+        #region Methods
 
-
-
-        private static MembershipUser getCurrentUser()
+        public static bool hasPermission(string permissionKey)
         {
+            bool ret = false;
 
-            if (!HttpContext.Current.Request.IsAuthenticated)
-                return null;
+            SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
 
+            Sql.SysConnect();
 
-            return  Membership.Provider.GetUser(new System.Web.UI.Page().User.Identity.Name.ToString(), false);
+            if (getCurrentUser() != null)
+            {
+                //Get Permissiongroup
+                string query = "SELECT PermissionGroup FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Users WHERE PKID=@p";
+                SqlParameter[] P = new SqlParameter[] { new SqlParameter("@p", getCurrentUser().ProviderUserKey.ToString()) };
+                SqlDataReader R = Sql.SysReader(query, P);
+                if (R.HasRows)
+                {
+                    R.Read();
+                    string groupid = R["PermissionGroup"].ToString();
+                    R.Close();
+                    string checkPerm = "SELECT val FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Permissions2Groups WHERE groupID=@g AND pk = @pk";
 
-            //>
+                    SqlParameter[] PP = new SqlParameter[] {
 
-        
+                new SqlParameter("@g", groupid),
+                new SqlParameter("@pk", permissionKey)
+
+                };
+
+                    SqlDataReader Perm1 = Sql.SysReader(checkPerm, PP);
+                    bool val1 = false;
+                    try
+                    {
+                        if (Perm1.HasRows)
+                        {
+                            Perm1.Read();
+
+                            val1 = Convert.ToBoolean(Perm1["val"].ToString());
+                        }
+                    }
+
+                    catch { }
+                    Perm1.Close();
+
+                    string checkPerm2 = "SELECT val FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Permissions2Users WHERE groupID=@g AND pk = @pk AND usr=@usr";
+                    SqlParameter[] PPP = new SqlParameter[] {
+
+                              new SqlParameter("@g", groupid),
+                new SqlParameter("@pk", permissionKey),
+                new SqlParameter("@usr", getCurrentUser().ProviderUserKey)
+
+                };
+                    SqlDataReader UserP = Sql.SysReader(checkPerm2, PPP);
+                    if (UserP.HasRows)
+                    {
+
+                        UserP.Read();
+
+                        val1 = (UserP["val"].ToString().ToLower() == "true" ? true : false);
+
+                    }
+                    UserP.Close();
+                    ret = val1;
+                }
+
+                R.Close();
+            }
+            Sql.SysDisconnect();
+
+            if (!ret && permissionKey != "FULL_ACCESS")
+            {
+
+                ret = hasPermission("FULL_ACCESS");
+            }
+
+            return ret;
         }
-
-
-
-
 
         public static bool permissionKeyExists(string key)
         {
@@ -138,102 +115,6 @@ namespace Ren.CMS.CORE.Permissions
             myHelper.SysDisconnect();
 
             return exists;
-
-
-
-        }
-        public static bool hasPermission(string permissionKey)
-        {
-
-            bool ret = false;
-
-
-            SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
-
-            Sql.SysConnect();
-
-            if (getCurrentUser() != null)
-            {
-                //Get Permissiongroup
-                string query = "SELECT PermissionGroup FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Users WHERE PKID=@p";
-                SqlParameter[] P = new SqlParameter[] { new SqlParameter("@p", getCurrentUser().ProviderUserKey.ToString()) };
-                SqlDataReader R = Sql.SysReader(query, P);
-                if (R.HasRows)
-                {
-                    R.Read();
-                    string groupid = R["PermissionGroup"].ToString();
-                    R.Close();
-                    string checkPerm = "SELECT val FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Permissions2Groups WHERE groupID=@g AND pk = @pk";
-
-                    SqlParameter[] PP = new SqlParameter[] { 
-               
-                new SqlParameter("@g", groupid),
-                new SqlParameter("@pk", permissionKey)
-                
-                
-                };
-
-                    SqlDataReader Perm1 = Sql.SysReader(checkPerm, PP);
-                    bool val1 = false;
-                    try
-                    {
-                        if (Perm1.HasRows)
-                        {
-                            Perm1.Read();
-
-                            val1 = Convert.ToBoolean(Perm1["val"].ToString());
-                        }
-                    }
-
-                    catch { }
-                    Perm1.Close();
-
-                    string checkPerm2 = "SELECT val FROM " + (new ThisApplication.ThisApplication().getSqlPrefix) + "Permissions2Users WHERE groupID=@g AND pk = @pk AND usr=@usr";
-                    SqlParameter[] PPP = new SqlParameter[] { 
-                
-                              new SqlParameter("@g", groupid),
-                new SqlParameter("@pk", permissionKey),
-                new SqlParameter("@usr", getCurrentUser().ProviderUserKey)
-                
-                
-                
-                };
-                    SqlDataReader UserP = Sql.SysReader(checkPerm2, PPP);
-                    if (UserP.HasRows)
-                    {
-
-
-                        UserP.Read();
-
-
-                        val1 = (UserP["val"].ToString().ToLower() == "true" ? true : false);
-
-
-                    }
-                    UserP.Close();
-                    ret = val1;
-                }
-
-
-
-                R.Close();
-            }
-            Sql.SysDisconnect();
-
-            if (!ret && permissionKey != "FULL_ACCESS")
-            {
-
-                ret = hasPermission("FULL_ACCESS");
-            }
-
-            return ret;
-
-
-
-
-
-
-
         }
 
         public static bool RegisterPermissionKey(string PermissionKey, bool DefaultValue, string languageLineName)
@@ -245,6 +126,21 @@ namespace Ren.CMS.CORE.Permissions
 
             return _registerPermissionKey(PermissionKey, DefaultValue, languageLineName);
         }
+
+        public static bool RegisterPermissionKey(string PermissionKey, bool DefaultValue, Language.LanguageDefaults.LanguageDefaultValues LanguageDefaults)
+        {
+            if(!checkForInvalidCharacter(PermissionKey))
+            {
+                return false;
+            }
+
+            Language.Language Lang = new Language.Language("__USER__", "PERMISSION_KEYS");
+            string langName = "LANG_" + PermissionKey + "_DESCRIPTION";
+            string LangContent = Lang.getLine(langName, LanguageDefaults.ToDictionary());
+
+            return _registerPermissionKey(PermissionKey, DefaultValue, langName);
+        }
+
         private static bool checkForInvalidCharacter(string PKEY)
         {
             if (permissionKeyExists(PKEY) || PKEY.ToLower() == "full_access")
@@ -256,26 +152,19 @@ namespace Ren.CMS.CORE.Permissions
             }
             return true;
         }
-        public static bool RegisterPermissionKey(string PermissionKey, bool DefaultValue, Language.LanguageDefaults.LanguageDefaultValues LanguageDefaults)
+
+        private static MembershipUser getCurrentUser()
         {
-            if(!checkForInvalidCharacter(PermissionKey))
-            {
-                return false;
-            }
-            
+            if (!HttpContext.Current.Request.IsAuthenticated)
+                return null;
 
-            Language.Language Lang = new Language.Language("__USER__", "PERMISSION_KEYS");
-            string langName = "LANG_" + PermissionKey + "_DESCRIPTION";
-            string LangContent = Lang.getLine(langName, LanguageDefaults.ToDictionary());
+            return  Membership.Provider.GetUser(new System.Web.UI.Page().User.Identity.Name.ToString(), false);
 
-            return _registerPermissionKey(PermissionKey, DefaultValue, langName);
+            //>
         }
-
 
         private static bool _registerPermissionKey(string PermissionKey, bool DefaultValue, string languageLineName)
         {
-            
-            
             SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
             ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
             string prefix = TA.getSqlPrefix;
@@ -304,9 +193,82 @@ namespace Ren.CMS.CORE.Permissions
             return false;
         }
 
+        #endregion Methods
     }
 
+    public class nPermissionValAttribute : AuthorizeAttribute
+    {
+        #region Properties
 
+        public string NeededPermissionKeys
+        {
+            get; set;
+        }
 
+        #endregion Properties
 
+        #region Methods
+
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            bool ok = validateRights(NeededPermissionKeys);
+
+            return ok;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            throw new HttpException(403, "Error: You don´t have the permission to do that!");
+        }
+
+        private bool AND(string[] k)
+        {
+            foreach (string v in k)
+            {
+                if (!nPermissions.hasPermission(v.Replace(" ", "").Replace("  ", "")))
+                    return false;
+
+            }
+
+            return true;
+        }
+
+        private bool OR(string[] k)
+        {
+            foreach (string v in k)
+            {
+                if (nPermissions.hasPermission(v.Replace(" ","").Replace("  ","")))
+                    return true;
+
+            }
+
+            return false;
+        }
+
+        private bool validateRights(string input)
+        {
+            if (input != null && input != String.Empty)
+            {
+                if (input.Contains('|'))
+                {
+                    //OR!
+
+                  return OR(input.Split('|'));
+                }
+                else if (input.Contains('&'))
+                {
+                    return AND(input.Split('&'));
+                }
+                else
+                {
+                    return nPermissions.hasPermission(input);
+                }
+
+            }
+
+            return false;
+        }
+
+        #endregion Methods
+    }
 }

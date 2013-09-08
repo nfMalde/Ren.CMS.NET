@@ -1,67 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Ren.CMS.CORE.Security;
-using System.Web.Mvc;
-using Ren.CMS.Models.jsTreeModels;
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
 
-    public class JsTreeJsonResult : JsonResult
-    {
-
-        private List<object> nodes = new List<object>();
-        public void addNode(string id, string relation, string text, bool stateOpen=false)
-        {
-            this.nodes.Add(new
-            {
-                attr = new { id = id, rel = relation },
-                data = text,
-                state = (stateOpen ? "" : "closed")
-            });
-        
-        }
-        public override void ExecuteResult(ControllerContext context)
-        {
-
-
-            this.Data = this.nodes;
-
-            
-            base.ExecuteResult(context);
-             
-        
-        }
-    
-    
-    }
+    using Ren.CMS.CORE.Security;
+    using Ren.CMS.Models.jsTreeModels;
 
     public static class jsTreeHelper
     {
+        #region Fields
+
+        public static string lastID = null;
+
         private static string lastElementID = "";
+
+        #endregion Fields
+
+        #region Methods
+
+        public static HtmlString jsTreeFull(this HtmlHelper helper, jsTreeSettings settings, string elID = null, bool withTags = true)
+        {
+            elID = simID(elID);
+            string script =  buildTreeScript(elID,settings);
+            script = fixScript(script, withTags);
+
+            string HTML = "<div id=\"" + elID + "\"></div>" + script;
+
+            return new HtmlString(HTML);
+        }
+
+        public static HtmlString jsTreeScriptOnly(this HtmlHelper helper, jsTreeSettings settings, string elID = null, bool withTags=true)
+        {
+            elID = simID(elID);
+
+            string script = buildTreeScript(elID, settings);
+
+            script = fixScript(script, withTags);
+
+            return new HtmlString(script);
+        }
+
         private static string buildTreeScript(string id, jsTreeSettings settings)
         {
-        
-           //Create UL
+            //Create UL
 
             string html = "";
-           
 
             html+= "$('#"+ HttpContext.Current.Server.HtmlDecode( id ) +"').jstree({";
-            
+
             //Plugins
             html+= "\"plugins\" : [";
 
             if(settings.plugins != null)
-            {   
+            {
                 string plugins = "";
 
                 foreach(string plugin in settings.plugins.Plugins)
                 {
 
                     if(plugins != "") plugins+= ",";
- 
+
                     plugins+= "\"";
 
                     plugins+= HttpContext.Current.Server.HtmlDecode(plugin);
@@ -73,7 +74,7 @@ namespace Ren.CMS.Helpers
             }
 
             html+="],";
-            
+
             //Tree Data
             //Read
             if(settings.ajax_read != null && !String.IsNullOrEmpty(settings.ajax_read.url))
@@ -112,7 +113,6 @@ namespace Ren.CMS.Helpers
                         {
                             additionalParametersRead += par.Value.Substring(8);
 
-                           
                         }
                         else
                         {
@@ -125,12 +125,7 @@ namespace Ren.CMS.Helpers
                 html += "}";
                 html += "}";
 
-
-
                 //Search
-
-             
-
 
                 html+="}";
                 html += "},";
@@ -144,9 +139,9 @@ namespace Ren.CMS.Helpers
                 html+="\" : {";
 
                 html+="\"ajax\": {";
-                
+
                 html+="\"url\":";
-             
+
                 if (settings.ajax_search.UrlIsJavaScript)
                 {
                     html += settings.ajax_search.url;
@@ -170,37 +165,29 @@ namespace Ren.CMS.Helpers
 
                         additionalParametersSearch+="\""+ HttpUtility.HtmlDecode(par.Key) +"\" : ";
 
-                        
                         additionalParametersSearch+="\""+ HttpUtility.HtmlDecode(par.Value)+"\"";
-
 
                     }
                 }
                 html+=additionalParametersSearch;
                 //Search
 
-             
-
-
                 html+="},";
             }
             //TODO: Edit, Create, Delete
 
-
-
             //Types
 
             jsTreeTypes Types = settings.types;
-
 
             html+= "\"types\" : {";
 
                 html+= "\"max_depth\" : "+ Types.max_depth +",";
 
                 html+= "\"max_children\" : "+ Types.max_children +",";
-                
+
                 html+= "\"valid_children\" : [";
-                
+
                 string valid_children = "";
 
                 if(Types.valid_children != null)
@@ -212,29 +199,14 @@ namespace Ren.CMS.Helpers
 
                         valid_children+= "\""+ HttpUtility.HtmlDecode(vc)+"\"";
 
-                    
-                    
                     }
-                
-                
-                
+
                 }
               html+= valid_children;
-              
+
               html+="],";
-              
-
-
 
              html+="\"types\" : {";
-
-
-
-
-
-
-
-
 
              if (Types.types != null)
              {
@@ -255,12 +227,9 @@ namespace Ren.CMS.Helpers
                          {
                              vc += ", ";
 
-
-
                          }
 
                          vc += "\"" + HttpUtility.HtmlDecode(v) + "\"";
-
 
                      }
                      myTypes += vc;
@@ -276,7 +245,7 @@ namespace Ren.CMS.Helpers
 
                  }
                  html += myTypes;
-                 
+
              }
              html += "}";
                  if (settings.ui != null)
@@ -303,20 +272,16 @@ namespace Ren.CMS.Helpers
                              foreach (string str in (string[])valuex)
                              {
 
-
                                  if (strarray != "")
                                  {
                                      strarray += ",";
                                  }
                                  strarray += "\"" + str + "\"";
 
-
-
                              }
                              ui += strarray;
 
                              ui += "]";
-
 
                          }
                          else if (valuex.GetType() == typeof(int))
@@ -330,16 +295,12 @@ namespace Ren.CMS.Helpers
 
                          }
 
-
-
                      }
                      html += ui;
 
                      html += "}";
 
                  }
-
-
 
                  //Core
                  if (settings.core != null)
@@ -366,19 +327,15 @@ namespace Ren.CMS.Helpers
                              foreach (string str in (string[])valuex)
                              {
 
-
                                  if (strarray == "")
                                  {
                                      strarray += ",";
                                  }
                                  strarray += "\"" + str + "\"";
 
-
-
                              }
                              core += strarray;
                              core += "]";
-
 
                          }
                          else if (valuex.GetType() == typeof(int))
@@ -392,8 +349,6 @@ namespace Ren.CMS.Helpers
 
                          }
 
-
-
                      }
                      html += core;
 
@@ -401,14 +356,26 @@ namespace Ren.CMS.Helpers
 
                  }
 
-             
                 html += "}});";
                 //Returning Script
                 return html;
+        }
 
-                }
+        private static string fixScript(string script, bool withTags)
+        {
+            if (withTags)
+            {
 
+                script = "<script type=\"text/javascript\">" +
+                            "$(function(){" +
+                            script +
+                            "});" +
+                         "</script>";
 
+            }
+
+            return script;
+        }
 
         private static string simID(string elID)
         {
@@ -425,55 +392,41 @@ namespace Ren.CMS.Helpers
 
                 elID = id;
 
-
             }
             lastID = elID;
             return elID;
-        
         }
-        public static string lastID = null;
-        private static string fixScript(string script, bool withTags)
+
+        #endregion Methods
+    }
+
+    public class JsTreeJsonResult : JsonResult
+    {
+        #region Fields
+
+        private List<object> nodes = new List<object>();
+
+        #endregion Fields
+
+        #region Methods
+
+        public void addNode(string id, string relation, string text, bool stateOpen=false)
         {
-            if (withTags)
+            this.nodes.Add(new
             {
-
-                script = "<script type=\"text/javascript\">" +
-                            "$(function(){" +
-                            script +
-                            "});" +
-                         "</script>";
-
-
-            }
-
-            return script;
+                attr = new { id = id, rel = relation },
+                data = text,
+                state = (stateOpen ? "" : "closed")
+            });
         }
-        public static HtmlString jsTreeScriptOnly(this HtmlHelper helper, jsTreeSettings settings, string elID = null, bool withTags=true)
+
+        public override void ExecuteResult(ControllerContext context)
         {
+            this.Data = this.nodes;
 
-            elID = simID(elID);
-
-
-            string script = buildTreeScript(elID, settings);
-
-            script = fixScript(script, withTags);
-
-            return new HtmlString(script);
+            base.ExecuteResult(context);
         }
 
-        public static HtmlString jsTreeFull(this HtmlHelper helper, jsTreeSettings settings, string elID = null, bool withTags = true)
-        {
-
-            elID = simID(elID);
-            string script =  buildTreeScript(elID,settings);
-            script = fixScript(script, withTags);
-
-            string HTML = "<div id=\"" + elID + "\"></div>" + script;
-
-
-            return new HtmlString(HTML);
-
-        }
-
+        #endregion Methods
     }
 }

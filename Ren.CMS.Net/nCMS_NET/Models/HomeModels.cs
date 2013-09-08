@@ -1,42 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Ren.CMS.Content;
-using Ren.CMS.CORE.Language;
-using Ren.CMS.CORE.Language.LanguageDefaults;
-
-namespace Ren.CMS.Models.HomeModels
+﻿namespace Ren.CMS.Models.HomeModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+
+    using Ren.CMS.Content;
+    using Ren.CMS.CORE.Language;
+    using Ren.CMS.CORE.Language.LanguageDefaults;
+
     public class ContentBoxModel
     {
-        private string headerTextLangLine = null;
+        #region Fields
 
         public LanguageDefaultValues LanguageDefaultText = null;
-        public string CSSclass { get; set; }
 
-        public IEnumerable<nContent> Contents { get; set; }
+        private string headerTextLangLine = null;
 
-        public string ContentListAction { get; set; }
-       
-        public string ContentListController { get; set; }
-        /// <summary>
-        /// Language Package for the Header (Default: Root)
-        /// </summary>
-        public string LanguagePackage {get;set;}
-        
-        /// <summary>
-        /// Language Line for the Header
-        /// </summary>
-        public string LanguageLine {get;set;}
+        #endregion Fields
+
+        #region Properties
+
+        public string ContentListAction
+        {
+            get; set;
+        }
+
+        public string ContentListController
+        {
+            get; set;
+        }
+
+        public IEnumerable<nContent> Contents
+        {
+            get; set;
+        }
+
+        public string CSSclass
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Header Text(READ ONLY)
         /// </summary>
         public string HeaderText
         {
-            get 
-            { 
+            get
+            {
 
                 if(LanguageLine != null || LanguageDefaultText != null)
                 {
@@ -46,7 +57,7 @@ namespace Ren.CMS.Models.HomeModels
                         if(!String.IsNullOrEmpty(Default))
                         {
                             return Default;
-                        
+
                         }
                     }
                     string Package = (LanguagePackage != null ? LanguagePackage : "Root");
@@ -61,8 +72,24 @@ namespace Ren.CMS.Models.HomeModels
 
                 return "!HEADER_TEXT_MISSING!";
             }
-        
-        
         }
+
+        /// <summary>
+        /// Language Line for the Header
+        /// </summary>
+        public string LanguageLine
+        {
+            get;set;
+        }
+
+        /// <summary>
+        /// Language Package for the Header (Default: Root)
+        /// </summary>
+        public string LanguagePackage
+        {
+            get;set;
+        }
+
+        #endregion Properties
     }
 }

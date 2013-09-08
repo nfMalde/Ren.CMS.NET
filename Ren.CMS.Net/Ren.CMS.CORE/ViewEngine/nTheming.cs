@@ -1,18 +1,26 @@
-﻿using System;
-using System.Globalization;
-using System.Web;
-
-using System.Web.Mvc;
-using System.IO;
-using System.Linq;
-using System.Web.Security;
-using Ren.CMS;
-using Ren.CMS.CORE.Settings;
-namespace Ren.CMS.ViewEngine
+﻿namespace Ren.CMS.ViewEngine
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
+
+    using Ren.CMS;
+    using Ren.CMS.CORE.Settings;
 
     public class nTheming : RazorViewEngine
     {
+        #region Fields
+
+        private static readonly string[] _emptyLocations;
+
+        #endregion Fields
+
+        #region Constructors
+
         public nTheming()
         {
             MasterLocationFormats = new[] {
@@ -36,7 +44,7 @@ namespace Ren.CMS.ViewEngine
             };
             PartialViewLocationFormats = new[] {
                 "~/Views/{2}/{1}/{0}.cshtml",
-           "~/Views/Backend/{0}.cshtml",
+               "~/Views/Backend/{0}.cshtml",
                 "~/Views/Backend/{1}/{0}.cshtml",
                 "~/Views/Backend/Shared/{0}.cshtml",
                 "~/Views/{2}/{1}/{0}.vbhtml",
@@ -45,24 +53,27 @@ namespace Ren.CMS.ViewEngine
             };
         }
 
-        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
+        #endregion Constructors
+
+        #region Methods
+
+        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            try
+            string[] strArray;
+            if (controllerContext == null)
             {
-                return File.Exists(controllerContext.HttpContext.Server.MapPath(virtualPath));
+                throw new ArgumentNullException("controllerContext");
             }
-            catch (HttpException exception)
+            if (string.IsNullOrEmpty(partialViewName))
             {
-                if (exception.GetHttpCode() != 0x194)
-                {
-                    throw;
-                }
-                return false;
+                throw new ArgumentException("partialViewName must be specified.", "partialViewName");
             }
-            catch
-            {
-                return false;
-            }
+
+            var themeName = GetThemeToUse(controllerContext);
+
+            var requiredString = controllerContext.RouteData.GetRequiredString("controller");
+            var partialViewPath = GetPath(controllerContext, PartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, themeName, requiredString, "Partial", useCache, out strArray);
+            return string.IsNullOrEmpty(partialViewPath) ? new ViewEngineResult(strArray) : new ViewEngineResult(CreatePartialView(controllerContext, partialViewPath), this);
         }
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
@@ -90,43 +101,58 @@ namespace Ren.CMS.ViewEngine
             {
                 return new ViewEngineResult(CreateView(controllerContext, viewPath, masterPath), this);
             }
-         
-        return new ViewEngineResult(strArray.Union(strArray2));
+
+            return new ViewEngineResult(strArray.Union(strArray2));
         }
 
-        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
-            string[] strArray;
-            if (controllerContext == null)
+            try
             {
-                throw new ArgumentNullException("controllerContext");
+                return File.Exists(controllerContext.HttpContext.Server.MapPath(virtualPath));
             }
-            if (string.IsNullOrEmpty(partialViewName))
+            catch (HttpException exception)
             {
-                throw new ArgumentException("partialViewName must be specified.", "partialViewName");
+                if (exception.GetHttpCode() != 0x194)
+                {
+                    throw;
+                }
+                return false;
             }
-
-            var themeName = GetThemeToUse(controllerContext);
-
-            var requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            var partialViewPath = GetPath(controllerContext, PartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, themeName, requiredString, "Partial", useCache, out strArray);
-            return string.IsNullOrEmpty(partialViewPath) ? new ViewEngineResult(strArray) : new ViewEngineResult(CreatePartialView(controllerContext, partialViewPath), this);
+            catch
+            {
+                return false;
+            }
         }
-  
+
         private static string GetThemeToUse(ControllerContext controllerContext)
-
         {
-
             //MembershipUser U = new Ren.CMS.MemberShip.nProvider.CurrentUser().nUser;
             //UserSettings USR = new UserSettings(U);
             //string theme = USR.getSetting("USER_THEME").Value.ToString();
 
-           // if (String.IsNullOrEmpty(theme)) theme = System.Configuration.ConfigurationManager.AppSettings["nfcmsThemeAtFirstRun"].ToString();
-           string theme = "nftheme";
+               // if (String.IsNullOrEmpty(theme)) theme = System.Configuration.ConfigurationManager.AppSettings["nfcmsThemeAtFirstRun"].ToString();
+               string theme = "nftheme";
             return theme;
         }
 
-        private static readonly string[] _emptyLocations;
+        private static bool IsSpecificPath(string name)
+        {
+            var ch = name[0];
+            if (ch != '~')
+            {
+                return (ch == '/');
+            }
+            return true;
+        }
+
+        private string CreateCacheKey(string prefix, string name, string controllerName, string themeName)
+        {
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}",
+                new object[] { GetType().AssemblyQualifiedName, prefix, name, controllerName, themeName });
+        }
 
         private string GetPath(ControllerContext controllerContext, string[] locations, string locationsPropertyName, string name, string themeName, string controllerName, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {
@@ -152,24 +178,6 @@ namespace Ren.CMS.ViewEngine
             }
             return !flag ? GetPathFromGeneralName(controllerContext, locations, name, controllerName, themeName, key, ref searchedLocations)
                         : GetPathFromSpecificName(controllerContext, name, key, ref searchedLocations);
-        }
-
-        private static bool IsSpecificPath(string name)
-        {
-            var ch = name[0];
-            if (ch != '~')
-            {
-                return (ch == '/');
-            }
-            return true;
-        }
-
-        private string CreateCacheKey(string prefix, string name, string controllerName, string themeName)
-        {
-            return string.Format(
-                CultureInfo.InvariantCulture,
-                ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}",
-                new object[] { GetType().AssemblyQualifiedName, prefix, name, controllerName, themeName });
         }
 
         private string GetPathFromGeneralName(ControllerContext controllerContext, string[] locations, string name, string controllerName, string themeName, string cacheKey, ref string[] searchedLocations)
@@ -203,5 +211,7 @@ namespace Ren.CMS.ViewEngine
             ViewLocationCache.InsertViewLocation(controllerContext.HttpContext, cacheKey, virtualPath);
             return virtualPath;
         }
+
+        #endregion Methods
     }
 }

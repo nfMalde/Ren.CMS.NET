@@ -1,40 +1,207 @@
-﻿using Ren.CMS.CORE.Settings;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.CORE.ThisApplication;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ren.CMS.Extensions.ArticleExt
+﻿namespace Ren.CMS.Extensions.ArticleExt
 {
-    #region ::LoadTotalRating
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Ren.CMS.CORE.Settings;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.CORE.ThisApplication;
+
+    public class initProContra
+    {
+        #region Fields
+
+        private ThisApplication App = new ThisApplication();
+        private List<ProContra> _list = new List<ProContra>();
+
+        #endregion Fields
+
+        #region Constructors
+
+        public initProContra(int contentID, string type = "all")
+        {
+            string query = "";
+            nSqlParameterCollection Parameters = new nSqlParameterCollection();
+
+            switch (type.ToLower())
+            {
+
+                case "pro":
+                    Parameters.Add("@type", "pro");
+                    Parameters.Add("@id", contentID);
+
+                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE pType=@type AND refid=@id";
+
+                    break;
+                case "contra":
+
+                    Parameters.Add("@type", "contra");
+                    Parameters.Add("@id", contentID);
+
+                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE pType=@type AND refid=@id";
+
+                    break;
+
+                default:
+
+                    Parameters.Add("@id", contentID);
+
+                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE refid=@id";
+
+                    break;
+
+            }
+
+            //Query steht...
+
+            SqlHelper Sql = new SqlHelper();
+            Sql.SysConnect();
+
+            SqlDataReader sList = Sql.SysReader(query, Parameters);
+            if (sList.HasRows)
+            {
+
+                while (sList.Read())
+                {
+
+                    ProContra Model = new ProContra((string)sList["pType"], (string)sList["pText"], contentID, (int)sList["id"]);
+
+                    _list.Add(Model);
+
+                }
+
+            }
+            Sql.SysDisconnect();
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public List<ProContra> Rows
+        {
+            get
+            {
+
+                return this._list;
+
+            }
+        }
+
+        #endregion Properties
+    }
+
+    public class initRatings
+    {
+        #region Fields
+
+        private List<InternalRating> x = new List<InternalRating>();
+
+        #endregion Fields
+
+        #region Constructors
+
+        public initRatings(int contentID)
+        {
+            GlobalSettings GS = new GlobalSettings();
+            ThisApplication App = new ThisApplication();
+
+            SqlHelper Sql = new SqlHelper();
+            Sql.SysConnect();
+
+            nSqlParameterCollection ListPara = new nSqlParameterCollection();
+            ListPara.Add("@refid", contentID);
+
+            SqlDataReader Li = Sql.SysReader("SELECT topic,stars FROM " + App.getSqlPrefix + "Internal_Rating WHERE refid=@refid", ListPara);
+
+            while (Li.Read())
+            {
+
+                InternalRating IR = new InternalRating();
+                IR.stars = (int)Li["stars"];
+                IR.topic = (string)Li["topic"];
+
+                x.Add(IR);
+
+            }
+
+            Li.Close();
+            Sql.SysDisconnect();
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public List<InternalRating> getRatings()
+        {
+            return x;
+        }
+
+        #endregion Methods
+    }
+
+    public class InternalRating
+    {
+        #region Properties
+
+        public int stars
+        {
+            set; get;
+        }
+
+        public string topic
+        {
+            set; get;
+        }
+
+        #endregion Properties
+    }
+
     public class LoadTotalRating
     {
-        private decimal totalRatingP = 0;
-        private int cid = 0;
+        #region Fields
 
-        #region Constructor
+        private int cid = 0;
+        private decimal totalRatingP = 0;
+
+        #endregion Fields
+
+        #region Constructors
+
         public LoadTotalRating(int contentID)
         {
             this._calculate(contentID);
             this.cid = contentID;
         }
-        #endregion
+
+        #endregion Constructors
 
         #region Methods
+
+        public void reCalculate()
+        {
+            this._calculate(this.cid);
+        }
+
+        public decimal toDecimal()
+        {
+            return this.totalRatingP;
+        }
+
+        public int toInt()
+        {
+            return Convert.ToInt32(Math.Round(this.totalRatingP));
+        }
+
         private void _calculate(int contentID)
         {
-
-
             GlobalSettings GS = new GlobalSettings();
             ThisApplication App = new ThisApplication();
-
-
-
-
 
             SqlHelper Sql = new SqlHelper();
             Sql.SysConnect();
@@ -54,8 +221,6 @@ namespace Ren.CMS.Extensions.ArticleExt
 
                     int.TryParse(Su["topicSum"].ToString(), out sum);
 
-
-
                 }
                 Su.Close();
                 int starSum = 0;
@@ -74,25 +239,16 @@ namespace Ren.CMS.Extensions.ArticleExt
                         if (Calc.HasRows)
                         {
 
-
                             //Ah good we got a starSum
                             Calc.Read();
                             int.TryParse(Calc["starSum"].ToString(), out starSum);
 
-
                         }
                         Calc.Close();
 
-
                     }
 
-
-
-
-
                 }
-
-
 
                 if (starSum > 0 && sum > 0)
                 {
@@ -104,12 +260,7 @@ namespace Ren.CMS.Extensions.ArticleExt
 
                     this.totalRatingP = decStarSum / decSum;
 
-
-
-
                 }
-
-
 
             }
 
@@ -118,53 +269,67 @@ namespace Ren.CMS.Extensions.ArticleExt
 
                 //We stay here...we cant calculate it now.
 
-
             }
             Sql.SysDisconnect();
-
         }
 
-
-
-
-        public decimal toDecimal()
-        {
-
-
-            return this.totalRatingP;
-        }
-        public int toInt()
-        {
-
-            return Convert.ToInt32(Math.Round(this.totalRatingP));
-
-
-        }
-        public void reCalculate()
-        {
-
-            this._calculate(this.cid);
-
-
-
-
-        }
-        #endregion
-
-
+        #endregion Methods
     }
-    #endregion
 
     public class ProContra
     {
-        private ThisApplication App = new ThisApplication();
+        #region Fields
+
         public int contentID = 0;
+
+        private ThisApplication App = new ThisApplication();
+
+        #endregion Fields
+
+        #region Constructors
+
+        public ProContra(string type, string text, int refID, int id = 0)
+        {
+            if (id == 0) this.Save(out id);
+            this.Text = text;
+            this.Type = type;
+            this.ID = id;
+            this.contentID = refID;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public int ID
+        {
+            get; set;
+        }
+
+        public string Text
+        {
+            get; set;
+        }
+
+        public string Type
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        public void Save()
+        {
+            if (this.ID == 0)
+                this.insert();
+            else this.update();
+        }
 
         private void check()
         {
-
             GlobalSettings GS = new GlobalSettings();
-
 
             if (String.IsNullOrEmpty(this.Text)) throw new Exception("Text cannot be empty");
             if (String.IsNullOrEmpty(this.Type)) throw new Exception("Cannot save typeless item");
@@ -172,18 +337,33 @@ namespace Ren.CMS.Extensions.ArticleExt
             this.Type = this.Type.ToLower();
 
             if (this.Type != "pro" && this.Type != "contra") throw new Exception("Invalid type \"" + this.Type + "\"");
-
         }
+
+        private int delete()
+        {
+            nSqlParameterCollection Parameters = new nSqlParameterCollection();
+
+            Parameters.Add("@id", this.ID);
+            string query = "DELETE " + App.getSqlPrefix + "Internal_Pro_Contra WHERE id=@id";
+            SqlHelper Sql = new SqlHelper();
+
+            Sql.SysConnect();
+
+            Sql.SysNonQuery(query, Parameters);
+
+            Sql.SysDisconnect();
+
+            return this.ID;
+        }
+
         private int insert()
         {
             int retu = 0;
-
 
             this.check();
 
             SqlHelper Sql = new SqlHelper();
             Sql.SysConnect();
-
 
             string query = "INSERT INTO " + App.getSqlPrefix + "Internal_Pro_Contra (pType,pText,refid) VALUES(@type,@text,@refid)";
 
@@ -207,9 +387,14 @@ namespace Ren.CMS.Extensions.ArticleExt
             return retu;
         }
 
+        private void Save(out int newID)
+        {
+            if (this.ID == 0) newID = this.insert();
+            else newID = this.update();
+        }
+
         private int update()
         {
-
             this.check();
 
             nSqlParameterCollection Parameters = new nSqlParameterCollection();
@@ -218,221 +403,16 @@ namespace Ren.CMS.Extensions.ArticleExt
             Parameters.Add("@refid", this.contentID);
             Parameters.Add("@id", this.ID);
 
-
             string query = "UPDATE " + App.getSqlPrefix + "Internal_Pro_Contra SET pType=@type,pText=@text,refid=@refid WHERE id=@id";
             SqlHelper Sql = new SqlHelper();
             Sql.SysConnect();
 
             Sql.SysNonQuery(query, Parameters);
 
-
             Sql.SysDisconnect();
             return this.ID;
         }
 
-        private int delete()
-        {
-
-            nSqlParameterCollection Parameters = new nSqlParameterCollection();
-
-            Parameters.Add("@id", this.ID);
-            string query = "DELETE " + App.getSqlPrefix + "Internal_Pro_Contra WHERE id=@id";
-            SqlHelper Sql = new SqlHelper();
-
-            Sql.SysConnect();
-
-
-            Sql.SysNonQuery(query, Parameters);
-
-            Sql.SysDisconnect();
-
-            return this.ID;
-        }
-        public void Save()
-        {
-            if (this.ID == 0)
-                this.insert();
-            else this.update();
-
-        }
-
-        private void Save(out int newID)
-        {
-
-
-            if (this.ID == 0) newID = this.insert();
-            else newID = this.update();
-        }
-        public ProContra(string type, string text, int refID, int id = 0)
-        {
-
-
-
-
-            if (id == 0) this.Save(out id);
-            this.Text = text;
-            this.Type = type;
-            this.ID = id;
-            this.contentID = refID;
-        }
-        public string Type { get; set; }
-        public string Text { get; set; }
-        public int ID { get; set; }
-
-
-    }
-    public class initProContra
-    {
-
-        private List<ProContra> _list = new List<ProContra>();
-        private ThisApplication App = new ThisApplication();
-
-
-        public initProContra(int contentID, string type = "all")
-        {
-
-            string query = "";
-            nSqlParameterCollection Parameters = new nSqlParameterCollection();
-
-
-            switch (type.ToLower())
-            {
-
-                case "pro":
-                    Parameters.Add("@type", "pro");
-                    Parameters.Add("@id", contentID);
-
-
-                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE pType=@type AND refid=@id";
-
-
-                    break;
-                case "contra":
-
-                    Parameters.Add("@type", "contra");
-                    Parameters.Add("@id", contentID);
-
-                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE pType=@type AND refid=@id";
-
-                    break;
-
-                default:
-
-                    Parameters.Add("@id", contentID);
-
-                    query = "SELECT * FROM " + App.getSqlPrefix + "Internal_Pro_Contra WHERE refid=@id";
-
-                    break;
-
-
-            }
-
-            //Query steht...
-
-
-            SqlHelper Sql = new SqlHelper();
-            Sql.SysConnect();
-
-            SqlDataReader sList = Sql.SysReader(query, Parameters);
-            if (sList.HasRows)
-            {
-
-
-
-                while (sList.Read())
-                {
-
-
-                    ProContra Model = new ProContra((string)sList["pType"], (string)sList["pText"], contentID, (int)sList["id"]);
-
-                    _list.Add(Model);
-
-
-                }
-
-
-
-            }
-            Sql.SysDisconnect();
-
-
-        }
-
-        public List<ProContra> Rows
-        {
-
-            get
-            {
-
-                return this._list;
-
-            }
-
-
-        }
-
-    }
-    public class InternalRating
-    {
-
-        public int stars { set; get; }
-        public string topic { set; get; }
-
-
-
-
-    }
-
-    public class initRatings
-    {
-
-        private List<InternalRating> x = new List<InternalRating>();
-        public initRatings(int contentID)
-        {
-
-            GlobalSettings GS = new GlobalSettings();
-            ThisApplication App = new ThisApplication();
-
-
-
-
-
-            SqlHelper Sql = new SqlHelper();
-            Sql.SysConnect();
-
-
-            nSqlParameterCollection ListPara = new nSqlParameterCollection();
-            ListPara.Add("@refid", contentID);
-
-            SqlDataReader Li = Sql.SysReader("SELECT topic,stars FROM " + App.getSqlPrefix + "Internal_Rating WHERE refid=@refid", ListPara);
-
-            while (Li.Read())
-            {
-
-                InternalRating IR = new InternalRating();
-                IR.stars = (int)Li["stars"];
-                IR.topic = (string)Li["topic"];
-
-                x.Add(IR);
-
-
-
-            }
-
-            Li.Close();
-            Sql.SysDisconnect();
-        }
-
-        public List<InternalRating> getRatings()
-        {
-
-
-            return x;
-
-
-
-        }
-
-
+        #endregion Methods
     }
 }

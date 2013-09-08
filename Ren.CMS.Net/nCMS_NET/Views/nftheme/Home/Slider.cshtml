@@ -44,8 +44,8 @@
                   <div class="item @(id == 0? "active" : "")">
                     <img src="@C.Attachments("image","indeximg").First().Path" alt="">
                     <div class="carousel-caption">
-                      <h4>@C.Title</h4>
-                      <p>@C.PreviewText</p>
+                      <h4>@C.Texts.First().Title</h4>
+                      <p>@C.Texts.First().PreviewText</p>
                     </div>
                   </div>
                       id++;

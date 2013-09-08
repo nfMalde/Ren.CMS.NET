@@ -1,28 +1,15 @@
-﻿using Ren.CMS.Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Ren.CMS.Content
+﻿namespace Ren.CMS.Content
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+
+    using Ren.CMS.Models.Core;
+
     public class ContentValidator
     {
-
-        private bool multipleEmpty(string[] str)
-        {
-            foreach (string st in str)
-            {
-
-                if (String.IsNullOrEmpty(st)) return true;
-
-                if (String.IsNullOrWhiteSpace(st)) return true;
-
-
-            }
-
-            return false;
-        }
+        #region Methods
 
         /// <summary>
         /// Before Inserting, you can check all Required Field for valid values
@@ -33,22 +20,19 @@ namespace Ren.CMS.Content
         {
             if (!Postmodel.Texts.Any(e => e.Active))
                 return false;
-            bool isEmpty = this.multipleEmpty(new string[] {    Postmodel.Texts.Where(e => e.Active).FirstOrDefault().Title, 
-                                                                Postmodel.Texts.Where(e => e.Active).FirstOrDefault().PreviewText, 
-                                                                Postmodel.Texts.Where(e => e.Active).FirstOrDefault().LongText, 
-                                                                Postmodel.CreatorPKID, 
-                                                                Postmodel.CategoryID, 
-                                                                Postmodel.ContentType 
+            bool isEmpty = this.multipleEmpty(new string[] {    Postmodel.Texts.Where(e => e.Active).FirstOrDefault().Title,
+                                                                Postmodel.Texts.Where(e => e.Active).FirstOrDefault().PreviewText,
+                                                                Postmodel.Texts.Where(e => e.Active).FirstOrDefault().LongText,
+                                                                Postmodel.CreatorPKID,
+                                                                Postmodel.CategoryID,
+                                                                Postmodel.ContentType
                                                             }
 
                                                             );
 
-
-
             if (isEmpty) return false;
             return true;
         }
-
 
         /// <summary>
         /// Converts a String to a valid URL CONFORM and SEO String for URLs and Filenames
@@ -57,7 +41,6 @@ namespace Ren.CMS.Content
         /// <returns>Converted String</returns>
         public string makeTitleSEOConform(string title)
         {
-
             foreach (char c in System.IO.Path.GetInvalidFileNameChars())
             {
                 title = title.Replace(c, '_');
@@ -65,10 +48,23 @@ namespace Ren.CMS.Content
 
             title = title.Replace(' ', '_');
 
-
             return title;
         }
 
+        private bool multipleEmpty(string[] str)
+        {
+            foreach (string st in str)
+            {
 
+                if (String.IsNullOrEmpty(st)) return true;
+
+                if (String.IsNullOrWhiteSpace(st)) return true;
+
+            }
+
+            return false;
+        }
+
+        #endregion Methods
     }
 }

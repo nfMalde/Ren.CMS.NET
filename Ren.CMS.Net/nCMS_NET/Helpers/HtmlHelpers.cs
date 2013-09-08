@@ -1,44 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.UI;
-using System.Text;
-using System.IO;
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
-    
-   
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.UI;
 
-
-
-    public static class HtmlExtensions 
+    public static class HtmlExtensions
     {
+        #region Methods
 
-        public static IHtmlString ScrollTo(this HtmlHelper helper,  string elementID)
+        public static void AddCSSFile(this HtmlHelper helper, string url)
         {
+            helper.ViewData["______CSS" + Guid.NewGuid().ToString()] = url;
+        }
 
-          
-
-            TagBuilder Builder = new TagBuilder("script");
-            Builder.Attributes.Add("type", "text/javascript");
-            StringBuilder InnerHtml = new StringBuilder();
-
-            InnerHtml.AppendLine();
-            InnerHtml.AppendLine("$(function(){").AppendLine();
-
-            InnerHtml.AppendFormat("window.location.hash = '{0}';", elementID);
-            InnerHtml.AppendLine();
-
-            InnerHtml.AppendLine("});");
-            InnerHtml.AppendLine();
-
-            Builder.InnerHtml = InnerHtml.ToString();
-
-
-            return new HtmlString(Builder.ToString());
-        
+        public static void AddScriptFile(this HtmlHelper helper, string url)
+        {
+            helper.ViewData["______SCRIPT"+ Guid.NewGuid().ToString()] = url;
         }
 
         public static MvcHtmlString ChosenBox<TModel>(this HtmlHelper helper, string name, string dataField, string valueField, IEnumerable<TModel> Items, IDictionary<string, object> htmlAttributes = null, object config = null)
@@ -56,8 +38,6 @@ namespace Ren.CMS.Helpers
                 select.InnerHtml += option.ToString();
             }
 
-         
-
             var script = new TagBuilder("script");
             script.Attributes.Add("type", "text/javascript");
 
@@ -68,16 +48,12 @@ namespace Ren.CMS.Helpers
                       .AppendLine()
                       .AppendLine("});");
 
-
             script.InnerHtml = ScriptText.ToString();
 
-
-
-
             return MvcHtmlString.Create(select.ToString() + script.ToString());
-
         }
-/*
+
+        /*
         public static IHtmlString GenerateCaptcha(this HtmlHelper helper)
         {
 
@@ -96,13 +72,13 @@ namespace Ren.CMS.Helpers
             return helper.Raw(htmlWriter.InnerWriter.ToString());
         }
         */
-        //Adds an Ajax Link, 
+        //Adds an Ajax Link,
         public static IHtmlString nAjaxLink(this HtmlHelper helper, string text, string controller, string action, string callbackfunc = "", string contentID = "content")
         {
             if (!String.IsNullOrEmpty(callbackfunc))
             {
                 callbackfunc += ", " + callbackfunc;
-            
+
             }
             string script = "<script type=\"text/javascript\">";
 
@@ -116,39 +92,6 @@ namespace Ren.CMS.Helpers
             string html = script + a;
 
             return helper.Raw(html);
-        
-        }
-
-        public static void AddScriptFile(this HtmlHelper helper, string url)
-        {
-            helper.ViewData["______SCRIPT"+ Guid.NewGuid().ToString()] = url;
-
-        
-        }
-
-        public static void AddCSSFile(this HtmlHelper helper, string url)
-        {
-
-            helper.ViewData["______CSS" + Guid.NewGuid().ToString()] = url;
-            
-        
-        }
-
-        public static IHtmlString RenderScriptFiles(this HtmlHelper helper)
-        {   
-            var Dict = helper.ViewData.Where(e => e.Key.StartsWith("______SCRIPT"));
-            if (Dict == null) return new HtmlString("");
-            StringBuilder Builder = new StringBuilder();
-            foreach (KeyValuePair<string, object> Pair in Dict)
-            {
-          
-                Builder.AppendFormat("<script type=\"text/javascript\" src=\"{0}\">", Pair.Value.ToString()).AppendLine("</script>").AppendLine();
-
-            
-            }
-
-            return new HtmlString(Builder.ToString());
-        
         }
 
         public static IHtmlString RenderCSSFiles(this HtmlHelper helper)
@@ -158,14 +101,49 @@ namespace Ren.CMS.Helpers
             StringBuilder Builder = new StringBuilder();
             foreach (KeyValuePair<string, object> Pair in Dict)
             {
-        
-                Builder.AppendFormat("<link rel=\"stylesheet\" type=\"text/css\" href=\"{0}\" />", Pair.Value.ToString()).AppendLine();
 
+                Builder.AppendFormat("<link rel=\"stylesheet\" type=\"text/css\" href=\"{0}\" />", Pair.Value.ToString()).AppendLine();
 
             }
 
             return new HtmlString(Builder.ToString());
-        
         }
+
+        public static IHtmlString RenderScriptFiles(this HtmlHelper helper)
+        {
+            var Dict = helper.ViewData.Where(e => e.Key.StartsWith("______SCRIPT"));
+            if (Dict == null) return new HtmlString("");
+            StringBuilder Builder = new StringBuilder();
+            foreach (KeyValuePair<string, object> Pair in Dict)
+            {
+
+                Builder.AppendFormat("<script type=\"text/javascript\" src=\"{0}\">", Pair.Value.ToString()).AppendLine("</script>").AppendLine();
+
+            }
+
+            return new HtmlString(Builder.ToString());
+        }
+
+        public static IHtmlString ScrollTo(this HtmlHelper helper,  string elementID)
+        {
+            TagBuilder Builder = new TagBuilder("script");
+            Builder.Attributes.Add("type", "text/javascript");
+            StringBuilder InnerHtml = new StringBuilder();
+
+            InnerHtml.AppendLine();
+            InnerHtml.AppendLine("$(function(){").AppendLine();
+
+            InnerHtml.AppendFormat("window.location.hash = '{0}';", elementID);
+            InnerHtml.AppendLine();
+
+            InnerHtml.AppendLine("});");
+            InnerHtml.AppendLine();
+
+            Builder.InnerHtml = InnerHtml.ToString();
+
+            return new HtmlString(Builder.ToString());
+        }
+
+        #endregion Methods
     }
 }

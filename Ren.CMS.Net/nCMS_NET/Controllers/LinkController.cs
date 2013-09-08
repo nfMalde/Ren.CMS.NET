@@ -1,45 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Ren.CMS.Models;
-namespace Ren.CMS.Controllers
+﻿namespace Ren.CMS.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.Models;
+
     public class LinkController : Controller
     {
-        //
-        // GET: /Link/
+        #region Methods
 
-        public ActionResult Index()
+        public ActionResult Forward(string id)
         {
-
-            return RedirectToAction("Index", "Home");
-        }
-
-
-
-        public ActionResult Forward(string id) {
-
-             id = HttpUtility.UrlDecode(id);
+            id = HttpUtility.UrlDecode(id);
 
              ForwardModel MDL = new ForwardModel();
 
             MDL.url = id;
 
-
-
-
-
-
-
             return View(MDL);
         }
 
+        //
+        // GET: /Link/
+        public ActionResult Index()
+        {
+            return RedirectToAction("Index", "Home");
+        }
 
-
-        public ActionResult UniqueLink(int id) {
-
+        public ActionResult UniqueLink(int id)
+        {
             Ren.CMS.Content.ContentManagement.GetContent GCo = new Content.ContentManagement.GetContent(id);
 
             List<Ren.CMS.Content.nContent> COLIST = GCo.getList();
@@ -53,10 +45,8 @@ namespace Ren.CMS.Controllers
             }
 
             else return RedirectToAction("Index", "Home");
-        
-        
-        
         }
 
+        #endregion Methods
     }
 }

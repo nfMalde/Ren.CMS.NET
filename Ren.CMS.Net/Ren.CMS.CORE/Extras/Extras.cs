@@ -1,111 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-namespace Ren.CMS.CORE.Extras
+﻿namespace Ren.CMS.CORE.Extras
 {
-    public class LocationModel
-    {
-
-        public string Name
-        {
-
-            get;
-            set;
-
-        }
-        public string Address
-        {
-
-            get;
-            set;
-
-
-        }
-
-        public bool isCurrentLocation
-        {
-
-            get;
-            set;
-
-        }
-
-    }
-    public class LocationBar
-    {
-        private ControllerContext context = null;
-        private List<LocationModel> _Locations = new List<LocationModel>();
-        private string _linkTemplate_partialview = "location_bar_link";
-        private string _locationBarTemplate_partialview = "location_bar";
-
-        public LocationBar(ControllerContext controllerContext)
-        {
-
-            this.context = controllerContext;
-
-
-
-
-
-
-        }
-
-        public void AddLocation(LocationModel Location)
-        {
-
-
-
-            this._Locations.Add(Location);
-
-
-
-        }
-
-        public void AddLocation(string name, string address, bool currentLocation = false)
-        {
-            LocationModel Location = new LocationModel();
-            Location.Name = name;
-            Location.Address = address;
-            Location.isCurrentLocation = currentLocation;
-
-            this._Locations.Add(Location);
-
-
-
-        }
-        /// <summary>
-        /// Saves the Location Collection inside the ViewData["LocationBarCollection"];
-        /// </summary>
-        public void Render()
-        {
-
-            this.context.Controller.ViewData["LocationBarCollection"] = this._Locations;
-
-        }
-
-    }
-
-
-
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
     public class Extras
     {
-        public Extras() { }
+        #region Constructors
 
-
-        public bool ViewExists(string name, ControllerContext ControllerContextVar)
+        public Extras()
         {
-
-
-
-            ViewEngineResult result = ViewEngines.Engines.FindView(ControllerContextVar, name, null);
-            return (result.View != null);
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         public string var_dump(object obj, int recursion)
         {
@@ -197,7 +111,85 @@ namespace Ren.CMS.CORE.Extras
             return result.ToString();
         }
 
+        public bool ViewExists(string name, ControllerContext ControllerContextVar)
+        {
+            ViewEngineResult result = ViewEngines.Engines.FindView(ControllerContextVar, name, null);
+            return (result.View != null);
+        }
 
+        #endregion Methods
     }
 
+    public class LocationBar
+    {
+        #region Fields
+
+        private ControllerContext context = null;
+        private string _linkTemplate_partialview = "location_bar_link";
+        private string _locationBarTemplate_partialview = "location_bar";
+        private List<LocationModel> _Locations = new List<LocationModel>();
+
+        #endregion Fields
+
+        #region Constructors
+
+        public LocationBar(ControllerContext controllerContext)
+        {
+            this.context = controllerContext;
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public void AddLocation(LocationModel Location)
+        {
+            this._Locations.Add(Location);
+        }
+
+        public void AddLocation(string name, string address, bool currentLocation = false)
+        {
+            LocationModel Location = new LocationModel();
+            Location.Name = name;
+            Location.Address = address;
+            Location.isCurrentLocation = currentLocation;
+
+            this._Locations.Add(Location);
+        }
+
+        /// <summary>
+        /// Saves the Location Collection inside the ViewData["LocationBarCollection"];
+        /// </summary>
+        public void Render()
+        {
+            this.context.Controller.ViewData["LocationBarCollection"] = this._Locations;
+        }
+
+        #endregion Methods
+    }
+
+    public class LocationModel
+    {
+        #region Properties
+
+        public string Address
+        {
+            get;
+            set;
+        }
+
+        public bool isCurrentLocation
+        {
+            get;
+            set;
+        }
+
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        #endregion Properties
+    }
 }

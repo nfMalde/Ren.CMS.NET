@@ -1,39 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Ren.CMS.CORE.Helper.RoutingHelper;
-using Ren.CMS.ViewEngine;
-//using RouteDebug;
+﻿//using RouteDebug;
 namespace Ren.CMS
 {
-    // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7 
-    // finden Sie unter "http://go.microsoft.com/?LinkId=9394801".
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
 
+    using Ren.CMS.CORE.Helper.RoutingHelper;
+    using Ren.CMS.ViewEngine;
+
+    // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7
+    // finden Sie unter "http://go.microsoft.com/?LinkId=9394801".
     public class Global : System.Web.HttpApplication
     {
+        #region Methods
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-
             filters.Add(new HandleErrorAttribute());
         }
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRenCMSRoute("BackendUserHandler",
                      "BackendHandler/Users/{action}",
                      new { controller = "BackendHandlerUsers"});
 
-            
             routes.MapRenCMSRoute("Backend_Content_GetTagData",
                      "BackendHandler/Content/GetTagData",
                      new { controller = "BackendHandlerContent", action = "GetTagData" });
-
 
             routes.MapRenCMSRoute("Backend_Content_EditTag",
                      "BackendHandler/Content/EditTag",
@@ -43,17 +42,13 @@ namespace Ren.CMS
                      "BackendHandler/Content/DeleteTag",
                      new { controller = "BackendHandlerContent", action = "DeleteTag" });
 
-
             routes.MapRenCMSRoute("Backend_Content_CreateTag",
                      "BackendHandler/Content/CreateTag",
                      new { controller = "BackendHandlerContent", action = "CreateTag" });
 
-
             routes.MapRenCMSRoute("Backend_Content_GetTags",
                      "BackendHandler/Content/GetTags",
                      new { controller = "BackendHandlerContent", action = "GetTags" });
-
-
 
             routes.MapRenCMSRoute("Backend_Content_EditContent",
                          "BackendHandler/Content/EditContent",
@@ -61,8 +56,6 @@ namespace Ren.CMS
             routes.MapRenCMSRoute("Backend_Content_DeleteContent",
                         "BackendHandler/Content/DeleteContent",
                         new { controller = "BackendHandlerContent", action = "DeleteContent" });
- 
-
 
             routes.MapRenCMSRoute("Backend_Content_MoveCategory",
                        "BackendHandler/Content/MoveCategory",
@@ -71,7 +64,6 @@ namespace Ren.CMS
             routes.MapRenCMSRoute("Backend_Content_CatTree_NEW",
                        "BackendHandler/Content/JSTREE_CATEGORIES",
                        new { controller = "BackendHandlerContent", action = "JSTREE_CATEGORIES" });
-
 
             routes.MapRenCMSRoute("Backend_Content_CatTree",
                        "BackendHandler/Content/CatTree",
@@ -112,8 +104,8 @@ namespace Ren.CMS
             new { controller = "BackendHandlerContent", action = "ValidateSEOTitle" });
 
             routes.MapRenCMSRoute("Backend_Content_AddContent",
-  "BackendHandler/Content/AddContent/{id}",
-  new { controller = "BackendHandlerContent", action = "AddContent", id = "" });
+              "BackendHandler/Content/AddContent/{id}",
+              new { controller = "BackendHandlerContent", action = "AddContent", id = "" });
 
             routes.MapRenCMSRoute("Backend_Content_RemoveCat",
                 "BackendHandler/Content/RemoveCat",
@@ -127,19 +119,15 @@ namespace Ren.CMS
                   "BackendHandler/Content/AddCategory",
                   new { controller = "BackendHandlerContent", action = "AddCategory" });
 
-
-
             //Backend Handler Default
 
             routes.MapRenCMSRoute("Backend_Account_GetBGFiles",
                      "BackendHandler/Account/GetBGFiles",
                      new { controller = "BackendHandlerAccount", action = "GetBGFiles" });
 
-
             routes.MapRenCMSRoute("Backend_Account_SaveDesktopImage",
                      "BackendHandler/Account/SaveDesktopImage",
                      new { controller = "BackendHandlerAccount", action = "SaveDesktopImage" });
-
 
             routes.MapRenCMSRoute("Backend_Account_SaveDekstop",
                             "BackendHandler/Account/SaveDesktop",
@@ -160,7 +148,6 @@ namespace Ren.CMS
                           "BackendHandler/Account/CheckPermission",
                           new { controller = "BackendHandlerAccount", action = "CheckPermission" });
 
-
             routes.MapRenCMSRoute("Backend_Layout_Widget",
             "BackendHandler/Layout/Widget",
             new { controller = "BackendHandlerLayout", action = "Widget" });
@@ -170,45 +157,39 @@ namespace Ren.CMS
             "BackendHandler/Account/AddIcon",
             new { controller = "BackendHandlerAccount", action = "AddIcon" });
 
-
             routes.MapRenCMSRoute("Backend_Account_RemoveIcon",
-        "BackendHandler/Account/RemoveIcon",
-        new { controller = "BackendHandlerAccount", action = "RemoveIcon" });
-
+            "BackendHandler/Account/RemoveIcon",
+            new { controller = "BackendHandlerAccount", action = "RemoveIcon" });
 
             routes.MapRenCMSRoute("Backend_Account_UpdateIconPos",
-       "BackendHandler/Account/UpdateIconPos",
-       new { controller = "BackendHandlerAccount", action = "UpdateIconPos" });
+               "BackendHandler/Account/UpdateIconPos",
+               new { controller = "BackendHandlerAccount", action = "UpdateIconPos" });
             routes.MapRenCMSRoute("Backend_Layout_Icon",
-       "BackendHandler/Layout/Icons",
-       new { controller = "BackendHandlerLayout", action = "Icons" });
+               "BackendHandler/Layout/Icons",
+               new { controller = "BackendHandlerLayout", action = "Icons" });
             routes.MapRenCMSRoute("Backend_Layout_RenderIcon",
- "BackendHandler/Layout/RenderIcon",
- new { controller = "BackendHandlerLayout", action = "RenderIcon" });
+             "BackendHandler/Layout/RenderIcon",
+             new { controller = "BackendHandlerLayout", action = "RenderIcon" });
             routes.MapRenCMSRoute("Backend_Layout_MenuCount",
-       "BackendHandler/Layout/MenuCount",
-       new { controller = "BackendHandlerLayout", action = "MenuCount" });
+               "BackendHandler/Layout/MenuCount",
+               new { controller = "BackendHandlerLayout", action = "MenuCount" });
 
             routes.MapRenCMSRoute("Backend_Layout_Menu",
-"BackendHandler/Layout/Menu",
-new { controller = "BackendHandlerLayout", action = "Menu" });
+            "BackendHandler/Layout/Menu",
+            new { controller = "BackendHandlerLayout", action = "Menu" });
 
             routes.MapRenCMSRoute("Backend_Layout_LoginForm",
             "BackendHandler/Layout/LoginForm",
             new { controller = "BackendHandlerLayout", action = "LoginForm" });
 
-
             routes.MapRenCMSRoute("Backend_Layout_Desktop",
                     "BackendHandler/Layout/Desktop",
                     new { controller = "BackendHandlerLayout", action = "Desktop" });
-
-
 
             routes.MapRenCMSRoute("Backend_Layout_TimeUpdate",
                     "BackendHandler/Layout/TimeUpdate",
                     new { controller = "BackendHandlerLayout", action = "TimeUpdate" });
             //FIlemanagement
-
 
             routes.MapRenCMSRoute(
                 "FileManagement_1",
@@ -234,24 +215,19 @@ new { controller = "BackendHandlerLayout", action = "Menu" });
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameterstandardwerte
                 , new string[] { "Ren.CMS.Controllers" }
             );
-
         }
-        
+
         protected void Application_Start()
         {
-
-       
-
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new nTheming());
             AreaRegistration.RegisterAllAreas();
-       
+
             RegisterGlobalFilters(GlobalFilters.Filters);
             MvcContrib.UI.InputBuilder.InputBuilder.BootStrap();
             RegisterRoutes(RouteTable.Routes);
-
-      
-
         }
+
+        #endregion Methods
     }
 }

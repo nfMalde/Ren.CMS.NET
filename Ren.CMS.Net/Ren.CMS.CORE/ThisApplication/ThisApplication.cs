@@ -1,51 +1,98 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Data;
-using System.Web.Mvc;
-using System.Web.Security;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Net;
- 
-using System.Net.Mail;
-
-namespace Ren.CMS.CORE.ThisApplication
+﻿namespace Ren.CMS.CORE.ThisApplication
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Mail;
+    using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
+
     public class ThisApplication
     {
+        #region Constructors
+
         public ThisApplication()
         {
-
-
         }
 
-        private void createCFGifNotExists(string name, string defaultvalue)
-        {
+        #endregion Constructors
 
-            if (ConfigurationManager.AppSettings[name] == null)
+        #region Properties
+
+        public string ApplicationName
+        {
+            get { return HttpContext.Current.Request.ApplicationPath.Substring(1, HttpContext.Current.Request.ApplicationPath.Length - 1); }
+        }
+
+        public string BaseUrl
+        {
+            get
             {
 
+                try
+                {
 
-                ConfigurationManager.AppSettings.Add(name, defaultvalue);
+                    if (HttpContext.Current.Request.Url.Scheme.ToLower() == "https")
+
+                        return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTPS"];
+                    else return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTP"];
+
+                }
+                catch
+                {
+                    return null;
+
+                }
 
             }
-
-
         }
+
+        public string getSqlPrefix
+        {
+            get
+            {
+
+                string str = "";
+                try
+                {
+                    str = ConfigurationManager.AppSettings["nfcmsSQLPrefix"];
+                }
+                catch (StackOverflowException e)
+                {
+
+                    throw e;
+
+                }
+                return str;
+            }
+            set
+            {
+
+                @ConfigurationManager.AppSettings["nfcmsSQLPrefix"] = value;
+
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         /// <summary>
         /// Checks a boundle of Configvars for EXISTS. If any of them doesnt exists this function will create them.
         /// </summary>
         /// <param name="config">Config Syntax:  name=value  for example:  myconfigvar=MyValue</param>
         public void checkConfig(string[] config)
         {
-
             for (int x = 0; x < config.Length; x++)
             {
 
@@ -61,80 +108,18 @@ namespace Ren.CMS.CORE.ThisApplication
                 if (valueStr.EndsWith("=")) valueStr = valueStr.Remove(valueStr.LastIndexOf("="));
                 this.createCFGifNotExists(v[0], valueStr);
             };
-
-
         }
 
-        public string BaseUrl
+        private void createCFGifNotExists(string name, string defaultvalue)
         {
-
-            get
+            if (ConfigurationManager.AppSettings[name] == null)
             {
 
-                try
-                {
-
-
-
-
-
-                    if (HttpContext.Current.Request.Url.Scheme.ToLower() == "https")
-
-                        return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTPS"];
-                    else return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTP"];
-
-
-
-                }
-                catch
-                {
-                    return null;
-
-                }
+                ConfigurationManager.AppSettings.Add(name, defaultvalue);
 
             }
-
         }
 
-        public string ApplicationName
-        {
-            get { return HttpContext.Current.Request.ApplicationPath.Substring(1, HttpContext.Current.Request.ApplicationPath.Length - 1); }
-
-        }
-
-        public string getSqlPrefix
-        {
-
-            get
-            {
-
-                string str = "";
-                try
-                {
-                    str = ConfigurationManager.AppSettings["nfcmsSQLPrefix"];
-                }
-                catch (StackOverflowException e)
-                {
-
-
-                    throw e;
-
-                }
-                return str;
-            }
-            set
-            {
-
-                @ConfigurationManager.AppSettings["nfcmsSQLPrefix"] = value;
-
-            }
-
-
-
-        }
-
+        #endregion Methods
     }
-
-
 }
-

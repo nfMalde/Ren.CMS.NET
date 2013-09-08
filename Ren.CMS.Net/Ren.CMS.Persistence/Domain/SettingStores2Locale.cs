@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class SettingStores2Locale
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class SettingStores2Locale {
-        public virtual int Id { get; set; }
-        public virtual int Stid { get; set; }
-        public virtual string LangLine { get; set; }
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string LangLine
+        {
+            get; set;
+        }
+
+        public virtual int Stid
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

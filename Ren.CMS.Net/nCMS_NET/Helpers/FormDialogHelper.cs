@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Ren.CMS.Models.FormDialog;
-using System.Web.Script.Serialization;
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Script.Serialization;
+
+    using Ren.CMS.Models.FormDialog;
+
     public static class FormDialogHelper
     {
-        public static IHtmlString OpenFormDialogFunc(this HtmlHelper helper, string elementID, bool includeEndlineDelimiter = true)
-        {
+        #region Methods
 
-            return new HtmlString("$('#" + elementID + "').dialog(\"open\")" + (includeEndlineDelimiter ? ";" : ""));
-        
-        }
         public static IHtmlString CloseFormDialogFunc(this HtmlHelper helper, string elementID, bool includeEndlineDelimiter = true)
         {
-
             return new HtmlString("$('#" + elementID + "').dialog(\"close\")" + (includeEndlineDelimiter ? ";" : ""));
-
         }
+
         public static IHtmlString FormDialog(this HtmlHelper helper, FormDialogSettings Setup)
         {
-
             JavaScriptSerializer js = new JavaScriptSerializer();
             List<object> Elements = new List<object>();
 
@@ -38,7 +34,7 @@ namespace Ren.CMS.Helpers
                         };
 
                     ThisStore.Add(row);
-                
+
                 }
 
                 if (Element.CustomRenderer != null) Element.CustomRenderer = "%" + Element.CustomRenderer + "%";
@@ -55,13 +51,11 @@ namespace Ren.CMS.Helpers
                                                      {"dataStore", ThisStore}};
 
                 Elements.Add(element);
-            
+
             }
 
-
-
             Dictionary<object, object> _setup = new Dictionary<object, object>() {
-            
+
             {"method", Setup.Method.ToString() },
             {"url", Setup.URL },
             {"title", Setup.Title},
@@ -69,16 +63,13 @@ namespace Ren.CMS.Helpers
             {"width", Setup.Width},
             {"height", Setup.Height},
             {"elements", Elements },
-            
+
             {"saveText", Setup.SaveText },
 
             {"abortText", Setup.AbortText },
 
-            
             };
-            
 
-            
             string jscode = js.Serialize(_setup);
             jscode = jscode.Replace("\"%", "").Replace("%\"", "");
             string html = "<div id=\"" + Setup.ElementID + "\"></div>";
@@ -88,10 +79,14 @@ namespace Ren.CMS.Helpers
                             ");"+
                             "});</script>";
 
-
                    return new HtmlString(html);
-        
-        
         }
+
+        public static IHtmlString OpenFormDialogFunc(this HtmlHelper helper, string elementID, bool includeEndlineDelimiter = true)
+        {
+            return new HtmlString("$('#" + elementID + "').dialog(\"open\")" + (includeEndlineDelimiter ? ";" : ""));
+        }
+
+        #endregion Methods
     }
 }

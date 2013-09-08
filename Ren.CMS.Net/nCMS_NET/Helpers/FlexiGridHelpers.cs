@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Ren.CMS.Models.FlexiGrid;
-using System.Web.Mvc;
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.Models.FlexiGrid;
+
     public static class FlexiGridHelper
     {
+        #region Methods
+
         public static IHtmlString GenerateFlexiGrid(this HtmlHelper helper, FlexiSettings GridSetup)
         {
             if (GridSetup.SortName == null)
@@ -16,13 +20,12 @@ namespace Ren.CMS.Helpers
                     GridSetup.SortName = GridSetup.ColumnModel[0].Name;
                 else
                     GridSetup.SortName = "";
- 
+
             }
             if (GridSetup.SortOrder == null)
             {
                 GridSetup.SortOrder = "DESC";
 
-            
             }
             string jsCode = "$(function() { " +
                                 "$('#" + GridSetup.ElementID + "').flexigrid({ " +
@@ -30,8 +33,7 @@ namespace Ren.CMS.Helpers
                                 "dataType: '" + HttpUtility.HtmlDecode(GridSetup.DataType) + "', "+
                                 "colModel: [ ";
 
-
-            //Generating ColModels 
+            //Generating ColModels
 
             foreach (FlexiColModel Model in GridSetup.ColumnModel)
             {
@@ -56,7 +58,6 @@ namespace Ren.CMS.Helpers
 
             if (jsCode.EndsWith(","))
                 jsCode = jsCode.Remove(jsCode.LastIndexOf(','));
-
 
             jsCode += "], ";
             if (GridSetup.Buttons.Count > 0)
@@ -84,7 +85,7 @@ namespace Ren.CMS.Helpers
 
             jsCode += "sortname: '" + GridSetup.SortName.ToString() + "', "+
                       "sortorder: '"+ (GridSetup.SortOrder.ToUpper() == "DESC" ||
-                                            GridSetup.SortOrder.ToUpper() == "ASC" ? 
+                                            GridSetup.SortOrder.ToUpper() == "ASC" ?
                                             GridSetup.SortOrder.ToUpper() : "ASC") +"' ,";
 
             jsCode += "usepager: "+ GridSetup.UsePager.ToString().ToLower() +", ";
@@ -102,7 +103,6 @@ namespace Ren.CMS.Helpers
             jsCode += "});";
             jsCode += "});";
 
-
             string html = "<table id=\"" + GridSetup.ElementID + "\">" +
                             "</table>" +
                             "<script type=\"text/javascript\">" +
@@ -112,7 +112,8 @@ namespace Ren.CMS.Helpers
             //Okay done! Lets return the HTML
 
             return new HtmlString(html);
+        }
 
-         }
+        #endregion Methods
     }
 }

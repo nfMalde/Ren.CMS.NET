@@ -1,15 +1,38 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class Category
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class Category {
-        public virtual System.Guid Pkid { get; set; }
-        public virtual string ContentType { get; set; }
-        public virtual string ShortName { get; set; }
-        public virtual string LongName { get; set; }
-        public virtual string SubFrom { get; set; }
+        public virtual string ContentType
+        {
+            get; set;
+        }
+
+        public virtual string LongName
+        {
+            get; set;
+        }
+
+        public virtual System.Guid Pkid
+        {
+            get; set;
+        }
+
+        public virtual string ShortName
+        {
+            get; set;
+        }
+
+        public virtual string SubFrom
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

@@ -1,39 +1,30 @@
-﻿using Ren.CMS.CORE.Settings;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿namespace Ren.CMS.CORE.Mailer
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Mail;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
 
-namespace Ren.CMS.CORE.Mailer
-{ 
+    using Ren.CMS.CORE.Settings;
+
     public class Mailer
     {
-        private MailerCredentials MapFromGlobalSettings()
-        {
-            
+        #region Fields
 
-            Settings.GlobalSettings GS = new Settings.GlobalSettings();
-
-
-            return new MailerCredentials(GS.getSetting("MAILER_SMTPSERVER").Value.ToString(),
-                                         GS.getSetting("MAILER_SMTP_PORT").Value.ToString(),
-                                         GS.getSetting("MAILER_SMTPLOGIN").Value.ToString(),
-                                         GS.getSetting("MAILER_SMTP_PASSWORD").Value.ToString(),
-                                         GS.getSetting("MAILER_SENDER_EMAILADDRESS").Value.ToString(),
-                                         GS.getSetting("MAILER_SENDERNAME").Value.ToString(),
-                                         GS.getSetting("MAILER_SMTP_REQUIRES_AUTH").ValueAsBoolean(),
-                                         GS.getSetting("MAILER_SMTP_REQUIRES_HTTPS").ValueAsBoolean(),
-                                         GS.getSetting("MAILER_DEFAULT_LAYOUT").Value.ToString(),false);
-        }
-
+        public List<string> ErrorLog = new List<string>();
 
         private MailerCredentials Credentials = null;
+        private SmtpClient _client = new SmtpClient();
+
+        #endregion Fields
+
+        #region Constructors
 
         public Mailer()
         {
@@ -50,41 +41,23 @@ namespace Ren.CMS.CORE.Mailer
             this.Credentials = this.MapFromGlobalSettings();
 
             init_();
-
         }
 
         public Mailer(MailerCredentials CredentialData)
         {
-
             this.Credentials = CredentialData;
             init_();
-
-
         }
 
-        private SmtpClient _client = new SmtpClient();
-        
-        private void init_()
-        {
-            int PORT = 0;
-            int.TryParse(this.Credentials.CredentialSMTPPort, out PORT);
-            SmtpClient MailSender = new SmtpClient(this.Credentials.CredentialSMTPServer,
-                                                    PORT);
+        #endregion Constructors
 
-            MailSender.EnableSsl = this.Credentials.CredentialSMPTRequiresHTTPS;
-            if (!String.IsNullOrEmpty(this.Credentials.CredentialSMTPLogin) &&
-                    this.Credentials.CredentialSMTPRequiredAuthentification)
-                MailSender.Credentials = new NetworkCredential(this.Credentials.CredentialSMTPLogin, this.Credentials.CredentialSMTPPassword);
-            _client = MailSender;
+        #region Methods
 
-        }
-
-        public List<string> ErrorLog = new List<string>();
         public bool SendMail(string To, string Subject, string MailFormat, string Body, ControllerContext controllerContext)
         {
             return SendMail(To, Subject, MailFormat, Body, controllerContext.ParentActionViewContext);
-
         }
+
         public bool SendMail(string To, string Subject, string MailFormat, string Body, ViewContext viewContext)
         {
             try
@@ -94,7 +67,6 @@ namespace Ren.CMS.CORE.Mailer
                 MailModel.Body = Body;
                 MailModel.MailID = DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day
                                     + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond;
-
 
                 MailModel.Receiptient = To;
                 MailModel.Subject = Subject;
@@ -106,7 +78,6 @@ namespace Ren.CMS.CORE.Mailer
                     MSG.Subject = Subject;
                     MSG.Body = HTMLBody;
                     MSG.BodyEncoding = Encoding.ASCII;
-
 
                     MSG.IsBodyHtml = true;
 
@@ -126,7 +97,6 @@ namespace Ren.CMS.CORE.Mailer
                     MSG.Body = HTMLBody;
                     MSG.BodyEncoding = Encoding.ASCII;
 
-
                     MSG.IsBodyHtml = false;
 
                     _client.Send(MSG);
@@ -143,13 +113,40 @@ namespace Ren.CMS.CORE.Mailer
             return false;
         }
 
+        private void init_()
+        {
+            int PORT = 0;
+            int.TryParse(this.Credentials.CredentialSMTPPort, out PORT);
+            SmtpClient MailSender = new SmtpClient(this.Credentials.CredentialSMTPServer,
+                                                    PORT);
+
+            MailSender.EnableSsl = this.Credentials.CredentialSMPTRequiresHTTPS;
+            if (!String.IsNullOrEmpty(this.Credentials.CredentialSMTPLogin) &&
+                    this.Credentials.CredentialSMTPRequiredAuthentification)
+                MailSender.Credentials = new NetworkCredential(this.Credentials.CredentialSMTPLogin, this.Credentials.CredentialSMTPPassword);
+            _client = MailSender;
+        }
+
+        private MailerCredentials MapFromGlobalSettings()
+        {
+            Settings.GlobalSettings GS = new Settings.GlobalSettings();
+
+            return new MailerCredentials(GS.getSetting("MAILER_SMTPSERVER").Value.ToString(),
+                                         GS.getSetting("MAILER_SMTP_PORT").Value.ToString(),
+                                         GS.getSetting("MAILER_SMTPLOGIN").Value.ToString(),
+                                         GS.getSetting("MAILER_SMTP_PASSWORD").Value.ToString(),
+                                         GS.getSetting("MAILER_SENDER_EMAILADDRESS").Value.ToString(),
+                                         GS.getSetting("MAILER_SENDERNAME").Value.ToString(),
+                                         GS.getSetting("MAILER_SMTP_REQUIRES_AUTH").ValueAsBoolean(),
+                                         GS.getSetting("MAILER_SMTP_REQUIRES_HTTPS").ValueAsBoolean(),
+                                         GS.getSetting("MAILER_DEFAULT_LAYOUT").Value.ToString(),false);
+        }
 
         private string RenderPartialViewToString(ViewContext pvt, string viewName, object model)
         {
             ViewDataDictionary ViewData = pvt.ViewData;
             TempDataDictionary TempData = pvt.TempData;
             ControllerContext CT = pvt.Controller.ControllerContext;
-
 
             if (string.IsNullOrEmpty(viewName))
                 viewName = CT.RouteData.GetRequiredString("action");
@@ -167,9 +164,6 @@ namespace Ren.CMS.CORE.Mailer
             }
         }
 
-
-
+        #endregion Methods
     }
-
-
 }

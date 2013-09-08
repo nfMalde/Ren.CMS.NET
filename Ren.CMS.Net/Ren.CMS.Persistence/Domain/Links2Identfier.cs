@@ -1,12 +1,23 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class Links2Identfier
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class Links2Identfier {
-        public virtual int LinkID { get; set; }
-        public virtual int IdentifierID { get; set; }
+        public virtual int IdentifierID
+        {
+            get; set;
+        }
+
+        public virtual int LinkID
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

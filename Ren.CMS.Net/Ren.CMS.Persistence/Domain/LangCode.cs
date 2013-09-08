@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class LangCode
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class LangCode {
-        public virtual int Id { get; set; }
-        public virtual string Code { get; set; }
-        public virtual string Name { get; set; }
+        public virtual string Code
+        {
+            get; set;
+        }
+
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string Name
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ren.CMS.CORE.nhibernate.Domain;
-using Ren.CMS.CORE.nhibernate.Base;
-using System.Web;
-using System.Web.Mvc;
-
-
-
-namespace Ren.CMS.CORE.Helper
+﻿namespace Ren.CMS.CORE.Helper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.CORE.nhibernate.Domain;
+
     public static class CurrentLanguageHelper
     {
-        public static string CurrentLanguage {
+        #region Properties
 
+        public static string CurrentLanguage
+        {
             get {
 
                 string language = DefaultLanguage;
@@ -34,39 +35,25 @@ namespace Ren.CMS.CORE.Helper
                 }
                 catch { }
 
-
                 return language;
-            
-            
+
             }
-        
-        
         }
 
         public static string DefaultLanguage
         {
-
-            get 
+            get
             {
 
                 SettingsHelper.GlobalSettingsHelper GS = new SettingsHelper.GlobalSettingsHelper();
 
                 string l = GS.Read("GLOBAL_DEFAULT_LANGUAGE");
 
-
                 return l;
-            
-            
+
             }
-        
-        
         }
 
-
-
-
-
-
-
+        #endregion Properties
     }
 }

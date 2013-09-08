@@ -1,29 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using MvcContrib;
-using MvcContrib.PortableAreas;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.ViewEngine;
-
-namespace ThumpnailModule.Thumpnail
+﻿namespace ThumpnailModule.Thumpnail
 {
-    public class ThumpnailRegistration:PortableAreaRegistration
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
+    using MvcContrib;
+    using MvcContrib.PortableAreas;
+
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.ViewEngine;
+
+    public class ThumpnailRegistration : PortableAreaRegistration
     {
+        #region Fields
 
         private string ThumpnailPath = HttpContext.Current.Server.MapPath("~/StorageThumpnails");
 
+        #endregion Fields
+
+        #region Properties
+
+        public override string AreaName
+        {
+            get { return "Thumpnail"; }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         public override void RegisterArea(System.Web.Mvc.AreaRegistrationContext context, IApplicationBus bus)
         {
-
-
-
             string[] thisNamespace = { "ThumpnailModule.Thumpnail.Controllers" };
             #region Adding Routes
             context.MapRoute("Thumpnail",
@@ -35,8 +48,6 @@ namespace ThumpnailModule.Thumpnail
                                 new { controller = "Thumpnail", action = "_Get", contentid = 0, pkid = "", filename = "", Width = 64, Height = 64, ext = "jpg" },
                                 thisNamespace);
 
-        
-
             context.MapRoute("Thumpnail-Minimal",
                                 "Thumpnail",
                                 new { controller = "Thumpnail", action = "_Get", contentid = 0, pkid = "", filename = "", Width = 64, Height = 64, ext = "jpg" },
@@ -47,10 +58,8 @@ namespace ThumpnailModule.Thumpnail
             this.Install();
             #endregion Install Module
 
-
             RegisterAreaEmbeddedResources();
         }
-
 
         private void Install()
         {
@@ -80,21 +89,15 @@ namespace ThumpnailModule.Thumpnail
                 Builder.AppendLine(")");
 
                 SQL.SysNonQuery(Builder.ToString(), new nSqlParameterCollection());
-            
+
             }
 
             if (!EX.IsClosed)
                 EX.Close();
 
-
             SQL.SysDisconnect();
-
-        
         }
 
-        public override string AreaName
-        {
-            get { return "Thumpnail"; }
-        }
+        #endregion Methods
     }
 }

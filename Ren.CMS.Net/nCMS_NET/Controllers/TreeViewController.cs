@@ -1,16 +1,11 @@
-using System.Collections.Generic;
-using System.Web.Mvc;
-
 namespace Ren.CMS.Controllers
 {
+    using System.Collections.Generic;
+    using System.Web.Mvc;
+
     public class TreeViewController : Controller
     {
-        public ActionResult Index()
-        {
-            var locations = GetLocations();
-
-            return View(locations);
-        }
+        #region Methods
 
         public static List<TreeViewLocation> GetLocations()
         {
@@ -46,18 +41,45 @@ namespace Ren.CMS.Controllers
                                 };
             return locations;
         }
+
+        public ActionResult Index()
+        {
+            var locations = GetLocations();
+
+            return View(locations);
+        }
+
+        #endregion Methods
     }
 
     public class TreeViewLocation
     {
+        #region Constructors
+
         public TreeViewLocation()
         {
             ChildLocations = new HashSet<TreeViewLocation>();
         }
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<TreeViewLocation> ChildLocations { get; set; }
-    }
+        #endregion Constructors
 
+        #region Properties
+
+        public ICollection<TreeViewLocation> ChildLocations
+        {
+            get; set;
+        }
+
+        public int Id
+        {
+            get; set;
+        }
+
+        public string Name
+        {
+            get; set;
+        }
+
+        #endregion Properties
+    }
 }

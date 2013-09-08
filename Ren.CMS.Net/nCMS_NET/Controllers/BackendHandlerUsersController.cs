@@ -1,21 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.CORE.ThisApplication;
-using System.Data.SqlClient;
-using Ren.CMS.Models.FlexiGrid;
-using Ren.CMS.Models.FormDialog;
-using Ren.CMS.Models.Backend.Users;
-using Ren.CMS.MemberShip;
-using System.Web.Security;
-using Ren.CMS.CORE.Security;
-namespace Ren.CMS.Controllers
+﻿namespace Ren.CMS.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
+
+    using Ren.CMS.CORE.Security;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.CORE.ThisApplication;
+    using Ren.CMS.MemberShip;
+    using Ren.CMS.Models.Backend.Users;
+    using Ren.CMS.Models.FlexiGrid;
+    using Ren.CMS.Models.FormDialog;
+
     public class BackendHandlerUsersController : Controller
     {
+        #region Methods
+
+        [HttpPost]
+        public FormDialogReturn Create(CreateUser MDL)
+        {
+            CryptoServices Crypto = new CryptoServices();
+            if(MDL.GeneratePWD)
+            {
+               Random PWhash = new Random(1000);
+               int pwhashExt = DateTime.Now.Millisecond;
+
+               string uncrypted = PWhash +"_"+ pwhashExt;
+
+               string cryptedPW = Crypto.ConvertToSHA1(uncrypted);
+
+               string newPWD = ( cryptedPW.Length > 8 ?
+                                    cryptedPW.Substring(0,8) :
+                                    cryptedPW);
+
+               MDL.password = newPWD;
+               MDL.password_confirm = newPWD;
+            }
+
+            if (!ModelState.IsValid)
+            {
+
+            if(MDL.password != MDL.password_confirm)
+                return new FormDialogReturn(false, "Das Passwort stimmt nicht mit der Besätigung überein");
+
+                return new FormDialogReturn(false, "Es wurde nicht alle Felder ausgefüllt oder sind fehlerhaft. Bitte überprüfen Sie ihre Angaben!");
+
+            }
+            MDL.email = (MDL.email == null ? String.Empty : MDL.email);
+            MemberShip.nProvider Prov = (MemberShip.nProvider)Membership.Provider;
+            MembershipCreateStatus Status = new MembershipCreateStatus();
+            MembershipUser User = Prov.CreateUser(
+                                                    MDL.Username,
+                                                    MDL.password,
+                                                    MDL.email,
+                                                    MDL.secretQuestion,
+                                                    MDL.secretAnswer,
+                                                    (MDL.user_status == "activated" ? true : false),
+                                                    Guid.NewGuid(),
+                                                    out Status, MDL.Pgroup);
+
+                if(Status == MembershipCreateStatus.Success)
+                {
+                //Now lets try the lockout
+                if (MDL.user_locked)
+                {
+
+                    Prov.LockUser(MDL.Username);
+
+                }
+
+                if (!String.IsNullOrEmpty(MDL.user_comment))
+                {
+                    User = Prov.GetUser(User.ProviderUserKey, false);
+
+                    User.Comment = MDL.user_comment;
+
+                    Prov.UpdateUser(User);
+
+                }
+                    return new FormDialogReturn(true, "Benutzer wurde erfolgreich erstellt");
+
+                }
+                else if(Status == MembershipCreateStatus.DuplicateUserName)
+                {
+
+                return new FormDialogReturn(false, "Dieser Benutzername existert bereits");
+                }
+                else if (Status == MembershipCreateStatus.DuplicateEmail)
+                {
+                    return new FormDialogReturn(false, "Es existiert breits ein Benutzer mit dieser E-Mail Adresse.");
+                }
+
+                return new FormDialogReturn(false, "Unbekannter Fehler während der Benutzererstellung: <a href=\"http://msdn.microsoft.com/de-de/library/system.web.security.membershipcreatestatus.aspx\" target=\"_blank\">" + Status.ToString() +"</a>");
+        }
+
         [HttpPost]
         public FormDialogReturn Edit(EditUser MDL)
         {
@@ -25,11 +107,8 @@ namespace Ren.CMS.Controllers
                 if (MDL.password != MDL.password_confirm)
                     return new FormDialogReturn(false, "Fehler: 'Passwort' und 'Passwort bestätigen' stimmen nicht überein.");
 
-
                 return new FormDialogReturn(false, "Bitte korrigieren Sie ihre Angaben!");
 
-            
-            
             }
 
             MembershipUser User = Provider.GetUser(MDL.PKID, false);
@@ -38,7 +117,7 @@ namespace Ren.CMS.Controllers
                 MembershipCreateStatus status = MembershipCreateStatus.UserRejected;
                 Provider.UpdateUsername(User.ProviderUserKey, MDL.Username, out status);
                 if (status != MembershipCreateStatus.Success)
-                {  
+                {
                     return new FormDialogReturn(false, "Fehler: Entweder ist der Benutzername schon vergeben oder er wurde vom System abgelehnt (Error-Code: MembershipCreateStatus." + status.ToString() + ")");
 
                 }
@@ -69,115 +148,41 @@ namespace Ren.CMS.Controllers
             }
             //Update Process
             Provider.UpdateUser(User,MDL.Pgroup);
-            
 
             return new FormDialogReturn(true, "");
-
-
         }
 
         [HttpPost]
-        public FormDialogReturn Create(CreateUser MDL) {
+        public JsonResult GetUserData(object PKID)
+        {
+            string pkid = PKID.ToString();
+            nProvider Provider = (nProvider)Membership.Provider;
 
-            CryptoServices Crypto = new CryptoServices();
-            if(MDL.GeneratePWD)
-            {
-               Random PWhash = new Random(1000);
-               int pwhashExt = DateTime.Now.Millisecond;
+            MembershipUser User = Provider.GetUser(PKID, true);
 
-               string uncrypted = PWhash +"_"+ pwhashExt;
+            if(User == null)
+                return Json(new { success = false, error = "User not found"});
+            Dictionary<string, object> allData = Provider.GetUserDataRow(PKID);
 
-               string cryptedPW = Crypto.ConvertToSHA1(uncrypted);
+            EditUser Return = new EditUser();
+            Return.PKID = User.ProviderUserKey;
+            Return.email = User.Email;
+            Return.GeneratePWD = false;
+            Return.inform_user = true;
+            Return.Pgroup = allData.Where(i => i.Key == "PermissionGroup").First().Value.ToString();
+            Return.PKID = User.ProviderUserKey;
+            Return.secretAnswer = allData.Where(i => i.Key == "PasswordAnswer").First().Value.ToString();
+            Return.secretQuestion = User.PasswordQuestion;
+            Return.user_status = (User.IsApproved ? "activated" : "deactivated");
+            Return.user_locked = User.IsLockedOut;
+            Return.Username = User.UserName;
 
-               string newPWD = ( cryptedPW.Length > 8 ?
-                                    cryptedPW.Substring(0,8) :
-                                    cryptedPW);
-
-
-               MDL.password = newPWD;
-               MDL.password_confirm = newPWD;
-            }
-
-
-            if (!ModelState.IsValid)
-            {
-              
-                  
-            if(MDL.password != MDL.password_confirm)        
-                return new FormDialogReturn(false, "Das Passwort stimmt nicht mit der Besätigung überein");
-
-             
-                
-               
-                return new FormDialogReturn(false, "Es wurde nicht alle Felder ausgefüllt oder sind fehlerhaft. Bitte überprüfen Sie ihre Angaben!");
-
-            
-            }
-            MDL.email = (MDL.email == null ? String.Empty : MDL.email); 
-            MemberShip.nProvider Prov = (MemberShip.nProvider)Membership.Provider;
-            MembershipCreateStatus Status = new MembershipCreateStatus();
-            MembershipUser User = Prov.CreateUser(
-                                                    MDL.Username,
-                                                    MDL.password,
-                                                    MDL.email,
-                                                    MDL.secretQuestion,
-                                                    MDL.secretAnswer,
-                                                    (MDL.user_status == "activated" ? true : false),
-                                                    Guid.NewGuid(),
-                                                    out Status, MDL.Pgroup);
-
-           
-
-
-             
-            
-
-                if(Status == MembershipCreateStatus.Success)
-                {
-                //Now lets try the lockout
-                if (MDL.user_locked)
-                {
-
-                    Prov.LockUser(MDL.Username);
-                
-                }
-
-                if (!String.IsNullOrEmpty(MDL.user_comment))
-                {
-                    User = Prov.GetUser(User.ProviderUserKey, false);
-
-                    User.Comment = MDL.user_comment;
-
-                    Prov.UpdateUser(User);
-                
-                }
-                    return new FormDialogReturn(true, "Benutzer wurde erfolgreich erstellt");
-                 
-                }
-                else if(Status == MembershipCreateStatus.DuplicateUserName)
-                {
-
-                return new FormDialogReturn(false, "Dieser Benutzername existert bereits");
-                }
-                else if (Status == MembershipCreateStatus.DuplicateEmail)
-                {
-                    return new FormDialogReturn(false, "Es existiert breits ein Benutzer mit dieser E-Mail Adresse.");
-                }
-
-
-                return new FormDialogReturn(false, "Unbekannter Fehler während der Benutzererstellung: <a href=\"http://msdn.microsoft.com/de-de/library/system.web.security.membershipcreatestatus.aspx\" target=\"_blank\">" + Status.ToString() +"</a>");
-            
-            
-
-
-
-
+            return Json(new { success = true, UserData = Return });
         }
 
         [HttpPost]
         public FlexiGridReturn UserList(Ren.CMS.Models.Core.FlexyGridPostParameters Flexi = null)
         {
-
             List<FlexiRow> UserRows = new List<FlexiRow>();
             if (!ModelState.IsValid)
             {
@@ -209,9 +214,8 @@ namespace Ren.CMS.Controllers
 
             }
 
-
             switch (Flexi.sortorder.ToUpper())
-            { 
+            {
                 case "DESC":
                 case "ASC":
 
@@ -221,7 +225,7 @@ namespace Ren.CMS.Controllers
                 default:
                     Flexi.sortorder = "DESC";
                     break;
-            
+
             }
 
             List<object> _list = new List<object>();
@@ -240,8 +244,6 @@ namespace Ren.CMS.Controllers
             int pageStart = (Flexi.page - 1) * pageSize;
             int pageEnd = Flexi.page * pageSize;
             int totalRows = 0;
-
-
 
             SqlHelper SQL = new SqlHelper();
             SQL.SysConnect();
@@ -271,7 +273,6 @@ namespace Ren.CMS.Controllers
                             PGROUP = ((string)Users["GROUPNAME"]),
                             LOCKED = ((string)Users["LOCKEDOUT"]),
 
-
                         }
                     };
                 }
@@ -279,48 +280,13 @@ namespace Ren.CMS.Controllers
             }
             Users.Close();
             SQL.SysDisconnect();
-            
+
             //here we are setting up the return and with a little bit magic we return a valid json return for our flexi grid
             FlexiGridReturn Ret = new FlexiGridReturn(UserRows, Flexi.page, totalRows);
-
 
             return Ret;
         }
 
-        [HttpPost]
-        public JsonResult GetUserData(object PKID)
-        {
-            string pkid = PKID.ToString();
-            nProvider Provider = (nProvider)Membership.Provider;
-
-            MembershipUser User = Provider.GetUser(PKID, true);
-
-            if(User == null) 
-                return Json(new { success = false, error = "User not found"});
-            Dictionary<string, object> allData = Provider.GetUserDataRow(PKID);
-
-            EditUser Return = new EditUser();
-            Return.PKID = User.ProviderUserKey;
-            Return.email = User.Email;
-            Return.GeneratePWD = false;
-            Return.inform_user = true;
-            Return.Pgroup = allData.Where(i => i.Key == "PermissionGroup").First().Value.ToString();
-            Return.PKID = User.ProviderUserKey;
-            Return.secretAnswer = allData.Where(i => i.Key == "PasswordAnswer").First().Value.ToString();
-            Return.secretQuestion = User.PasswordQuestion;
-            Return.user_status = (User.IsApproved ? "activated" : "deactivated");
-            Return.user_locked = User.IsLockedOut;
-            Return.Username = User.UserName;
-
-
-            return Json(new { success = true, UserData = Return });
-
-
-        }
-
-
-
-
-
+        #endregion Methods
     }
 }

@@ -1,63 +1,65 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Data;
-using System.Web.Mvc;
-using System.Web.Security;
-using System.Text;
-using System.Reflection;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Net;
- 
-using System.Net.Mail;
-
-namespace Ren.CMS.CORE.SqlHelper
+﻿namespace Ren.CMS.CORE.SqlHelper
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Mail;
+    using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
+
     public class SqlHelper
     {
+        #region Fields
+
         private int lastAffectedRows = 0;
-        private string parseQuery(string query)
+        private SqlConnection SysConnection = new SqlConnection();
+
+        #endregion Fields
+
+        #region Constructors
+
+        public SqlHelper()
         {
+            SqlConnection temp = new SqlConnection();
+            temp.ConnectionString = this.GetConnectionString("nfCMS");
+            ///* connection string building for sql and oledb from 1st line to 5th line*/
+            SqlConnectionStringBuilder Obj_sqnbuild =
+               new SqlConnectionStringBuilder();//making the instance for
+            //the sqlConnection String builder
+            //Obj_sqnbuild.InitialCatalog = temp.;
+            //Obj_sqnbuild.DataSource = "DBSERVER";
+            //Obj_sqnbuild.UserID = "sa";
+            //Obj_sqnbuild.Password = "db_Ser3er_2009";
+            Obj_sqnbuild.ConnectionString = temp.ConnectionString;
+            Obj_sqnbuild.Add("Max pool size", 1500);
+            Obj_sqnbuild.Add("Min pool size", 20);
+            Obj_sqnbuild.Add("Pooling", true);
 
-            return query.Replace("__PREFIX__", (new ThisApplication.ThisApplication().getSqlPrefix));
-
-
+            this.SysConnection.ConnectionString = Obj_sqnbuild.ConnectionString;
         }
 
+        #endregion Constructors
 
-
+        #region Properties
 
         public int AffectedRows
         {
-
             get { return this.lastAffectedRows; }
         }
 
-        private string GetConnectionString(string str)
-        {
-            //variable to hold our return value
-            string conn = string.Empty;
-            //check if a value was provided
-            if (!string.IsNullOrEmpty(str))
-            {
-                
-                //name provided so search for that connection
-                conn = ConfigurationManager.ConnectionStrings[str].ConnectionString;
-            }
-            else
-            //name not provided, get the 'default' connection
-            {
-                throw new Exception("ERROR IN SYS.CORE", new Exception("Required Connection String name is empty or null"));
-            }
-            //return the value
-            return conn;
-        }
-        private SqlConnection SysConnection = new SqlConnection();
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Fills an System.Data.DataSet by using a internal SqlDataAdapter (System.Data.SqlClient)
@@ -77,37 +79,7 @@ namespace Ren.CMS.CORE.SqlHelper
             }
             return Set;
         }
-        public SqlCommand SysCommand(string querystring)
-        {
-            SqlCommand CMD = new SqlCommand(querystring);
-            CMD.Connection = this.SysConnection;
-            return CMD;
 
-        }
-
-
-
-        public SqlHelper()
-        {
-
-            SqlConnection temp = new SqlConnection();
-            temp.ConnectionString = this.GetConnectionString("nfCMS");
-            ///* connection string building for sql and oledb from 1st line to 5th line*/
-            SqlConnectionStringBuilder Obj_sqnbuild =
-       new SqlConnectionStringBuilder();//making the instance for 
-            //the sqlConnection String builder
-            //Obj_sqnbuild.InitialCatalog = temp.;
-            //Obj_sqnbuild.DataSource = "DBSERVER";
-            //Obj_sqnbuild.UserID = "sa";
-            //Obj_sqnbuild.Password = "db_Ser3er_2009";
-            Obj_sqnbuild.ConnectionString = temp.ConnectionString;
-            Obj_sqnbuild.Add("Max pool size", 1500);
-            Obj_sqnbuild.Add("Min pool size", 20);
-            Obj_sqnbuild.Add("Pooling", true);
-
-            this.SysConnection.ConnectionString = Obj_sqnbuild.ConnectionString;
-
-        }
         /// <summary>
         /// Returns the Last ID of a Table
         /// </summary>
@@ -115,7 +87,6 @@ namespace Ren.CMS.CORE.SqlHelper
         /// <returns>-1 if no id was found or the id as integer</returns>
         public int getLastId(string table)
         {
-
             string query = "SELECT IDENT_CURRENT(@table) as id";
             nSqlParameterCollection PCOL = new nSqlParameterCollection();
             PCOL.Add("@table", table);
@@ -131,236 +102,6 @@ namespace Ren.CMS.CORE.SqlHelper
             R.Close();
             return id;
         }
-
-        /// <summary>
-        /// Connects to the Database
-        /// </summary>
-        public void SysConnect()
-        {
-            try
-            {
-                if (this.SysConnection.State == ConnectionState.Open)
-                {
-
-                    this.SysConnection.Close();
-                }
-                this.SysConnection.Open();
-
-            }
-            catch (SqlException e2) { throw e2; }
-
-            if (this.SysConnection.State != ConnectionState.Open)
-            {
-
-                throw new Exception("Unable connect. Server is reachable and but we get no OK");
-
-            }
-
-        }
-
-        /// <summary>
-        /// Disconnects from the Database
-        /// </summary>
-        public void SysDisconnect()
-        {
-
-            if (this.SysConnection.State == System.Data.ConnectionState.Open)
-            {
-
-                this.SysConnection.Close();
-
-
-            }
-
-        }
-
-        /// <summary>
-        /// Executes an non query command to the Database.
-        /// </summary>
-        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
-        /// <param name="parameter">Optional: Parameter Array (System.Data.SqlClient.SqlParameter[])</param>
-        public void SysNonQuery(string commandstring, nSqlParameterCollection parameter = null)
-        {
-
-
-
-
-
-            SqlCommand Command = new SqlCommand(commandstring);
-            Command.Connection = this.SysConnection;
-            if (parameter != null)
-            {
-                foreach (SqlParameter P in parameter)
-                {
-                    if (P.Value == null) P.Value = DBNull.Value;
-
-                    Command.Parameters.Add(P);
-                }
-
-
-            }
-            Command.ExecuteNonQuery();
-
-
-            Command.Dispose();
-
-        }
-
-
-        /// <summary>
-        /// Executes an non query command to the Database.
-        /// </summary>
-        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
-        /// <param name="parameter">Optional: Parameter Array (System.Data.SqlClient.SqlParameter[])</param>
-        public void SysNonQuery(string commandstring, SqlParameter[] parameter = null)
-        {
-
-
-
-
-
-            SqlCommand Command = new SqlCommand(commandstring);
-            Command.Connection = this.SysConnection;
-            if (parameter != null)
-            {
-                foreach (SqlParameter P in parameter)
-                {
-                    if (P.Value == null) P.Value = DBNull.Value;
-
-                    Command.Parameters.Add(P);
-                }
-
-
-            }
-
-            Command.ExecuteNonQuery();
-
-            Command.Dispose();
-
-        }
-        /// <summary>
-        /// Executes an non query command to the Database.
-        /// </summary>
-        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
-        /// <param name="parameter">Optional: Parameter List</param>
-        public void SysNonQuery(string commandstring, List<SqlParameter> parameter = null)
-        {
-
-
-
-
-
-            SqlCommand Command = new SqlCommand(commandstring);
-            Command.Connection = this.SysConnection;
-            if (parameter != null)
-            {
-                foreach (SqlParameter P in parameter)
-                {
-                    if (P.Value == null) P.Value = DBNull.Value;
-
-                    Command.Parameters.Add(P);
-                }
-
-
-            }
-            Command.ExecuteNonQuery();
-
-
-            Command.Dispose();
-
-        }
-
-        /// <summary>
-        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
-        /// </summary>
-        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
-        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
-        /// <returns>Opened SqlDataReader</returns>
-        public SqlDataReader SysReader(string querystring, SqlParameter[] parameter = null)
-        {
-
-            SqlCommand C = new SqlCommand(querystring);
-            C.Connection = this.SysConnection;
-            if (parameter != null) C.Parameters.AddRange(parameter);
-
-            return C.ExecuteReader();
-        }
-
-
-
-        /// <summary>
-        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
-        /// </summary>
-        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
-        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
-        /// <returns>Opened SqlDataReader</returns>
-        public SqlDataReader SysReader(string querystring, List<SqlParameter> parameter)
-        {
-
-            SqlCommand C = new SqlCommand(querystring);
-            C.Connection = this.SysConnection;
-            if (parameter != null)
-            {
-
-                foreach (SqlParameter P in parameter)
-                {
-                    C.Parameters.Add(P);
-                }
-
-            }
-            return C.ExecuteReader();
-        }
-        /// <summary>
-        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
-        /// </summary>
-        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
-        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
-        /// <returns>Opened SqlDataReader</returns>
-        public SqlDataReader SysReader(string querystring, nSqlParameterCollection parameter)
-        {
-
-            SqlCommand C = new SqlCommand(querystring);
-
-            C.Connection = this.SysConnection;
-            if (parameter != null)
-            {
-
-                foreach (SqlParameter P in parameter)
-                {
-                    C.Parameters.Add(P);
-                }
-
-            }
-
-
-            return C.ExecuteReader();
-        }
-        public int SysCount(string SQLTABLE, string identifycol = "", string identifyvalue = "")
-        {
-
-            string c = "SELECT * FROM " + new ThisApplication.ThisApplication().getSqlPrefix + SQLTABLE;
-            SqlParameter[] P = new SqlParameter[1];
-            if (!String.IsNullOrEmpty(identifycol) && !String.IsNullOrEmpty(identifyvalue))
-            {
-
-                c += " WHERE " + identifycol + " = @p";
-
-                P[0] = new SqlParameter("@p", identifyvalue);
-            }
-
-            SqlDataReader R = this.SysReader(c, P);
-            int i = 0;
-            while (R.Read())
-            {
-
-                i++;
-
-            }
-            R.Close();
-
-            return i;
-        }
-
 
         public dynamic getModel(object TableModel)
         {
@@ -418,16 +159,12 @@ namespace Ren.CMS.CORE.SqlHelper
 
                             TableModel.GetType().GetProperty(col).SetValue(TableModel, Convert.ChangeType(R[col].ToString(), TableModel.GetType().GetProperty(col).PropertyType), null);
 
-
                         }
-
-
 
                     }
                 }
 
             }
-
 
             model = TableModel;
 
@@ -436,8 +173,238 @@ namespace Ren.CMS.CORE.SqlHelper
             model.IdentityName = identityCol;
             model.IdentityValue = identityValue;
 
-
             return model;
         }
+
+        public SqlCommand SysCommand(string querystring)
+        {
+            SqlCommand CMD = new SqlCommand(querystring);
+            CMD.Connection = this.SysConnection;
+            return CMD;
+        }
+
+        /// <summary>
+        /// Connects to the Database
+        /// </summary>
+        public void SysConnect()
+        {
+            try
+            {
+                if (this.SysConnection.State == ConnectionState.Open)
+                {
+
+                    this.SysConnection.Close();
+                }
+                this.SysConnection.Open();
+
+            }
+            catch (SqlException e2) { throw e2; }
+
+            if (this.SysConnection.State != ConnectionState.Open)
+            {
+
+                throw new Exception("Unable connect. Server is reachable and but we get no OK");
+
+            }
+        }
+
+        public int SysCount(string SQLTABLE, string identifycol = "", string identifyvalue = "")
+        {
+            string c = "SELECT * FROM " + new ThisApplication.ThisApplication().getSqlPrefix + SQLTABLE;
+            SqlParameter[] P = new SqlParameter[1];
+            if (!String.IsNullOrEmpty(identifycol) && !String.IsNullOrEmpty(identifyvalue))
+            {
+
+                c += " WHERE " + identifycol + " = @p";
+
+                P[0] = new SqlParameter("@p", identifyvalue);
+            }
+
+            SqlDataReader R = this.SysReader(c, P);
+            int i = 0;
+            while (R.Read())
+            {
+
+                i++;
+
+            }
+            R.Close();
+
+            return i;
+        }
+
+        /// <summary>
+        /// Disconnects from the Database
+        /// </summary>
+        public void SysDisconnect()
+        {
+            if (this.SysConnection.State == System.Data.ConnectionState.Open)
+            {
+
+                this.SysConnection.Close();
+
+            }
+        }
+
+        /// <summary>
+        /// Executes an non query command to the Database.
+        /// </summary>
+        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
+        /// <param name="parameter">Optional: Parameter Array (System.Data.SqlClient.SqlParameter[])</param>
+        public void SysNonQuery(string commandstring, nSqlParameterCollection parameter = null)
+        {
+            SqlCommand Command = new SqlCommand(commandstring);
+            Command.Connection = this.SysConnection;
+            if (parameter != null)
+            {
+                foreach (SqlParameter P in parameter)
+                {
+                    if (P.Value == null) P.Value = DBNull.Value;
+
+                    Command.Parameters.Add(P);
+                }
+
+            }
+            Command.ExecuteNonQuery();
+
+            Command.Dispose();
+        }
+
+        /// <summary>
+        /// Executes an non query command to the Database.
+        /// </summary>
+        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
+        /// <param name="parameter">Optional: Parameter Array (System.Data.SqlClient.SqlParameter[])</param>
+        public void SysNonQuery(string commandstring, SqlParameter[] parameter = null)
+        {
+            SqlCommand Command = new SqlCommand(commandstring);
+            Command.Connection = this.SysConnection;
+            if (parameter != null)
+            {
+                foreach (SqlParameter P in parameter)
+                {
+                    if (P.Value == null) P.Value = DBNull.Value;
+
+                    Command.Parameters.Add(P);
+                }
+
+            }
+
+            Command.ExecuteNonQuery();
+
+            Command.Dispose();
+        }
+
+        /// <summary>
+        /// Executes an non query command to the Database.
+        /// </summary>
+        /// <param name="commandstring">SQL Command String for executing - INSERT/UPDATE/DELETE etc.(string)</param>
+        /// <param name="parameter">Optional: Parameter List</param>
+        public void SysNonQuery(string commandstring, List<SqlParameter> parameter = null)
+        {
+            SqlCommand Command = new SqlCommand(commandstring);
+            Command.Connection = this.SysConnection;
+            if (parameter != null)
+            {
+                foreach (SqlParameter P in parameter)
+                {
+                    if (P.Value == null) P.Value = DBNull.Value;
+
+                    Command.Parameters.Add(P);
+                }
+
+            }
+            Command.ExecuteNonQuery();
+
+            Command.Dispose();
+        }
+
+        /// <summary>
+        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
+        /// </summary>
+        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
+        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
+        /// <returns>Opened SqlDataReader</returns>
+        public SqlDataReader SysReader(string querystring, SqlParameter[] parameter = null)
+        {
+            SqlCommand C = new SqlCommand(querystring);
+            C.Connection = this.SysConnection;
+            if (parameter != null) C.Parameters.AddRange(parameter);
+
+            return C.ExecuteReader();
+        }
+
+        /// <summary>
+        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
+        /// </summary>
+        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
+        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
+        /// <returns>Opened SqlDataReader</returns>
+        public SqlDataReader SysReader(string querystring, List<SqlParameter> parameter)
+        {
+            SqlCommand C = new SqlCommand(querystring);
+            C.Connection = this.SysConnection;
+            if (parameter != null)
+            {
+
+                foreach (SqlParameter P in parameter)
+                {
+                    C.Parameters.Add(P);
+                }
+
+            }
+            return C.ExecuteReader();
+        }
+
+        /// <summary>
+        /// Executes an System.Data.SqlClient.SqlDataReader to the Database.
+        /// </summary>
+        /// <param name="querystring">Selection String for the query (SELECT * FROM)  (string)</param>
+        /// <param name="parameter">Optional: Parameters for the SQL Query (System.Data.SqlClient.SqlParameter[]</param>
+        /// <returns>Opened SqlDataReader</returns>
+        public SqlDataReader SysReader(string querystring, nSqlParameterCollection parameter)
+        {
+            SqlCommand C = new SqlCommand(querystring);
+
+            C.Connection = this.SysConnection;
+            if (parameter != null)
+            {
+
+                foreach (SqlParameter P in parameter)
+                {
+                    C.Parameters.Add(P);
+                }
+
+            }
+
+            return C.ExecuteReader();
+        }
+
+        private string GetConnectionString(string str)
+        {
+            //variable to hold our return value
+            string conn = string.Empty;
+            //check if a value was provided
+            if (!string.IsNullOrEmpty(str))
+            {
+
+                //name provided so search for that connection
+                conn = ConfigurationManager.ConnectionStrings[str].ConnectionString;
+            }
+            else
+            //name not provided, get the 'default' connection
+            {
+                throw new Exception("ERROR IN SYS.CORE", new Exception("Required Connection String name is empty or null"));
+            }
+            //return the value
+            return conn;
+        }
+
+        private string parseQuery(string query)
+        {
+            return query.Replace("__PREFIX__", (new ThisApplication.ThisApplication().getSqlPrefix));
+        }
+
+        #endregion Methods
     }
 }

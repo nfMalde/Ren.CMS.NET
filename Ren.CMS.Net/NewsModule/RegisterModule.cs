@@ -1,17 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Ren.CMS.ViewEngine;
-using MvcContrib.PortableAreas;
-using MvcContrib;
-using Ren.CMS.CORE.Helper.RoutingHelper;
-namespace Ren.CMS.Blog
+﻿namespace Ren.CMS.Blog
 {
-    public class BlogRegistration:PortableAreaRegistration
-    {   
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
+    using MvcContrib;
+    using MvcContrib.PortableAreas;
+
+    using Ren.CMS.CORE.Helper.RoutingHelper;
+    using Ren.CMS.ViewEngine;
+
+    public class BlogRegistration : PortableAreaRegistration
+    {
+        #region Properties
+
+        public override string AreaName
+        {
+            get { return "Blog"; }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         public override void RegisterArea(System.Web.Mvc.AreaRegistrationContext context, IApplicationBus bus)
         {
             /*context.MapRenCMSRoute(
@@ -20,22 +34,17 @@ namespace Ren.CMS.Blog
                 new { controller = "Blog", action = "Archive", id=UrlParameter.Optional, category =  UrlParameter.Optional, subcategory=UrlParameter.Optional }
 
                 );
-          */
+              */
 
             string[] synonems = new string[] { "Kategorie", "Category" };
             int x = 0;
             foreach (string s in synonems) {
-                
-              
 
                 x++;
-            
-            
+
             }
 
             string[] thisNamespace = { "Ren.CMS.Blog" };
-
- 
 
             context.MapRenCMSRoute("NewsIndex",
                 "Blog/{contentType}/{id}-{title}-{page}",
@@ -79,39 +88,31 @@ namespace Ren.CMS.Blog
 
             );
 
-
             context.MapRenCMSRoute(
-           "Blog_Tag",
+               "Blog_Tag",
             "Blog/{contentType}/Tag/{tgn}-{page}",
-           new { controller = "Blog", action = "Tag", tgn = "", page = "" }
-           , thisNamespace
-           );
+               new { controller = "Blog", action = "Tag", tgn = "", page = "" }
+               , thisNamespace
+               );
             context.MapRenCMSRoute(
-          "Blog_Tag2",
-           "Blog/{contentType}/Tag/{tgn}",
-          new { controller = "Blog", action = "Tag", tgn = ""}
-          , thisNamespace
-          );
-
-
-
-
+              "Blog_Tag2",
+               "Blog/{contentType}/Tag/{tgn}",
+              new { controller = "Blog", action = "Tag", tgn = ""}
+              , thisNamespace
+              );
 
             context.MapRenCMSRoute(
-        "Blog_Category",
-         "Blog/{contentType}/Category/{category}-{page}",
-        new { controller = "Blog", action = "Category", category = "", page = "" }
-        , thisNamespace
-        );
+            "Blog_Category",
+             "Blog/{contentType}/Category/{category}-{page}",
+            new { controller = "Blog", action = "Category", category = "", page = "" }
+            , thisNamespace
+            );
             context.MapRenCMSRoute(
-       "Blog_Category2",
-        "Blog/{contentType}/Category/{category}",
-       new { controller = "Blog", action = "Category", category = "" }
-       , thisNamespace
-       );
-
- 
-         
+               "Blog_Category2",
+            "Blog/{contentType}/Category/{category}",
+               new { controller = "Blog", action = "Category", category = "" }
+               , thisNamespace
+               );
 
             /*
             context.MapRenCMSRoute(
@@ -124,9 +125,6 @@ namespace Ren.CMS.Blog
             RegisterAreaEmbeddedResources();
         }
 
-        public override string AreaName
-        {
-            get { return "Blog"; }
-        }
+        #endregion Methods
     }
 }

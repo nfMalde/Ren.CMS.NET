@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class FilemanagementControllersAcceptMimeType
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class FilemanagementControllersAcceptMimeType {
-        public virtual int Id { get; set; }
-        public virtual string MimeType { get; set; }
-        public virtual System.Nullable<int> Cid { get; set; }
+        public virtual System.Nullable<int> Cid
+        {
+            get; set;
+        }
+
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string MimeType
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

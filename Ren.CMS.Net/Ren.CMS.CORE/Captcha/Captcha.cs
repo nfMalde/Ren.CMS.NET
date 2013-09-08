@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region Header
+
 /*
 namespace Ren.CMS.CORE.Captcha
 {
@@ -13,11 +10,8 @@ namespace Ren.CMS.CORE.Captcha
     using System.Web.UI;
     using Recaptcha;
 
-
-
     public class CaptchaValidatorAttribute : ActionFilterAttribute
     {
-
 
         private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
         private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
@@ -43,7 +37,7 @@ namespace Ren.CMS.CORE.Captcha
 
                 var recaptchaResponse = captchaValidtor.Validate();
 
-                // this will push the result value into a parameter in our Action  
+                // this will push the result value into a parameter in our Action
                 filterContext.ActionParameters["captchaValid"] = recaptchaResponse.IsValid;
 
                 base.OnActionExecuting(filterContext);
@@ -51,15 +45,11 @@ namespace Ren.CMS.CORE.Captcha
         }
     }
 
-
-
-
     public class Captcha
     {
 
         private string pkey = "";
         private string pvkey = "";
-
 
         public Captcha(string publicKey, string privateKey)
         {
@@ -67,15 +57,12 @@ namespace Ren.CMS.CORE.Captcha
             this.pkey = publicKey;
             this.pvkey = privateKey;
 
-
-
         }
 
         public bool Verify(string challenge, string response)
         {
             bool ret = false;
             string postData = "";
-
 
             postData += HttpUtility.UrlEncode("privatekey") + "="
                   + HttpUtility.UrlEncode(this.pvkey) + "&";
@@ -115,11 +102,15 @@ namespace Ren.CMS.CORE.Captcha
 
         }
 
-
-
     }
-
-
 
 }
 */
+
+#endregion Header
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;

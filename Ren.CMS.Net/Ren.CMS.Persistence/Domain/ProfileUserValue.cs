@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class ProfileUserValue
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class ProfileUserValue {
-        public virtual string VarName { get; set; }
-        public virtual string VarValue { get; set; }
-        public virtual string Pkid { get; set; }
+        public virtual string Pkid
+        {
+            get; set;
+        }
+
+        public virtual string VarName
+        {
+            get; set;
+        }
+
+        public virtual string VarValue
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

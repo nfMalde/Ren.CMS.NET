@@ -1,39 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Web.Mvc;
-using System.Web.Security;
-using Ren.CMS.CORE.Language;
-using System.ComponentModel;
-using Ren.CMS.Content;
-using System.Web;
-using Ren.CMS.CORE.Settings;
-using System.Linq;
-
-namespace Ren.CMS.Blog.Models
+﻿namespace Ren.CMS.Blog.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
 
+    using Ren.CMS.Content;
+    using Ren.CMS.CORE.Language;
+    using Ren.CMS.CORE.Settings;
+
+    public class NewsArchive
+    {
+        #region Properties
+
+        public Dictionary<DateTime, List<nContent>> News
+        {
+            get; set;
+        }
+
+        public int Page
+        {
+            get; set;
+        }
+
+        public int RowsOnPage
+        {
+            get; set;
+        }
+
+        public int TotalRows
+        {
+            get; set;
+        }
+
+        #endregion Properties
+    }
 
     public class NewsComment
     {
+        #region Properties
+
         [Required]
-        public int NewsID { get; set; }
+        public string Comment
+        {
+            get; set;
+        }
+
+        [Required]
+        public string FormID
+        {
+            get; set;
+        }
+
+        [Required]
+        public int NewsID
+        {
+            get; set;
+        }
 
         [StringLength(200)]
-        public string Nickname { get; set; }
-        [Required]
-        public string Comment { get; set; }
+        public string Nickname
+        {
+            get; set;
+        }
 
-        public int Reference { get; set; }
+        public int Reference
+        {
+            get; set;
+        }
 
-        public int ScrollTo { get; set; }
-
-        public string TargetAction { get; set; }
-        public string TargetController { get; set; }
-
-        public object RouteValues { 
-            get 
+        public object RouteValues
+        {
+            get
             {
 
             if(this.TargetAction != null && this.TargetController != null)
@@ -41,66 +84,75 @@ namespace Ren.CMS.Blog.Models
                 return new { action=this.TargetAction, controller = this.TargetController, area = ""};
 
             }
-        
+
             return null;
             }
-        
-        
         }
-        
-        [Required]
-        public string FormID { get; set; }
-    }
- 
 
-    public class NewsDetail
+        public int ScrollTo
+        {
+            get; set;
+        }
+
+        public string TargetAction
+        {
+            get; set;
+        }
+
+        public string TargetController
+        {
+            get; set;
+        }
+
+        #endregion Properties
+    }
+
+    public class NewsCommentAnswerForm
     {
-        public string mode = "normal";
-        public NewsComment PostedComment { get; set; }
-        public nContent NewsEntry { get; set; }
-        public int TotalComments { get; set; }
-        public int CommentsOnPage { get; set; }
-        public int CommentPage { get; set; }
-        public string UniqueUrl { get{
+        #region Properties
 
-            Ren.CMS.CORE.Helper.LinkHelper.LinkHelper LinkHelper1 = new Ren.CMS.CORE.Helper.LinkHelper.LinkHelper();
-           return  LinkHelper1.generateUniqueURL(this.NewsEntry);
+        public int CommentID
+        {
+            get;
+            set;
+        }
 
-        
-        }}
+        public NewsComment NewsComment
+        {
+            get; set;
+        }
 
-        public IEnumerable<nContent> Comments { get; set; }
-
-        public int ScrollTo { get; set; }
-        public string FormIDgotError { get; set; }
+        #endregion Properties
     }
-
- 
 
     public class NewsCommentAnswerView
     {
-        
-     
-        public int CommentSize = 10;
+        #region Fields
 
+        public int CommentSize = 10;
         public int Page = 1;
 
-        public nContent NewsEntry { get;  set; }
+        #endregion Fields
 
-        public int MainCommentID { get; set; }
+        #region Properties
 
-        public IEnumerable<nContent> CommentAnswers {
+        public int CommentAnswerCountOnPage
+        {
+            get;
+            set;
+        }
 
+        public IEnumerable<nContent> CommentAnswers
+        {
             get {
 
                 ContentManagement.GetContent AnswersGet = new ContentManagement.GetContent(acontenttypes: new string[] { "eComment" },
                                                                           contentRef: this.MainCommentID,
-                                                                          pageIndex:1, 
+                                                                          pageIndex:1,
                                                                           pageSize: ( this.Page * this.CommentSize));
                 GlobalSettings Gsettings = new GlobalSettings();
 
                 var Guest = Gsettings.getSetting("GLOBAL_GUESTPKID").Value.ToString();
-
 
                 var Answers =  AnswersGet.getList();
                 Answers.ForEach(a => a.CreatorName = Ren.CMS.Blog.Helpers.NewsCommentHelper.SpecialNameForGuests(a));
@@ -108,47 +160,86 @@ namespace Ren.CMS.Blog.Models
                 this.CommentAnswersCountTotal = AnswersGet.TotalRows;
                 return Answers;
             }
-        
-        
-        
         }
-        public int CommentAnswerCountOnPage
+
+        public int CommentAnswersCountTotal
         {
-
-            get;
-            set;
-
+            get; set;
         }
 
-        public int CommentAnswersCountTotal { get; set; }
+        public int MainCommentID
+        {
+            get; set;
+        }
+
+        public nContent NewsEntry
+        {
+            get;  set;
+        }
+
+        #endregion Properties
     }
 
-    public class NewsCommentAnswerForm
+    public class NewsDetail
     {
+        #region Fields
 
-        public int CommentID
+        public string mode = "normal";
+
+        #endregion Fields
+
+        #region Properties
+
+        public int CommentPage
         {
-
-            get;
-            set;
-
+            get; set;
         }
 
-        public NewsComment NewsComment { get; set; }
+        public IEnumerable<nContent> Comments
+        {
+            get; set;
+        }
 
-    }
+        public int CommentsOnPage
+        {
+            get; set;
+        }
 
-    public class NewsArchive
-    {
+        public string FormIDgotError
+        {
+            get; set;
+        }
 
-        public Dictionary<DateTime,List<nContent>> News { get; set; }
+        public nContent NewsEntry
+        {
+            get; set;
+        }
 
-        public int TotalRows { get; set; }
+        public NewsComment PostedComment
+        {
+            get; set;
+        }
 
-        public int RowsOnPage { get; set; }
+        public int ScrollTo
+        {
+            get; set;
+        }
 
-        public int Page { get; set; }
+        public int TotalComments
+        {
+            get; set;
+        }
 
-    
+        public string UniqueUrl
+        {
+            get{
+
+            Ren.CMS.CORE.Helper.LinkHelper.LinkHelper LinkHelper1 = new Ren.CMS.CORE.Helper.LinkHelper.LinkHelper();
+               return  LinkHelper1.generateUniqueURL(this.NewsEntry);
+
+            }
+        }
+
+        #endregion Properties
     }
 }

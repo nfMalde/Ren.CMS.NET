@@ -1,16 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Ren.CMS.ViewEngine;
-using MvcContrib.PortableAreas;
-using MvcContrib;
-namespace Ren.CMS.Gallery
+﻿namespace Ren.CMS.Gallery
 {
-    public class GalleryRegistration:PortableAreaRegistration
-    {   
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
+    using MvcContrib;
+    using MvcContrib.PortableAreas;
+
+    using Ren.CMS.ViewEngine;
+
+    public class GalleryRegistration : PortableAreaRegistration
+    {
+        #region Properties
+
+        public override string AreaName
+        {
+            get { return "Gallery"; }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         public override void RegisterArea(System.Web.Mvc.AreaRegistrationContext context, IApplicationBus bus)
         {
             /*context.MapRoute(
@@ -19,17 +33,14 @@ namespace Ren.CMS.Gallery
                 new { controller = "News", action = "Archive", id=UrlParameter.Optional, category =  UrlParameter.Optional, subcategory=UrlParameter.Optional }
 
                 );
-          */
+              */
 
             string[] synonems = new string[] { "Kategorie", "Category" };
             int x = 0;
             foreach (string s in synonems) {
-                
-              
 
                 x++;
-            
-            
+
             }
 
             string[] thisNamespace = { "GalleryModule.Gallery.Controllers" };
@@ -47,7 +58,6 @@ namespace Ren.CMS.Gallery
                         new { controller = "Gallery", reference = "default", action = "Gallery", id = 0, type = "image", page = 1 },
                         thisNamespace);
 
-        
             /*
             context.MapRoute(
             "News_Show",
@@ -59,9 +69,6 @@ namespace Ren.CMS.Gallery
             RegisterAreaEmbeddedResources();
         }
 
-        public override string AreaName
-        {
-            get { return "Gallery"; }
-        }
+        #endregion Methods
     }
 }

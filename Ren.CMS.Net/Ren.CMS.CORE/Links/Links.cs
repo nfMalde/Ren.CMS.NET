@@ -1,35 +1,36 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ren.CMS.CORE.Links
+﻿namespace Ren.CMS.CORE.Links
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-
-
-    #region Link Model
     public class Link
     {
+        #region Fields
 
-        private string pType = "";
-        private string pTargetController = "";
-        private string pTargetAction = "";
-        private string pText = "";
+        private string pHoverStateClass = "";
         private string pHref = "";
         private int pID = 0;
         private string pNormalStateClass = "";
-        private string pHoverStateClass = "";
         private LinkCollection pSubLinks = new LinkCollection();
+        private string pTargetAction = "";
+        private string pTargetController = "";
+        private string pText = "";
+        private string pType = "";
+
+        #endregion Fields
+
+        #region Constructors
 
         public Link()
         {
-
         }
+
         public Link(int aID, string aType, string aTargetController, string aTargetAction, string aText, string aHref, string aNormalStateClass = "", string aHoverStateClass = "", LinkCollection aSubLinks = null)
         {
             SettingsHelper.GlobalSettingsHelper G = new SettingsHelper.GlobalSettingsHelper();
@@ -37,7 +38,6 @@ namespace Ren.CMS.CORE.Links
             if (G.empty(aType) || G.empty(aText) || aID <= 0)
             {
                 throw new ConfigurationErrorsException("Required Attributes (Type,Text,ID) are not correct.");
-
 
             }
             else
@@ -51,66 +51,41 @@ namespace Ren.CMS.CORE.Links
                 this.pHref = aHref;
                 this.pID = aID;
 
-
             }
-
-
         }
-        public LinkCollection SubLinks
+
+        #endregion Constructors
+
+        #region Properties
+
+        public string HoverStateClass
         {
+            get { return this.pHoverStateClass; }
+            set { this.pHoverStateClass = value; }
+        }
 
-
+        public string Href
+        {
             get
             {
 
-
-                return this.pSubLinks;
-
-
+                return this.pHref;
 
             }
-
-
             set
             {
 
-
-                this.pSubLinks = value;
+                this.pHref = value;
 
             }
-
-
         }
-        #region Property NormalStateClass
-        public string NormalStateClass
-        {
-
-            get { return this.pNormalStateClass; }
-            set { this.pNormalStateClass = value; }
-
-        }
-
-        #endregion
-        #region Property HoverStateClass
-        public string HoverStateClass
-        {
-
-            get { return this.pHoverStateClass; }
-            set { this.pHoverStateClass = value; }
-
-        }
-
-        #endregion
-        #region Property ID
 
         public int ID
         {
-
             get
             {
 
                 return this.pID;
-
 
             }
             set
@@ -119,81 +94,33 @@ namespace Ren.CMS.CORE.Links
                 this.pID = value;
 
             }
-
-
         }
 
-        #endregion
-        #region Property Href
-
-        public string Href
+        public string NormalStateClass
         {
-
-            get
-            {
-
-                return this.pHref;
-
-
-            }
-            set
-            {
-
-                this.pHref = value;
-
-
-            }
-
-
+            get { return this.pNormalStateClass; }
+            set { this.pNormalStateClass = value; }
         }
 
-        #endregion
-        #region Property Type
-        public string Type
+        public LinkCollection SubLinks
         {
             get
             {
 
-
-                return this.pType;
+                return this.pSubLinks;
 
             }
+
             set
             {
 
+                this.pSubLinks = value;
 
-
-                this.pType = value;
             }
-
         }
-        #endregion
-        #region Property TargetController
-        public string TargetController
-        {
-
-
-            get
-            {
-
-
-                return this.pTargetController;
-            }
-            set
-            {
-
-                this.pTargetController = value;
-
-            }
-
-
-        }
-        #endregion
-        #region Property TargetAction
 
         public string TargetAction
         {
-
             get
             {
 
@@ -204,14 +131,24 @@ namespace Ren.CMS.CORE.Links
 
                 this.pTargetAction = value;
 
-
             }
-
-
         }
 
-        #endregion
-        #region Property Text
+        public string TargetController
+        {
+            get
+            {
+
+                return this.pTargetController;
+            }
+            set
+            {
+
+                this.pTargetController = value;
+
+            }
+        }
+
         public string Text
         {
             get
@@ -224,44 +161,56 @@ namespace Ren.CMS.CORE.Links
             set
             {
 
-
-
                 this.pText = value;
             }
-
         }
-        #endregion
 
+        public string Type
+        {
+            get
+            {
+
+                return this.pType;
+
+            }
+            set
+            {
+
+                this.pType = value;
+            }
+        }
+
+        #endregion Properties
     }
-    #endregion
-    #region Link Collection
+
     public class LinkCollection : System.Collections.IEnumerable
     {
+        #region Fields
 
         private List<Link> pCol = new List<Link>();
-        public LinkCollection() { }
 
+        #endregion Fields
 
+        #region Constructors
+
+        public LinkCollection()
+        {
+        }
+
+        #endregion Constructors
+
+        #region Methods
 
         public void Add(Link LinkItem)
         {
             this.pCol.Add(LinkItem);
-
         }
+
         public void AddRange(Link[] LinkRange)
         {
-
             this.pCol.AddRange(LinkRange);
-
-
         }
-        public void Remove(Link LinkItem)
-        {
 
-            this.pCol.Remove(LinkItem);
-
-
-        }
         public IEnumerator<Link> GetEnumerator()
         {
             return this.pCol.GetEnumerator();
@@ -272,23 +221,35 @@ namespace Ren.CMS.CORE.Links
             return GetEnumerator();
         }
 
+        public void Remove(Link LinkItem)
+        {
+            this.pCol.Remove(LinkItem);
+        }
+
+        #endregion Methods
     }
-
-    #endregion
-
-    #region Navi-Links
 
     public class ReturnMainLinks
     {
+        #region Fields
 
         private LinkCollection Col = new LinkCollection();
         private int pCount = 0;
 
-        public ReturnMainLinks() { }
+        #endregion Fields
+
+        #region Constructors
+
+        public ReturnMainLinks()
+        {
+        }
+
+        #endregion Constructors
+
+        #region Methods
 
         public LinkCollection toLinkCollection()
         {
-
             Language.Language LGN = new Language.Language("__USER__", "LINKS");
 
             SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
@@ -312,35 +273,30 @@ namespace Ren.CMS.CORE.Links
                     if (Row["LinkAction"] != DBNull.Value) Lnk.TargetAction = Row["LinkAction"].ToString();
                     this.Col.Add(Lnk);
 
-
-
-
-
-
                 }
-
-
 
             }
             Row.Close();
 
             Sql.SysDisconnect();
             return this.Col;
-
-
         }
 
-
-
+        #endregion Methods
     }
+
     public class ReturnSublinks
     {
+        #region Fields
+
         private LinkCollection Col = new LinkCollection();
+
+        #endregion Fields
+
+        #region Constructors
+
         public ReturnSublinks(int RefId)
         {
-
-
-
             Language.Language LGN = new Language.Language("__USER__", "LINKS");
 
             SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
@@ -366,31 +322,23 @@ namespace Ren.CMS.CORE.Links
                     if (Row["LinkAction"] != DBNull.Value) Lnk.TargetAction = Row["LinkAction"].ToString();
                     this.Col.Add(Lnk);
 
-
-
-
-
-
                 }
-
-
 
             }
             Row.Close();
 
             Sql.SysDisconnect();
-
-
-
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         public LinkCollection toLinkCollection()
         {
-
-
             return this.Col;
         }
 
-
+        #endregion Methods
     }
-    #endregion
 }

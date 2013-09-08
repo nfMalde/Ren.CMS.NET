@@ -1,18 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-using Ren.CMS.Models;
-using Ren.CMS.CORE.Extras;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.CORE.Settings;
-using System.Data.SqlClient;
-namespace Ren.CMS.Controllers
+﻿namespace Ren.CMS.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.CORE.Extras;
+    using Ren.CMS.CORE.Settings;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.Models;
+
     public class HomeController : Controller
     {
+        #region Methods
+
+        public ActionResult About()
+        {
+            return View();
+        }
 
         //
         // GET: /Home/Index/1
@@ -34,15 +41,12 @@ namespace Ren.CMS.Controllers
             else {
 
                 INDEX_MAX = maxX.Value.ToString();
-            
+
             }
 
             int page = id;
             if (id<1) page = 1;
 
-
-
-     
             int max = 0;
             if (String.IsNullOrEmpty(INDEX_MAX)) {
                 nSetting N1 = new nSetting();
@@ -58,24 +62,20 @@ namespace Ren.CMS.Controllers
                 N1.CategoryName = "Contents";
                 bool ok = G.AddSetting(N1);
                 if(ok) maxX =N1;
-               
-            
+
             }
 
             max = maxX.toInt();
-           
-            
 
-            Ren.CMS.Content.ContentManagement.GetContent News = new Ren.CMS.Content.ContentManagement.GetContent(new string[] { 
-    "eNews",
-    "eArticle"
-    
-    },null,
-    "{prefix}Content.cDate","DESC",false,page,max);
+            Ren.CMS.Content.ContentManagement.GetContent News = new Ren.CMS.Content.ContentManagement.GetContent(new string[] {
+            "eNews",
+            "eArticle"
 
-             
+            },null,
+            "{prefix}Content.cDate","DESC",false,page,max);
+
             List<Ren.CMS.Content.nContent> N = News.getList();
-            Pagination.nPagingCollection pages = new Pagination.nPagingCollection(News.TotalRows, max); 
+            Pagination.nPagingCollection pages = new Pagination.nPagingCollection(News.TotalRows, max);
             ViewData["TotalRows"] = News.TotalRows;
             ViewData["News"] = N;
             ViewData["Show"] = N.Count;
@@ -85,9 +85,6 @@ namespace Ren.CMS.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            return View();
-        }
+        #endregion Methods
     }
 }

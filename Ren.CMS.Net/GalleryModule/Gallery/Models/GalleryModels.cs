@@ -1,33 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Ren.CMS.Content;
-
-namespace GalleryModule.Gallery.Models
+﻿namespace GalleryModule.Gallery.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.Content;
 
     public class GalleryNavigation
     {
-        [Required]
-        public string Type { get; set; }
-        [Required]
-        public int Page { get; set; }
-        [Required]
-        public int ContentID { get; set; }
+        #region Properties
 
+        [Required]
+        public int ContentID
+        {
+            get; set;
+        }
 
+        [Required]
+        public int Page
+        {
+            get; set;
+        }
+
+        [Required]
+        public string Type
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
-
 
     public class GalleryView
     {
+        #region Constructors
 
-
-        public string Type { get; set; }
-        public string Reference { get; set; }
         public GalleryView(string reference, int contentID, string type, int page)
         {
             this.Type = type;
@@ -65,13 +75,16 @@ namespace GalleryModule.Gallery.Models
                 this.LocaleType = "Videos";
 
             }
-
-
-
-
-
         }
-        public nContent Content { get; set; }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public nContent Content
+        {
+            get; set;
+        }
 
         public nContent.nAttachment CurrentView
         {
@@ -79,26 +92,39 @@ namespace GalleryModule.Gallery.Models
             set;
         }
 
-        public int Page { get; set; }
-        public int MaxPage { get; set; }
-        public int MinPage { get; set; }
-
-
-        public string LocaleType { get; set; }
-
-        public RedirectResult RedirectAction()
+        public string LocaleType
         {
-
-            if (this.Content != null)
-            {
-                this.Content.GenerateLink();
-                return new RedirectResult(this.Content.FullLink);
-
-
-            }
-
-            return new RedirectResult("/Home/");
+            get; set;
         }
+
+        public int MaxPage
+        {
+            get; set;
+        }
+
+        public int MinPage
+        {
+            get; set;
+        }
+
+        public int Page
+        {
+            get; set;
+        }
+
+        public string Reference
+        {
+            get; set;
+        }
+
+        public string Type
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
 
         public bool IsValid()
         {
@@ -108,12 +134,21 @@ namespace GalleryModule.Gallery.Models
                             && (this.MinPage != 0)
                             && (this.MaxPage != 0);
 
-
             return valid;
-
-
         }
 
+        public RedirectResult RedirectAction()
+        {
+            if (this.Content != null)
+            {
+                this.Content.GenerateLink();
+                return new RedirectResult(this.Content.FullLink);
 
+            }
+
+            return new RedirectResult("/Home/");
+        }
+
+        #endregion Methods
     }
 }

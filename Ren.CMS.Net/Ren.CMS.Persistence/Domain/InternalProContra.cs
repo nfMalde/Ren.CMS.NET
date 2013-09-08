@@ -1,14 +1,33 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class InternalProContra
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class InternalProContra {
-        public virtual int Id { get; set; }
-        public virtual int Refid { get; set; }
-        public virtual string PType { get; set; }
-        public virtual string PText { get; set; }
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string PText
+        {
+            get; set;
+        }
+
+        public virtual string PType
+        {
+            get; set;
+        }
+
+        public virtual int Refid
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

@@ -1,63 +1,53 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NHibernate.Mapping.ByCode.Conformist;
-using NHibernate.Mapping.ByCode;
-using Ren.CMS.CORE.nhibernate.Domain;
-using NHibernate;
+namespace Ren.CMS.CORE.nhibernate.Mapping
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
+    using NHibernate;
+    using NHibernate.Mapping.ByCode;
+    using NHibernate.Mapping.ByCode.Conformist;
 
-namespace Ren.CMS.CORE.nhibernate.Mapping {
+    using Ren.CMS.CORE.nhibernate.Domain;
 
     [Ren.CMS.CORE.nhibernate.Base.PersistenceMapping]
     public class ContentMap : ClassMapping<TContent>
     {
-        
-        public ContentMap() {
-			Table("nfcms_Content");
-			Schema("dbo");
-			Lazy(false);
+        #region Constructors
+
+        public ContentMap()
+        {
+            Table("nfcms_Content");
+            Schema("dbo");
+            Lazy(false);
             Id<int>(x => x.Id, map => {
 
                 map.Generator(Generators.Identity);
 
-            
-            
             });
-			//Property(x => x.Id, map => map.NotNullable(true));
-			 
+            //Property(x => x.Id, map => map.NotNullable(true));
+
             Property(x => x.Cid, map =>
             {
                 map.NotNullable(true);
 
-
             });
-			Property(x => x.CreatorPKID, map => map.NotNullable(true));
-			Property(x => x.Locked, map => {
-
+            Property(x => x.CreatorPKID, map => map.NotNullable(true));
+            Property(x => x.Locked, map => {
 
                 map.NotNullable(true);
-           
 
                 map.Type(NHibernateUtil.Boolean);
-            
-            
-            
-            
-            }); 
-			Property(x => x.RatingGroupID);
-			Property(x => x.CDate);
- 
- 
-			Property(x => x.ContentType, map => map.NotNullable(true));
- 
-			Property(x => x.ContentRef);
-			Property(x => x.CreatorSpecialName);
 
- 
+            });
+            Property(x => x.RatingGroupID);
+            Property(x => x.CDate);
 
+            Property(x => x.ContentType, map => map.NotNullable(true));
 
+            Property(x => x.ContentRef);
+            Property(x => x.CreatorSpecialName);
 
             Set(x => x.Texts, mapping =>
             {
@@ -68,7 +58,7 @@ namespace Ren.CMS.CORE.nhibernate.Mapping {
                 });
                 mapping.Inverse(true);
             },
-       r => r.OneToMany());
+               r => r.OneToMany());
 
             ManyToOne(x => x.User, m =>
             {
@@ -79,7 +69,6 @@ namespace Ren.CMS.CORE.nhibernate.Mapping {
                 m.Insert(false);
                 m.Update(false);
                 m.Lazy(LazyRelation.NoLazy);
-
 
             });
 
@@ -93,7 +82,6 @@ namespace Ren.CMS.CORE.nhibernate.Mapping {
                 m.Update(false);
                 m.Lazy(LazyRelation.NoLazy);
 
-
             });
 
             //OneToOne(x => x.Category, map =>
@@ -104,17 +92,15 @@ namespace Ren.CMS.CORE.nhibernate.Mapping {
             //    map.Cascade(Cascade.None);
             //});
 
-   
-
-
-
             //ManyToOne(x => x.User, map =>
             //{
             //    map.PropertyRef("PKID");
             //    map.Column("CreatorPKID");
-                
+
             //    map.Cascade(Cascade.None);
             //});
         }
+
+        #endregion Constructors
     }
 }

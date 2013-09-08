@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class RegisteredMIMEType
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class RegisteredMIMEType {
-        public virtual int Id { get; set; }
-        public virtual string FileExstension { get; set; }
-        public virtual string Mimetype { get; set; }
+        public virtual string FileExstension
+        {
+            get; set;
+        }
+
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string Mimetype
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

@@ -1,14 +1,33 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class Permissions2User
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class Permissions2User {
-        public virtual string Pk { get; set; }
-        public virtual string GroupID { get; set; }
-        public virtual string Val { get; set; }
-        public virtual string Usr { get; set; }
+        public virtual string GroupID
+        {
+            get; set;
+        }
+
+        public virtual string Pk
+        {
+            get; set;
+        }
+
+        public virtual string Usr
+        {
+            get; set;
+        }
+
+        public virtual string Val
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

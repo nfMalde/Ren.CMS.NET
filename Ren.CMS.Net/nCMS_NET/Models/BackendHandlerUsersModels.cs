@@ -1,135 +1,104 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Web.Mvc;
-using System.Web.Security;
-using Ren.CMS.CORE;
-using Ren.CMS.MemberShip;
-using Ren.CMS.CORE.Settings;
-using Ren.CMS.CORE.SqlHelper;
-using Ren.CMS.CORE.ThisApplication;
-using System.Data.SqlClient;
-using Ren.CMS.Models.FormDialog;
-using System.Web;
-using Ren.CMS.Helpers;
-using Ren.CMS.CORE.Language.LanguageDefaults;
-namespace Ren.CMS.Models.Backend.Users
+﻿namespace Ren.CMS.Models.Backend.Users
 {
-    public class EditUser
-    {
-        [Required]
-        public object PKID { get; set; }
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.SqlClient;
+    using System.Globalization;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
 
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Pgroup { get; set; }
-        public string secretAnswer { get; set; }
-        public string secretQuestion { get; set; }
-
-        public bool GeneratePWD { get; set; }
-
-        [DataType(DataType.Password)]
-        public string password { get; set; }
-
-        [DataType(DataType.Password)]
-        [System.Web.Mvc.Compare("password", ErrorMessage = "ERRR_PASSWORD_DOESNT_MATCH")]
-        public string password_confirm { get; set; }
-
-        [DataType(DataType.EmailAddress, ErrorMessage= "This is not a valid eMail Address")]
-        public string email { get; set; }
-
-        public bool inform_user { get; set; }
-
-        [Required]
-        public string user_status { get; set; }
-
-        public bool user_locked { get; set; }
-
-        [DataType(DataType.MultilineText)]
-        public string user_comment { get; set; }
-
-    }
+    using Ren.CMS.CORE;
+    using Ren.CMS.CORE.Language.LanguageDefaults;
+    using Ren.CMS.CORE.Settings;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.CORE.ThisApplication;
+    using Ren.CMS.Helpers;
+    using Ren.CMS.MemberShip;
+    using Ren.CMS.Models.FormDialog;
 
     public class CreateUser
     {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Pgroup { get; set; }
-        public string secretAnswer { get; set; }
-        public string secretQuestion { get; set; }
-       
-        public bool GeneratePWD { get; set; }
+        #region Properties
+
+        [DataType(DataType.EmailAddress, ErrorMessage = "This is not a Valid e-Mail Adress")]
+        public string email
+        {
+            get; set;
+        }
+
+        public bool GeneratePWD
+        {
+            get; set;
+        }
+
+        public bool inform_user
+        {
+            get; set;
+        }
 
         [DataType(DataType.Password)]
-        public string password { get;set;}
+        public string password
+        {
+            get;set;
+        }
 
         [DataType(DataType.Password)]
         [System.Web.Mvc.Compare("password", ErrorMessage = "ERRR_PASSWORD_DOESNT_MATCH")]
-        public string password_confirm { get; set; }
-
-        [DataType(DataType.EmailAddress, ErrorMessage = "This is not a Valid e-Mail Adress")]
-        public string email { get; set; }
-
-        public bool inform_user { get; set; }
+        public string password_confirm
+        {
+            get; set;
+        }
 
         [Required]
-        public string user_status { get; set; }
+        public string Pgroup
+        {
+            get; set;
+        }
 
-        public bool user_locked { get; set; }
+        public string secretAnswer
+        {
+            get; set;
+        }
+
+        public string secretQuestion
+        {
+            get; set;
+        }
+
+        [Required]
+        public string Username
+        {
+            get; set;
+        }
+
         [DataType(DataType.MultilineText)]
-        public string user_comment { get; set; }
+        public string user_comment
+        {
+            get; set;
+        }
+
+        public bool user_locked
+        {
+            get; set;
+        }
+
+        [Required]
+        public string user_status
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 
     public class CreateUserFormDialog
     {
-        private FormDialogDataStore permissionGroups() {
+        #region Methods
 
-            SqlHelper SQL = new SqlHelper();
-            SQL.SysConnect();
-
-            string query = "SELECT [id],[groupName],[isGuestGroup],[isDefaultGroup] FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "PermissionGroups ORDER BY [groupName]";
-            System.Data.SqlClient.SqlDataReader Groups = SQL.SysReader(query, new nSqlParameterCollection());
-            FormDialogDataStore Store = new FormDialogDataStore();
-            if (Groups.HasRows)
-            {
-                while (Groups.Read())
-                {
-
-                    
-
-                     Store.Contents.Add(new FormDialogDataStoreRow((string)Groups["groupName"], (string)Groups["groupName"]));
-
-                }
-
-            }
-
-            Groups.Close();
-            SQL.SysDisconnect();
-            return Store;
-        
-        }
-        private string getDefaultPermissiongroup()
+        public FormDialogSettings FormDialogSetup(HtmlHelper helper, string elementID = "formDialogCreateUser")
         {
-            string query = "SELECT TOP 1 groupName FROM " + (new ThisApplication().getSqlPrefix) + "PermissionGroups WHERE isDefaultGroup='true'";
-            string group = "";
-            SqlHelper SQL = new SqlHelper();
-            SQL.SysConnect();
-            SqlDataReader R = SQL.SysReader(query, new nSqlParameterCollection());
-            if (R.HasRows)
-            {
-                R.Read();
-                group = R[0].ToString();
-            }
-            R.Close();
-            SQL.SysDisconnect();
-            return group;
-        }
-        public FormDialogSettings FormDialogSetup(HtmlHelper helper, string elementID = "formDialogCreateUser") 
-        {
-
             FormDialogSettings Settings = new FormDialogSettings();
 
             nProvider Provider = (nProvider) Membership.Provider;
@@ -142,7 +111,7 @@ namespace Ren.CMS.Models.Backend.Users
             Settings.Modal = true;
             Settings.SaveText = LanguageDefaultsManageUsers.LANG_FM_DIALOG_CREATE.ReturnLangLine();
             Settings.AbortText = LanguageDefaultsShared.LANG_SHARED_ABORT.ReturnLangLine();
-           
+
             Settings.Elements.Add(new FormDialogElement(
                                     FormDialogElementType.Hidden,
                                     helper.ProtectID("fc_PKID"),
@@ -162,17 +131,15 @@ namespace Ren.CMS.Models.Backend.Users
                                                         getDefaultPermissiongroup(),
                                                         this.permissionGroups().Contents));
 
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Radiobutton,
                                                         helper.ProtectID("fc_GeneratePWD"),
                                                         "GeneratePWD",
                                                          LanguageDefaultsManageUsers.LANG_FM_DIALOG_GENERATE_PW.ReturnLangLine(),
                                                         true,
 
-                                                        new List<FormDialogDataStoreRow>(){ 
+                                                        new List<FormDialogDataStoreRow>(){
                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_YES.ReturnLangLine(), true),
                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_NO.ReturnLangLine(), false)}, "customRenderers.GeneratePWD", null, null, true));
-
 
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Password,
                                                                 helper.ProtectID("fc_password"),
@@ -205,13 +172,12 @@ namespace Ren.CMS.Models.Backend.Users
                                                         null,
                                                         null, Provider.RequiresQuestionAndAnswer));
 
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Combobox,
                                                         helper.ProtectID("fc_user_status"),
                                                         "user_status",
                                                         LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS.ReturnLangLine(),
                                                         "activated",
-                                                        new List<FormDialogDataStoreRow>() { 
+                                                        new List<FormDialogDataStoreRow>() {
                                                             new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS_ACTIVATED.ReturnLangLine(), "activated"),
                                                             new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS_DEACTIVATED.ReturnLangLine(), "deactivated")}));
 
@@ -223,9 +189,6 @@ namespace Ren.CMS.Models.Backend.Users
                                                         new List<FormDialogDataStoreRow>(){ new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_YES.ReturnLangLine(),true),
                                                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_NO.ReturnLangLine(), false)}));
 
-
-
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Textbox,
                                                         helper.ProtectID("fc_email"),
                                                         "email",
@@ -236,8 +199,6 @@ namespace Ren.CMS.Models.Backend.Users
                                                         null,
                                                         "email", true));
 
-
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Combobox,
                                                             helper.ProtectID("fc_send_mail"),
                                                             "inform_user",
@@ -246,12 +207,9 @@ namespace Ren.CMS.Models.Backend.Users
                                                             new List<FormDialogDataStoreRow>(){
                                                                 new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_INFORM_USER_YES.ReturnLangLine(), true),
                                                                 new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_INFORM_USER_NO.ReturnLangLine(), false)
-                                                                
-                                                                
+
                                                             },
                                                             "customRenderers.send_mail"));
-
-
 
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.RichTextbox,
                                     helper.ProtectID("fc_user_comment"),
@@ -259,43 +217,9 @@ namespace Ren.CMS.Models.Backend.Users
                                     LanguageDefaultsManageUsers.LANG_FM_DIALOG_COMMENT.ReturnLangLine(),
                                     LanguageDefaultsManageUsers.LANG_FM_DIALOG_COMMENT_NO_COMMENT.ReturnLangLine()));
 
-
-
             return Settings;
         }
-        
-    
-    }
 
-    public class EditUserFormDialog
-    {
-        private FormDialogDataStore permissionGroups()
-        {
-
-            SqlHelper SQL = new SqlHelper();
-            SQL.SysConnect();
-
-            string query = "SELECT [id],[groupName],[isGuestGroup],[isDefaultGroup] FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "PermissionGroups ORDER BY [groupName]";
-            System.Data.SqlClient.SqlDataReader Groups = SQL.SysReader(query, new nSqlParameterCollection());
-            FormDialogDataStore Store = new FormDialogDataStore();
-            if (Groups.HasRows)
-            {
-                while (Groups.Read())
-                {
-
-
-
-                    Store.Contents.Add(new FormDialogDataStoreRow((string)Groups["groupName"], (string)Groups["groupName"]));
-
-                }
-
-            }
-
-            Groups.Close();
-            SQL.SysDisconnect();
-            return Store;
-
-        }
         private string getDefaultPermissiongroup()
         {
             string query = "SELECT TOP 1 groupName FROM " + (new ThisApplication().getSqlPrefix) + "PermissionGroups WHERE isDefaultGroup='true'";
@@ -312,13 +236,122 @@ namespace Ren.CMS.Models.Backend.Users
             SQL.SysDisconnect();
             return group;
         }
+
+        private FormDialogDataStore permissionGroups()
+        {
+            SqlHelper SQL = new SqlHelper();
+            SQL.SysConnect();
+
+            string query = "SELECT [id],[groupName],[isGuestGroup],[isDefaultGroup] FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "PermissionGroups ORDER BY [groupName]";
+            System.Data.SqlClient.SqlDataReader Groups = SQL.SysReader(query, new nSqlParameterCollection());
+            FormDialogDataStore Store = new FormDialogDataStore();
+            if (Groups.HasRows)
+            {
+                while (Groups.Read())
+                {
+
+                     Store.Contents.Add(new FormDialogDataStoreRow((string)Groups["groupName"], (string)Groups["groupName"]));
+
+                }
+
+            }
+
+            Groups.Close();
+            SQL.SysDisconnect();
+            return Store;
+        }
+
+        #endregion Methods
+    }
+
+    public class EditUser
+    {
+        #region Properties
+
+        [DataType(DataType.EmailAddress, ErrorMessage= "This is not a valid eMail Address")]
+        public string email
+        {
+            get; set;
+        }
+
+        public bool GeneratePWD
+        {
+            get; set;
+        }
+
+        public bool inform_user
+        {
+            get; set;
+        }
+
+        [DataType(DataType.Password)]
+        public string password
+        {
+            get; set;
+        }
+
+        [DataType(DataType.Password)]
+        [System.Web.Mvc.Compare("password", ErrorMessage = "ERRR_PASSWORD_DOESNT_MATCH")]
+        public string password_confirm
+        {
+            get; set;
+        }
+
+        [Required]
+        public string Pgroup
+        {
+            get; set;
+        }
+
+        [Required]
+        public object PKID
+        {
+            get; set;
+        }
+
+        public string secretAnswer
+        {
+            get; set;
+        }
+
+        public string secretQuestion
+        {
+            get; set;
+        }
+
+        [Required]
+        public string Username
+        {
+            get; set;
+        }
+
+        [DataType(DataType.MultilineText)]
+        public string user_comment
+        {
+            get; set;
+        }
+
+        public bool user_locked
+        {
+            get; set;
+        }
+
+        [Required]
+        public string user_status
+        {
+            get; set;
+        }
+
+        #endregion Properties
+    }
+
+    public class EditUserFormDialog
+    {
+        #region Methods
+
         public FormDialogSettings FormDialogSetup(HtmlHelper helper, string elementID = "formDialogCreateUser")
         {
-
             FormDialogSettings Settings = new FormDialogSettings();
-
-
-
 
             nProvider Provider = (nProvider)Membership.Provider;
             Settings.ElementID = elementID;
@@ -329,7 +362,7 @@ namespace Ren.CMS.Models.Backend.Users
             Settings.Height = 350;
             Settings.SaveText = LanguageDefaultsShared.LANG_SHARED_SAVE.ReturnLangLine();
             Settings.AbortText = LanguageDefaultsShared.LANG_SHARED_ABORT.ReturnLangLine();
-           
+
             Settings.Modal = true;
             Settings.Elements.Add(new FormDialogElement(
                                     FormDialogElementType.Hidden,
@@ -350,17 +383,15 @@ namespace Ren.CMS.Models.Backend.Users
                                                         getDefaultPermissiongroup(),
                                                         this.permissionGroups().Contents));
 
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Radiobutton,
                                                         helper.ProtectID("fe_GeneratePWD"),
                                                         "GeneratePWD",
                                                          LanguageDefaultsManageUsers.LANG_FM_DIALOG_GENERATE_PW.ReturnLangLine(),
                                                         true,
 
-                                                        new List<FormDialogDataStoreRow>(){ 
+                                                        new List<FormDialogDataStoreRow>(){
                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_YES.ReturnLangLine(), true),
                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_NO.ReturnLangLine(), false)}, "customRenderersEditMode.GeneratePWD", null, null, true));
-
 
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Password,
                                                                 helper.ProtectID("fe_password"),
@@ -393,13 +424,12 @@ namespace Ren.CMS.Models.Backend.Users
                                                         null,
                                                         null, Provider.RequiresQuestionAndAnswer));
 
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Combobox,
                                                         helper.ProtectID("fe_user_status"),
                                                         "user_status",
                                                         LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS.ReturnLangLine(),
                                                         "activated",
-                                                        new List<FormDialogDataStoreRow>() { 
+                                                        new List<FormDialogDataStoreRow>() {
                                                             new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS_ACTIVATED.ReturnLangLine(), "activated"),
                                                             new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_STATUS_DEACTIVATED.ReturnLangLine(), "deactivated")}));
 
@@ -411,9 +441,6 @@ namespace Ren.CMS.Models.Backend.Users
                                                         new List<FormDialogDataStoreRow>(){ new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_YES.ReturnLangLine(),true),
                                                                                             new FormDialogDataStoreRow(LanguageDefaultsShared.LANG_SHARED_NO.ReturnLangLine(), false)}));
 
-
-
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Textbox,
                                                         helper.ProtectID("fe_email"),
                                                         "email",
@@ -424,8 +451,6 @@ namespace Ren.CMS.Models.Backend.Users
                                                         null,
                                                         "email", true));
 
-
-
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.Combobox,
                                                             helper.ProtectID("fe_send_mail"),
                                                             "inform_user",
@@ -434,8 +459,7 @@ namespace Ren.CMS.Models.Backend.Users
                                                             new List<FormDialogDataStoreRow>(){
                                                                 new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_INFORM_USER_YES.ReturnLangLine(), true),
                                                                 new FormDialogDataStoreRow(LanguageDefaultsManageUsers.LANG_FM_DIALOG_INFORM_USER_NO.ReturnLangLine(), false)
-                                                                
-                                                                
+
                                                             },
                                                             "customRenderersEditMode.send_mail"));
             Settings.Elements.Add(new FormDialogElement(FormDialogElementType.RichTextbox,
@@ -444,18 +468,50 @@ namespace Ren.CMS.Models.Backend.Users
                                 LanguageDefaultsManageUsers.LANG_FM_DIALOG_COMMENT.ReturnLangLine(),
                                 LanguageDefaultsManageUsers.LANG_FM_DIALOG_COMMENT_NO_COMMENT.ReturnLangLine()));
 
-
-
-
-
-
-
-
-
-
             return Settings;
-
-
         }
+
+        private string getDefaultPermissiongroup()
+        {
+            string query = "SELECT TOP 1 groupName FROM " + (new ThisApplication().getSqlPrefix) + "PermissionGroups WHERE isDefaultGroup='true'";
+            string group = "";
+            SqlHelper SQL = new SqlHelper();
+            SQL.SysConnect();
+            SqlDataReader R = SQL.SysReader(query, new nSqlParameterCollection());
+            if (R.HasRows)
+            {
+                R.Read();
+                group = R[0].ToString();
+            }
+            R.Close();
+            SQL.SysDisconnect();
+            return group;
+        }
+
+        private FormDialogDataStore permissionGroups()
+        {
+            SqlHelper SQL = new SqlHelper();
+            SQL.SysConnect();
+
+            string query = "SELECT [id],[groupName],[isGuestGroup],[isDefaultGroup] FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "PermissionGroups ORDER BY [groupName]";
+            System.Data.SqlClient.SqlDataReader Groups = SQL.SysReader(query, new nSqlParameterCollection());
+            FormDialogDataStore Store = new FormDialogDataStore();
+            if (Groups.HasRows)
+            {
+                while (Groups.Read())
+                {
+
+                    Store.Contents.Add(new FormDialogDataStoreRow((string)Groups["groupName"], (string)Groups["groupName"]));
+
+                }
+
+            }
+
+            Groups.Close();
+            SQL.SysDisconnect();
+            return Store;
+        }
+
+        #endregion Methods
     }
 }

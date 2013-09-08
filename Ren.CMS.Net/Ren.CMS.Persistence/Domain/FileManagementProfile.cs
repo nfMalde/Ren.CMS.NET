@@ -1,12 +1,23 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class FileManagementProfile
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class FileManagementProfile {
-        public virtual int Id { get; set; }
-        public virtual string ProfileName { get; set; }
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual string ProfileName
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

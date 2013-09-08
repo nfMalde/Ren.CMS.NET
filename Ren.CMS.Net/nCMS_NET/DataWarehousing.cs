@@ -1,82 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.SqlTypes;
-using System.Data.Sql;
-using System.Data.SqlClient;
-using System.Data;
-using Ren.CMS.CORE.SqlHelper;
-namespace Ren.CMS.DataWarehousing
+﻿namespace Ren.CMS.DataWarehousing
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Sql;
+    using System.Data.SqlClient;
+    using System.Data.SqlTypes;
+    using System.Linq;
+    using System.Web;
+
+    using Ren.CMS.CORE.SqlHelper;
+
     public class DataWarehousing
     {
-        public partial class ColumnModel 
+        #region Nested Types
+
+        public partial class ColumnModel
         {
+            #region Properties
 
-            public SqlDbType ColumnType
-            {
-
-                get;
-                set;
-
-            }
             public bool AllowNull
             {
                 get;
                 set;
-
             }
-            public long Length
+
+            public SqlDbType ColumnType
             {
                 get;
                 set;
-
             }
 
             public object DefaultValue
             {
-
                 get;
                 set;
             }
-            public bool isIdentity
-            {
-                get;
-                set;
 
-            }
             public int IDstart
             {
                 get;
                 set;
-
             }
+
             public int IDStepLength
             {
-
                 get;
                 set;
             }
-        
+
+            public bool isIdentity
+            {
+                get;
+                set;
+            }
+
+            public long Length
+            {
+                get;
+                set;
+            }
+
+            #endregion Properties
         }
-        public partial class TableModel {
 
-            public string TableName{get;set;}
+        public partial class TableDataModel
+        {
+            #region Constructors
 
-            public List<ColumnModel> Columns = new List<ColumnModel>();
-            
-     
-        
-        
-        }
-        public partial class TableDataModel {
-     
-            public TableModel Table { get; set; }
-
-
-            public TableDataModel(string tableName) {
-
+            public TableDataModel(string tableName)
+            {
                 TableModel Model = new TableModel();
                 Ren.CMS.CORE.ThisApplication.ThisApplication TA = new Ren.CMS.CORE.ThisApplication.ThisApplication();
                 string query = "SELECT IDENT_SEED(@tableName) as IdentityStart,IDENT_INCR(@tableName) as IdentitySteps, "+
@@ -86,8 +79,8 @@ namespace Ren.CMS.DataWarehousing
                     "LEFT OUTER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS Usg ON Col.TABLE_NAME = Usg.TABLE_NAME AND Col.COLUMN_NAME = Usg.COLUMN_NAME "+
                     "LEFT OUTER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS Con ON Usg.CONSTRAINT_NAME = Con.CONSTRAINT_NAME "+
                     "WHERE Col.TABLE_NAME = @tableName";
-               
-            //Hotfix extract dbo.
+
+                //Hotfix extract dbo.
                 string sqlprefix = TA.getSqlPrefix;
                 tableName = sqlprefix + tableName;
 
@@ -97,18 +90,15 @@ namespace Ren.CMS.DataWarehousing
                 Sql.SysConnect();
                 SqlDataReader TableSchema = Sql.SysReader(query, PCol);
 
-                if (!TableSchema.HasRows) { 
+                if (!TableSchema.HasRows) {
                 TableSchema.Close();
                 while(!TableSchema.IsClosed){
-                
+
                 }
                     Sql.SysDisconnect();
-                
+
                     throw new Exception("Table "+ tableName +" does not exists or nfcms was unable to load Table Shema");
 
-
-                
-                
                 }
                 else
                 {
@@ -134,17 +124,41 @@ namespace Ren.CMS.DataWarehousing
 
                         Model.Columns.Add(MDL);
                     }
-                    TableSchema.Close();               
+                    TableSchema.Close();
                 }
                 this.Table = Model;
-              
-             
-            
-            
             }
-        
-        
+
+            #endregion Constructors
+
+            #region Properties
+
+            public TableModel Table
+            {
+                get; set;
+            }
+
+            #endregion Properties
         }
 
+        public partial class TableModel
+        {
+            #region Fields
+
+            public List<ColumnModel> Columns = new List<ColumnModel>();
+
+            #endregion Fields
+
+            #region Properties
+
+            public string TableName
+            {
+                get;set;
+            }
+
+            #endregion Properties
+        }
+
+        #endregion Nested Types
     }
 }

@@ -1,13 +1,28 @@
-using System;
-using System.Text;
-using System.Collections.Generic;
+namespace Ren.CMS.CORE.nhibernate.Domain
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
+    public class FilemanagementControllersAcceptProfile
+    {
+        #region Properties
 
-namespace Ren.CMS.CORE.nhibernate.Domain {
-    
-    public class FilemanagementControllersAcceptProfile {
-        public virtual int Id { get; set; }
-        public virtual System.Nullable<int> Pid { get; set; }
-        public virtual System.Nullable<int> Cid { get; set; }
+        public virtual System.Nullable<int> Cid
+        {
+            get; set;
+        }
+
+        public virtual int Id
+        {
+            get; set;
+        }
+
+        public virtual System.Nullable<int> Pid
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

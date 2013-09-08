@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHibernate;
-using NHibernate.SqlTypes;
-using NHibernate.Type;
-using NHibernate.UserTypes;
-
-namespace Ren.CMS.Persistence.Types
+﻿namespace Ren.CMS.Persistence.Types
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using NHibernate;
+    using NHibernate.SqlTypes;
+    using NHibernate.Type;
+    using NHibernate.UserTypes;
+
     public class CharBoolType : IUserType
     {
+        #region Properties
+
         public bool IsMutable
         {
             get { return false; }
@@ -26,6 +29,39 @@ namespace Ren.CMS.Persistence.Types
         public SqlType[] SqlTypes
         {
             get { return new[] { NHibernateUtil.String.SqlType }; }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        public object Assemble(object cached, object owner)
+        {
+            return cached;
+        }
+
+        public object DeepCopy(object value)
+        {
+            return value;
+        }
+
+        public object Disassemble(object value)
+        {
+            return value;
+        }
+
+        public new bool Equals(object x, object y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+
+            if (x == null || y == null) return false;
+
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(object x)
+        {
+            return x == null ? typeof(bool).GetHashCode() + 473 : x.GetHashCode();
         }
 
         public object NullSafeGet(IDataReader rs, string[] names, object owner)
@@ -54,38 +90,11 @@ namespace Ren.CMS.Persistence.Types
             }
         }
 
-        public object DeepCopy(object value)
-        {
-            return value;
-        }
-
         public object Replace(object original, object target, object owner)
         {
             return original;
         }
 
-        public object Assemble(object cached, object owner)
-        {
-            return cached;
-        }
-
-        public object Disassemble(object value)
-        {
-            return value;
-        }
-
-        public new bool Equals(object x, object y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-
-            if (x == null || y == null) return false;
-
-            return x.Equals(y);
-        }
-
-        public int GetHashCode(object x)
-        {
-            return x == null ? typeof(bool).GetHashCode() + 473 : x.GetHashCode();
-        }
+        #endregion Methods
     }
 }

@@ -1,37 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.WebPages;
-
 namespace Ren.CMS.Helpers
 {
-    public static class TreeViewHelper
-    {
-        /// <summary>
-        /// Create an HTML tree from a recursive collection of items
-        /// </summary>
-        public static TreeView<T> TreeView<T>(this HtmlHelper html, IEnumerable<T> items)
-        {
-            return new TreeView<T>(html, items);
-        }
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.UI;
+    using System.Web.WebPages;
 
     /// <summary>
     /// Create an HTML tree from a resursive collection of items
     /// </summary>
     public class TreeView<T> : IHtmlString
     {
+        #region Fields
+
         private readonly HtmlHelper _html;
         private readonly IEnumerable<T> _items = Enumerable.Empty<T>();
-        private Func<T, string> _displayProperty = item => item.ToString();
+
+        private IDictionary<string, object> _childHtmlAttributes = new Dictionary<string, object>();
         private Func<T, IEnumerable<T>> _childrenProperty;
+        private Func<T, string> _displayProperty = item => item.ToString();
         private string _emptyContent = "No children";
         private IDictionary<string, object> _htmlAttributes = new Dictionary<string, object>();
-        private IDictionary<string, object> _childHtmlAttributes = new Dictionary<string, object>();
         private Func<T, HelperResult> _itemTemplate;
+
+        #endregion Fields
+
+        #region Constructors
 
         public TreeView(HtmlHelper html, IEnumerable<T> items)
         {
@@ -42,27 +38,9 @@ namespace Ren.CMS.Helpers
             _itemTemplate = item => new HelperResult(writer => writer.Write(_displayProperty(item)));
         }
 
-        /// <summary>
-        /// The property which will display the text rendered for each item
-        /// </summary>
-        public TreeView<T> ItemText(Func<T, string> selector)
-        {
-            if (selector == null) throw new ArgumentNullException("selector");
-            _displayProperty = selector;
-            return this;
-        }
+        #endregion Constructors
 
-
-        /// <summary>
-        /// The template used to render each item in the tree view
-        /// </summary>
-        public TreeView<T> ItemTemplate(Func<T, HelperResult> itemTemplate)
-        {
-            if (itemTemplate == null) throw new ArgumentNullException("itemTemplate");
-            _itemTemplate = itemTemplate;
-            return this;
-        }
-
+        #region Methods
 
         /// <summary>
         /// The property which returns the children items
@@ -71,6 +49,25 @@ namespace Ren.CMS.Helpers
         {
             if (selector == null) throw new ArgumentNullException("selector");
             _childrenProperty = selector;
+            return this;
+        }
+
+        /// <summary>
+        /// HTML attributes appended to the children items
+        /// </summary>
+        public TreeView<T> ChildrenHtmlAttributes(object htmlAttributes)
+        {
+            ChildrenHtmlAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            return this;
+        }
+
+        /// <summary>
+        /// HTML attributes appended to the children items
+        /// </summary>
+        public TreeView<T> ChildrenHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        {
+            if (htmlAttributes == null) throw new ArgumentNullException("htmlAttributes");
+            _childHtmlAttributes = htmlAttributes;
             return this;
         }
 
@@ -104,27 +101,23 @@ namespace Ren.CMS.Helpers
         }
 
         /// <summary>
-        /// HTML attributes appended to the children items
+        /// The template used to render each item in the tree view
         /// </summary>
-        public TreeView<T> ChildrenHtmlAttributes(object htmlAttributes)
+        public TreeView<T> ItemTemplate(Func<T, HelperResult> itemTemplate)
         {
-            ChildrenHtmlAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            if (itemTemplate == null) throw new ArgumentNullException("itemTemplate");
+            _itemTemplate = itemTemplate;
             return this;
         }
 
         /// <summary>
-        /// HTML attributes appended to the children items
+        /// The property which will display the text rendered for each item
         /// </summary>
-        public TreeView<T> ChildrenHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        public TreeView<T> ItemText(Func<T, string> selector)
         {
-            if (htmlAttributes == null) throw new ArgumentNullException("htmlAttributes");
-            _childHtmlAttributes = htmlAttributes;
+            if (selector == null) throw new ArgumentNullException("selector");
+            _displayProperty = selector;
             return this;
-        }
-
-        public string ToHtmlString()
-        {
-            return ToString();
         }
 
         public void Render()
@@ -136,14 +129,10 @@ namespace Ren.CMS.Helpers
             }
         }
 
-        private void ValidateSettings()
+        public string ToHtmlString()
         {
-            if (_childrenProperty == null)
-            {
-                throw new InvalidOperationException("You must call the Children() method to tell the tree view how to find child items");
-            }
+            return ToString();
         }
-
 
         public override string ToString()
         {
@@ -207,5 +196,30 @@ namespace Ren.CMS.Helpers
 
             return li;
         }
+
+        private void ValidateSettings()
+        {
+            if (_childrenProperty == null)
+            {
+                throw new InvalidOperationException("You must call the Children() method to tell the tree view how to find child items");
+            }
+        }
+
+        #endregion Methods
+    }
+
+    public static class TreeViewHelper
+    {
+        #region Methods
+
+        /// <summary>
+        /// Create an HTML tree from a recursive collection of items
+        /// </summary>
+        public static TreeView<T> TreeView<T>(this HtmlHelper html, IEnumerable<T> items)
+        {
+            return new TreeView<T>(html, items);
+        }
+
+        #endregion Methods
     }
 }

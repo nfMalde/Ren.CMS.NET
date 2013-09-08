@@ -1,25 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ren.CMS.CORE.nhibernate.Base
+﻿namespace Ren.CMS.CORE.nhibernate.Base
 {
-    [AttributeUsage(AttributeTargets.Assembly)]
-    public class PersistenceAssembly:Attribute
-    {
-        public PersistenceAssembly()
-        { 
-        }
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
+    [AttributeUsage(AttributeTargets.Assembly)]
+    public class PersistenceAssembly : Attribute
+    {
+        #region Constructors
+
+        public PersistenceAssembly()
+        {
+        }
+
+        #endregion Constructors
+    }
 
     [AttributeUsage(AttributeTargets.Class)]
     public class PersistenceMapping : Attribute
     {
+        #region Constructors
+
         public PersistenceMapping()
-        { }
-    
+        {
+        }
+
+        #endregion Constructors
     }
 }

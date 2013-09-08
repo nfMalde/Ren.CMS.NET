@@ -1,165 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
-using Ren.CMS.Models;
-using Ren.CMS.CORE.Extras;
-using Ren.CMS.CORE.Settings;
-using Ren.CMS.CORE.Permissions;
-using Ren.CMS.MemberShip;
-using Ren.CMS.CORE.FileManagement;
-namespace Ren.CMS.Controllers
+﻿namespace Ren.CMS.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+    using System.Web.Security;
+
+    using Ren.CMS.CORE.Extras;
+    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.CORE.Permissions;
+    using Ren.CMS.CORE.Settings;
+    using Ren.CMS.MemberShip;
+    using Ren.CMS.Models;
+
     public class AccountController : Controller
     {
-        [HttpPost]
-        public ActionResult SaveSettings() { 
-        
-           //Save Settings
-            UserSettings USR = new UserSettings(new MemberShip.nProvider.CurrentUser().nUser);
-            
-            nValueType VT = new nValueType();
-            List<bool> OKs = new List<bool>();
-            foreach (nSetting Sett in USR.listSettings(false)) {
-
-
-                if (nPermissions.hasPermission(Sett.PermissionFrontend))
-                {
-
-                string fieldName = "setting_" + Sett.Name;
-                if (Request.Form[fieldName] != null) {
-
-                    if (Sett.ValueType == nValueType.ValueArray)
-                    {
-
-                        Sett.Value = Request.Form.GetValues(fieldName);
-
-
-                    }
-                    else {
-
-                        Sett.Value = Request.Form[fieldName].ToString();
-                    
-                    }
-
-                  bool ok =  USR.setValue(Sett);
-                  OKs.Add(ok);
-                }
-            
-                
-            
-            }
-            
-            
-            }
-
-            int x = 0; 
-            foreach (bool isOk in OKs) {
-
-
-                if (!isOk) x++;
-            
-            }
-
-            return RedirectToAction("Index/Success_"+x, "Account");
-        
-        }
-
-        public ActionResult ChangeProfile() {
-
-            Ren.CMS.CORE.Language.Language Lang = new CORE.Language.Language("__USER__","PAGE_TITLES");
-            MemberShip.ProfileManagement PM = new ProfileManagement();
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation(Lang.getLine("LANG_PAGE_TITLE_CHANGE_PROFILE"), "/Account/ChangeProfile", true);
-            Bar.Render();
-
-            GlobalSettings GS = new GlobalSettings();
-
-            EditProfileModel MDL = new EditProfileModel();
-
-            MDL.title = Lang.getLine("LANG_PAGE_TITLE_CHANGE_PROFILE");
-            MDL.basicInfo = PM.getCollection("basic", true);
-            MDL.social = PM.getCollection("social", true);
-            MDL.ProfileImage = PM.GetProfileVarByName("ProfileImage");
-         
-            MDL.User = new nProvider.CurrentUser().nUser;
-            nSetting ProfTypes = GS.getSetting("ACCOUNT_PIX_FILETYPES");
-            if (ProfTypes.Value == "") ProfTypes.Value = new string[0];
-            MDL.ProfilePictureFileTypes = (string[])ProfTypes.Value;
-            if(String.IsNullOrEmpty(MDL.ProfileImage.getUserValue())){
-
-
-             MDL.picname = "/UserAvatar/"+ MDL.User.UserName + "-Picture.jpg";
-    
-    
-    
-            }
-            else{
-            
-            MDL.picname = MDL.ProfileImage.getUserValue();
-            
-            }
-            MDL.nMaxFileSize = GS.getSetting("ACCOUNT_MAX_PROFILEPIC_FILE_SIZE");
-            MDL.nMinWidth = GS.getSetting("ACCOUNT_PIC_MIN_WIDTH");
-            MDL.nMinHeight = GS.getSetting("ACCOUNT_PIC_MIN_HEIGHT");
-            MDL.nMaxWidth = GS.getSetting("ACCOUNT_PIC_MAX_WIDTH");
-            MDL.nMaxHeight = GS.getSetting("ACCOUNT_PIC_MAX_HEIGHT");
-
-            
-
-            return View(MDL);
-        }
-
-        public ActionResult Settings()
-        {
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation("Einstellungen", "/Account/Settings", true);
-            Bar.Render();
-
-            return View();
-        
-        }
-        //
-        // GET: /Account/LogOn
-
-        public ActionResult LogOn()
-        {
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation("Login", "/Account/LogOn", true);
-            Bar.Render();
-            return View();
-        }
-
+        #region Methods
 
         [HttpPost]
         public WrappedJsonResult AjaxSaveAvatar()
         {
-             string fieldName = "avatar";
+            string fieldName = "avatar";
              string[] dirs = { "/Storage/User", "/Storage/User/Avatars" };
 
              foreach (string dir in dirs)
-             { 
+             {
                 if(!System.IO.Directory.Exists(Server.MapPath(dir)))
                 {
-                
+
                     System.IO.Directory.CreateDirectory(Server.MapPath(dir));
                 }
-             
-             
+
              }
-         
+
             MembershipUser U = new MemberShip.nProvider.CurrentUser().nUser;
 
             HttpPostedFileBase avatar = Request.Files[fieldName];
@@ -176,7 +51,6 @@ namespace Ren.CMS.Controllers
             int maxWidth = GS.getSetting("ACCOUNT_PIC_MAX_WIDTH").toInt();
             int maxHeight = GS.getSetting("ACCOUNT_PIC_MAX_HEIGHT").toInt();
 
-
              //Check Size
 
             if (avatar.ContentType.StartsWith("image"))
@@ -189,21 +63,16 @@ namespace Ren.CMS.Controllers
 
                     if (IMG.Width < minWidth) minsizeOK = false;
 
-
-
                 }
                 if (minHeight > 0)
                 {
 
-
                     if (IMG.Height < minHeight) minsizeOK = false;
-
-
 
                 }
                 if (!minsizeOK)
                 {
-                    
+
                     return new WrappedJsonResult
                     {
                         Data = new
@@ -211,7 +80,7 @@ namespace Ren.CMS.Controllers
                             IsValid = false,
                             Message = "Das Bild entsprecht nicht den vorgegebenen Mindestmaßen: " + minHeight + "px x " + minWidth + "px",
                             ImagePath = string.Empty
-                        }   
+                        }
                     };
 
                 }
@@ -222,18 +91,14 @@ namespace Ren.CMS.Controllers
 
                     if (IMG.Width > maxWidth) maxsizeok = false;
 
-
-
                 }
                 if (maxHeight > 0)
                 {
-
 
                     if (IMG.Height > maxHeight)
                     {
 
                         maxsizeok = false;
-
 
                     }
 
@@ -249,11 +114,8 @@ namespace Ren.CMS.Controllers
                         }
                     };
 
-
             }
             else {
-
-
 
                 return new WrappedJsonResult
                 {
@@ -264,7 +126,7 @@ namespace Ren.CMS.Controllers
                         ImagePath = string.Empty
                     }
                 };
-            
+
             }
 
             if (fileS > 0) {
@@ -273,7 +135,6 @@ namespace Ren.CMS.Controllers
 
                 if (uploadedSize > fileS) {
 
-                 
                     return new WrappedJsonResult
                     {
                         Data = new
@@ -283,15 +144,10 @@ namespace Ren.CMS.Controllers
                             ImagePath = string.Empty
                         }
                     };
-                
-                
-                }
-            
-            
-            
-            }
 
-           
+                }
+
+            }
 
             if (Request.Files[fieldName] == null || Request.Files[fieldName].ContentLength == 0)
             {
@@ -306,13 +162,12 @@ namespace Ren.CMS.Controllers
                 };
             }
 
-           
             FileManagement FM = new FileManagement();
 
             string[] exts = new string[] {
-            
+
             ".jpg",".jpeg", ".png", ".bmp", ".gif"
-            
+
             };
 
             if (Request.Files[fieldName] == null || Request.Files[fieldName].ContentLength == 0)
@@ -330,16 +185,15 @@ namespace Ren.CMS.Controllers
 
             nFile NewF = new nFile();
             FileManagement.nFileProfiles Prof = new FileManagement.nFileProfiles("UserAvatar");
-           
+
             NewF.aliasName = U.UserName +"-Picture"+ System.IO.Path.GetExtension(avatar.FileName);
-          
+
             NewF.filepath = "/Storage/User/Avatars";
             NewF.id = 0;
             NewF.isActive = true;
             NewF.mimetype = avatar.ContentType;
             NewF.ProfileID = Prof.ID;
             FM.RegisterFile(NewF, fieldName, true, MD.ProfilePictureFileTypes);
-
 
             NewF = FM.getFile(NewF.aliasName);
             HttpContext.Server.MapPath(NewF.filepath);
@@ -355,148 +209,10 @@ namespace Ren.CMS.Controllers
                     ImagePath = Url.Content("/UserAvatar/" + NewF.aliasName)
                 }
             };
-        
-        }
-
-
-        //
-        // POST: /Account/LogOn
-
-        [HttpPost]
-        public ActionResult LogOn(LogOnModel model, string returnUrl)
-        {
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation("Login", "/Account/LogOn", true);
-            Bar.Render();
-            if (ModelState.IsValid)
-            {
-                if (Membership.ValidateUser(model.UserName, model.Password))
-                {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
-                }
-            }
-
-            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
-            return View(model);
-        }
-
-        //
-        // GET: /Account/LogOff
-
-        public ActionResult LogOff()
-        {
-            FormsAuthentication.SignOut();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        //
-        // GET: /Account/Register
-
-        public ActionResult Register()
-        {
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation("Kontro erstellen", "/Account/Register", true);
-            Bar.Render();
-            return View();
-        }
-
-        //
-        // POST: /Account/Register
-
-        [HttpPost]
-        public ActionResult Register(RegisterModel model)
-        {
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
-            Bar.AddLocation("Benutzerkonto erstellen", "/Account/Register", true);
-            Bar.Render();
-            if (ModelState.IsValid)
-            {
-                // Versuch, den Benutzer zu registrieren
-                MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
-
-                if (createStatus == MembershipCreateStatus.Success)
-                {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
-                }
-            }
-
-            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
-            return View(model);
-        }
-
-
-        [Authorize]
-
-        public ActionResult Index(string id="") {
-            if (id.StartsWith("Success_")) {
-                string secc = "Success_";
-                CORE.Language.Language LNG = new CORE.Language.Language("__USER__", "ACCOUNT");
-                ViewBag.IsSuccess = true;
-               
-                int xe = 0;
-                string errors = id.Substring(secc.Length);
-                int.TryParse(errors, out xe);
-
-                if (xe > 0)
-                {
-                    ViewBag.SuccessMessageText = LNG.getLine("LANG_ACCOUNT_SUCCESS_TEXT_ERROR").Replace("%%NUMBER%%", errors);
-                    ViewBag.SuccessMessageTitle = LNG.getLine("LANG_ACCOUNT_SUCCESS_TITLE_ERROR");
-
-
-                }
-                else
-                {
-                    ViewBag.SuccessMessageText = LNG.getLine("LANG_ACCOUNT_SUCCESS_TEXT");
-                    ViewBag.SuccessMessageTitle = LNG.getLine("LANG_ACCOUNT_SUCCESS_TITLE");
-                }
-
-                ViewBag.Errors = xe;
-            }
-            //Hauptseite der Accountverwaltung anzeigen....
-            LocationBar Bar = new LocationBar(this.ControllerContext);
-
-            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
-            Bar.AddLocation("Benutzerkonto", "/Account/Index", true);
- 
-            Bar.Render();
-
-
-
-            return View();
         }
 
         //
         // GET: /Account/ChangePassword
-
         [Authorize]
         public ActionResult ChangePassword()
         {
@@ -511,7 +227,6 @@ namespace Ren.CMS.Controllers
 
         //
         // POST: /Account/ChangePassword
-
         [Authorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
@@ -554,7 +269,6 @@ namespace Ren.CMS.Controllers
 
         //
         // GET: /Account/ChangePasswordSuccess
-
         public ActionResult ChangePasswordSuccess()
         {
             LocationBar Bar = new LocationBar(this.ControllerContext);
@@ -566,7 +280,247 @@ namespace Ren.CMS.Controllers
             return View();
         }
 
-        #region Status Codes
+        public ActionResult ChangeProfile()
+        {
+            Ren.CMS.CORE.Language.Language Lang = new CORE.Language.Language("__USER__","PAGE_TITLES");
+            MemberShip.ProfileManagement PM = new ProfileManagement();
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation(Lang.getLine("LANG_PAGE_TITLE_CHANGE_PROFILE"), "/Account/ChangeProfile", true);
+            Bar.Render();
+
+            GlobalSettings GS = new GlobalSettings();
+
+            EditProfileModel MDL = new EditProfileModel();
+
+            MDL.title = Lang.getLine("LANG_PAGE_TITLE_CHANGE_PROFILE");
+            MDL.basicInfo = PM.getCollection("basic", true);
+            MDL.social = PM.getCollection("social", true);
+            MDL.ProfileImage = PM.GetProfileVarByName("ProfileImage");
+
+            MDL.User = new nProvider.CurrentUser().nUser;
+            nSetting ProfTypes = GS.getSetting("ACCOUNT_PIX_FILETYPES");
+            if (ProfTypes.Value == "") ProfTypes.Value = new string[0];
+            MDL.ProfilePictureFileTypes = (string[])ProfTypes.Value;
+            if(String.IsNullOrEmpty(MDL.ProfileImage.getUserValue())){
+
+             MDL.picname = "/UserAvatar/"+ MDL.User.UserName + "-Picture.jpg";
+
+            }
+            else{
+
+            MDL.picname = MDL.ProfileImage.getUserValue();
+
+            }
+            MDL.nMaxFileSize = GS.getSetting("ACCOUNT_MAX_PROFILEPIC_FILE_SIZE");
+            MDL.nMinWidth = GS.getSetting("ACCOUNT_PIC_MIN_WIDTH");
+            MDL.nMinHeight = GS.getSetting("ACCOUNT_PIC_MIN_HEIGHT");
+            MDL.nMaxWidth = GS.getSetting("ACCOUNT_PIC_MAX_WIDTH");
+            MDL.nMaxHeight = GS.getSetting("ACCOUNT_PIC_MAX_HEIGHT");
+
+            return View(MDL);
+        }
+
+        [Authorize]
+        public ActionResult Index(string id="")
+        {
+            if (id.StartsWith("Success_")) {
+                string secc = "Success_";
+                CORE.Language.Language LNG = new CORE.Language.Language("__USER__", "ACCOUNT");
+                ViewBag.IsSuccess = true;
+
+                int xe = 0;
+                string errors = id.Substring(secc.Length);
+                int.TryParse(errors, out xe);
+
+                if (xe > 0)
+                {
+                    ViewBag.SuccessMessageText = LNG.getLine("LANG_ACCOUNT_SUCCESS_TEXT_ERROR").Replace("%%NUMBER%%", errors);
+                    ViewBag.SuccessMessageTitle = LNG.getLine("LANG_ACCOUNT_SUCCESS_TITLE_ERROR");
+
+                }
+                else
+                {
+                    ViewBag.SuccessMessageText = LNG.getLine("LANG_ACCOUNT_SUCCESS_TEXT");
+                    ViewBag.SuccessMessageTitle = LNG.getLine("LANG_ACCOUNT_SUCCESS_TITLE");
+                }
+
+                ViewBag.Errors = xe;
+            }
+            //Hauptseite der Accountverwaltung anzeigen....
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", true);
+
+            Bar.Render();
+
+            return View();
+        }
+
+        //
+        // GET: /Account/LogOff
+        public ActionResult LogOff()
+        {
+            FormsAuthentication.SignOut();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        //
+        // GET: /Account/LogOn
+        public ActionResult LogOn()
+        {
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation("Login", "/Account/LogOn", true);
+            Bar.Render();
+            return View();
+        }
+
+        //
+        // POST: /Account/LogOn
+        [HttpPost]
+        public ActionResult LogOn(LogOnModel model, string returnUrl)
+        {
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation("Login", "/Account/LogOn", true);
+            Bar.Render();
+            if (ModelState.IsValid)
+            {
+                if (Membership.ValidateUser(model.UserName, model.Password))
+                {
+                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
+                }
+            }
+
+            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
+            return View(model);
+        }
+
+        //
+        // GET: /Account/Register
+        public ActionResult Register()
+        {
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation("Kontro erstellen", "/Account/Register", true);
+            Bar.Render();
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        public ActionResult Register(RegisterModel model)
+        {
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation("Benutzerkonto erstellen", "/Account/Register", true);
+            Bar.Render();
+            if (ModelState.IsValid)
+            {
+                // Versuch, den Benutzer zu registrieren
+                MembershipCreateStatus createStatus;
+                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
+
+                if (createStatus == MembershipCreateStatus.Success)
+                {
+                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                }
+            }
+
+            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SaveSettings()
+        {
+            //Save Settings
+            UserSettings USR = new UserSettings(new MemberShip.nProvider.CurrentUser().nUser);
+
+            nValueType VT = new nValueType();
+            List<bool> OKs = new List<bool>();
+            foreach (nSetting Sett in USR.listSettings(false)) {
+
+                if (nPermissions.hasPermission(Sett.PermissionFrontend))
+                {
+
+                string fieldName = "setting_" + Sett.Name;
+                if (Request.Form[fieldName] != null) {
+
+                    if (Sett.ValueType == nValueType.ValueArray)
+                    {
+
+                        Sett.Value = Request.Form.GetValues(fieldName);
+
+                    }
+                    else {
+
+                        Sett.Value = Request.Form[fieldName].ToString();
+
+                    }
+
+                  bool ok =  USR.setValue(Sett);
+                  OKs.Add(ok);
+                }
+
+            }
+
+            }
+
+            int x = 0;
+            foreach (bool isOk in OKs) {
+
+                if (!isOk) x++;
+
+            }
+
+            return RedirectToAction("Index/Success_"+x, "Account");
+        }
+
+        public ActionResult Settings()
+        {
+            LocationBar Bar = new LocationBar(this.ControllerContext);
+
+            Bar.AddLocation("NetworkFreaks.de", "/Home/Index", false);
+            Bar.AddLocation("Benutzerkonto", "/Account/Index", false);
+            Bar.AddLocation("Einstellungen", "/Account/Settings", true);
+            Bar.Render();
+
+            return View();
+        }
+
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
             // Eine vollständige Liste mit Statuscodes finden Sie unter http://go.microsoft.com/fwlink/?LinkID=177550
@@ -604,6 +558,7 @@ namespace Ren.CMS.Controllers
                     return "Unbekannter Fehler. Überprüfen Sie die Eingabe, und wiederholen Sie den Vorgang. Sollte das Problem weiterhin bestehen, wenden Sie sich an den zuständigen Systemadministrator.";
             }
         }
-        #endregion
+
+        #endregion Methods
     }
 }

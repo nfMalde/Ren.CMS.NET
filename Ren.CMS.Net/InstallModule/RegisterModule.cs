@@ -1,16 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Ren.CMS.ViewEngine;
-using MvcContrib.PortableAreas;
-using MvcContrib;
-namespace Ren.CMS.Install
+﻿namespace Ren.CMS.Install
 {
-    public class InstallRegistration:PortableAreaRegistration
-    {   
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
+    using MvcContrib;
+    using MvcContrib.PortableAreas;
+
+    using Ren.CMS.ViewEngine;
+
+    public class InstallRegistration : PortableAreaRegistration
+    {
+        #region Properties
+
+        public override string AreaName
+        {
+            get { return "Installer"; }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
         public override void RegisterArea(System.Web.Mvc.AreaRegistrationContext context, IApplicationBus bus)
         {
             /*context.MapRoute(
@@ -19,11 +33,9 @@ namespace Ren.CMS.Install
                 new { controller = "News", action = "Archive", id=UrlParameter.Optional, category =  UrlParameter.Optional, subcategory=UrlParameter.Optional }
 
                 );
-          */
- 
+              */
 
             string[] thisNamespace = { "Ren.CMS.Install" };
-
 
             /*
             context.MapRoute(
@@ -36,9 +48,6 @@ namespace Ren.CMS.Install
             RegisterAreaEmbeddedResources();
         }
 
-        public override string AreaName
-        {
-            get { return "Installer"; }
-        }
+        #endregion Methods
     }
 }

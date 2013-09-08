@@ -1,0 +1,18 @@
+﻿
+
+    /* This Stylesheet has to be loaded AFTER jquery UI css*/
+
+.ui-button-icon-only {
+    padding: 0 !important;
+
+}
+
+.ui-button-icon-only .ui-button-icon-primary {
+        margin:0 !important;
+}
+  .ui-dialog-title {
+
+
+        
+           font-size:10pt !important;
+        }

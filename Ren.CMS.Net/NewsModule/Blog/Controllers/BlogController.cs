@@ -1,46 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Ren.CMS.nModules;
-using Ren.CMS.Blog.Models;
-using Ren.CMS.CORE.SqlHelper;
-using System.Data.SqlClient;
-using Ren.CMS;
-using Ren.CMS.Pagination;
-using Ren.CMS.MemberShip;
-using Ren.CMS.CORE.Permissions;
-using Recaptcha;
-using Ren.CMS.CORE.SettingsHelper;
-using Ren.CMS.Content;
-using System.Text.RegularExpressions;
-using Ren.CMS.CORE.Settings;
-using Ren.CMS.Blog.Helpers;
-using Ren.CMS.CORE.ThisApplication;
-using Ren.CMS.ContentHelpers.Blog;
-using System.Globalization;
-using BlogModule.Blog.Helpers;
-using System.ComponentModel.DataAnnotations;
-
-namespace Ren.CMS.Blog
+﻿namespace Ren.CMS.Blog
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Data.SqlClient;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using BlogModule.Blog.Helpers;
+
+    using Recaptcha;
+
+    using Ren.CMS;
+    using Ren.CMS.Blog.Helpers;
+    using Ren.CMS.Blog.Models;
+    using Ren.CMS.Content;
+    using Ren.CMS.ContentHelpers.Blog;
+    using Ren.CMS.CORE.Permissions;
+    using Ren.CMS.CORE.Settings;
+    using Ren.CMS.CORE.SettingsHelper;
+    using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.CORE.ThisApplication;
+    using Ren.CMS.MemberShip;
+    using Ren.CMS.nModules;
+    using Ren.CMS.Pagination;
+
     public class BlogController : Controller
     {
-        private string BlogTypeRouteData
-        {
-            get{ 
-                string routingCT = "all";
-               
-                if(this.RouteData.Values["contentType"]  != null)
-                  routingCT = (string)this.RouteData.Values["contentType"]  ?? "all";
+        #region Properties
 
-                return routingCT;
-            }}
-
-        public string ContentType 
+        public string ContentType
         {
-        
             get
             {
                 string routingCT = BlogTypeRouteData;
@@ -54,272 +47,33 @@ namespace Ren.CMS.Blog
                     {
                         routingCT = BlogModule.Blog.Helpers.EnumHelper<BlogTypeEnum>.GetEnumDescription(v);
                     }
-                
+
                 }
 
                 return routingCT;
             }
         }
-        
-        public ActionResult Tag(string tgn, int page = 1) {
-             
-         
-            ContentManagement.GetContent GetC = new ContentManagement.GetContent();
-            string[] t = new string[1];
-            t[0] =ContentType;
 
-            SqlHelper SQL = new SqlHelper();
-            SQL.SysConnect();
-            string realTag = tgn;
-            string query = "SELECT COUNT(*) as tagCount, tagName FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "Content_Tags WHERE tagNameSEO=@tagName AND contentType=@ct AND enableBrowsing=1 GROUP BY tagName";
-
-            nSqlParameterCollection N = new nSqlParameterCollection();
-
-            N.Add("@tagName", tgn);
-            N.Add("@ct",ContentType);
-            SqlDataReader R = SQL.SysReader(query, N);
-            if (!R.HasRows) return RedirectToAction("Archive", "News");
-            R.Read();
-
-            int count = 0;
-            
-            if (R["tagCount"] != DBNull.Value) {
-
-
-                count = (int)R["tagCount"];
-                ViewBag.TagName = (string)R["tagName"];
-                realTag = (string)R["tagName"];
-
-            
-            
-            }
-            R.Close();
-            SQL.SysDisconnect();
-            if (count == 0) return RedirectToAction(BlogTypeRouteData +"/Archive");
-
-
-            GetC.GetContentByTag(realTag, t,null,"{prefix}Content.cDate","DESC",false,page,20);
-
-
-          
-            List<nContent> Li = GetC.getList();
-
-            nPagingCollection pages = new nPagingCollection(GetC.TotalRows, 10);
-            ViewData["TotalRows"] = GetC.TotalRows;
-            ViewData["Show"] = Li.Count;
-            ViewData["Pages"] = pages;
-            ViewData["Page"] = page;
-            ViewData["Entries"] = Li;
-           
-
-
-
-            return View();
-        
-        }
-
- 
-
-   
- 
-        public ActionResult Category(string category, int page = 1, string subname = null) {
-
-
-
-
-            ContentManagement.GetContent GetC = new ContentManagement.GetContent(new string[]{this.ContentType},category,"{prefix}Content.cDate","DESC",false,page,20);
-
-
-
-
-
-
-            string c = "";
-            List<nContent> Li = GetC.getList();
-            if (Li.Count > 0) c = Li[0].CategoryName;
-            else return RedirectToAction( this.BlogTypeRouteData + "/Archive", "News");
-            nPagingCollection pages = new nPagingCollection(GetC.TotalRows, 10);
-            ViewData["TotalRows"] = GetC.TotalRows;
-            ViewBag.CatName = c;
-            ViewData["Show"] = Li.Count;
-            ViewData["Pages"] = pages;
-            ViewData["Page"] = page;
-            ViewData["Entries"] = Li;
-
-
-
-
-            return View();
-        
-        
-        
-        
-        
-        }
-
-        private NewsDetail getDetailViewModel(int id, object page = null)
+        private string BlogTypeRouteData
         {
+            get{
+                string routingCT = "all";
 
-            if (id == 0) return null;
+                if(this.RouteData.Values["contentType"]  != null)
+                  routingCT = (string)this.RouteData.Values["contentType"]  ?? "all";
 
-
-
-
-         
-            List<Ren.CMS.Content.nContent> Entry = new List<Ren.CMS.Content.nContent>();
-
-            
-            List<Ren.CMS.Content.nContent> Comments = new List<Ren.CMS.Content.nContent>();
-            int totalRows = 0;
-            if (id == 0) return null;
-            else
-            {
-
-                int idd = id;
-
-                if (idd == -1) return null;
-                Ren.CMS.Content.ContentManagement.GetContent G = new Ren.CMS.Content.ContentManagement.GetContent(idd);
-                Ren.CMS.Content.ContentManagement.GetContent C = new Ren.CMS.Content.ContentManagement.GetContent(new string[] { "eComment" }, languages: new string [] { Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage }, pageIndex: 1, pageSize: 10, contentRef: idd);
-
-                Entry = G.getList();
-                Comments = C.getList();
-                Comments.ForEach(a => a.CreatorName = Ren.CMS.Blog.Helpers.NewsCommentHelper.SpecialNameForGuests(a));
-
-
-
-                totalRows = C.TotalRows;
-                if (Entry.Count == 0) RedirectToActionPermanent("Code/404", "Error");
-                Entry[0].GenerateLink();
-                if (Entry[0].ContentType !=ContentType) RedirectToActionPermanent(Entry[0].TargetAction, Entry[0].TargetController);
-
+                return routingCT;
             }
-
-            if (Entry.Count == 0)
-                return null;
-
-
-            
-            NewsDetail DetailModel = new NewsDetail();
-
-            DetailModel.NewsEntry = Entry.First();
-            foreach (nContentText Text in DetailModel.NewsEntry.Texts)
-            {
-
-                if (Text.LangCode != Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage && DetailModel.NewsEntry.Texts.Any(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage))
-                    DetailModel.NewsEntry.Texts.Remove(Text);
-                else
-                {
-                     string l = Ren.CMS.CORE.Helper.CurrentLanguageHelper.DefaultLanguage;
-                     if (DetailModel.NewsEntry.Texts.Any(e => e.LangCode == l))
-                     {
-                         if (Text.LangCode != l)
-                             DetailModel.NewsEntry.Texts.Remove(Text);
-                     
-                     
-                     }
-                }
-            
-            }
-            DetailModel.Comments = Comments;
-            DetailModel.CommentsOnPage = Comments.Count();
-            DetailModel.TotalComments = DetailModel.NewsEntry.GetCommentsCount();
-
-            return DetailModel;
-        }
-        [HttpGet]
-        public ActionResult Show(int id = 0, string title= "", int page = 1) {
-
-            var model = this.getDetailViewModel(id, page);
-            if (model == null)
-            {
-                return RedirectToActionPermanent(BlogTypeRouteData + "/Archive", "Blog");
-            
-            }
-
-            return View(model);
         }
 
-        private nContent Map(NewsComment c)
-        {
-            if (Request.IsAuthenticated)
-            {
+        #endregion Properties
 
-                c.Nickname = null;
-            }
-            else
-            {
-                if (String.IsNullOrEmpty(c.Nickname) ||
-                                String.IsNullOrWhiteSpace(c.Nickname))
-                {
-
-                    c.Nickname = "Besucher";
-
-
-                }
-
-            }
-
-            ContentManagement.GetContent Check = new ContentManagement.GetContent(id: (c.Reference > 0 ? c.Reference : c.NewsID));
-            var e = Check.getList().First();
-
-
-            nContentText Text = new nContentText()
-            {
-                Id = 0,
-                LangCode = Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage,
-                LongText = c.Comment,
-                PreviewText = c.Comment,
-                MetaDescription = "",
-                MetaKeyWords = "",
-                SEOName = "",
-                Title = "eComment"
-            };
-
-
-            List<nContentText> texts = new List<nContentText>() { Text };
-
-               
-            nContent Content = new nContent(
-                id: -1,
-                contentTexts: texts, 
-                type: "eComment",
-                category: e.CategoryName,
-                creatorPKid: MemberShip.Helper.CmsUser.Current.ProviderUserKey,
-                CreatorSpecialName_: c.Nickname,
-                username: MemberShip.Helper.CmsUser.Current.UserName,
-                locked: false,
-                 ratinggroupid: 0,
-                cdate: DateTime.Now,
-                Cref: (c.Reference > 0 ? c.Reference : c.NewsID),
-                cid: e.CategoryID);
-
-
-
-            return Content;
-
-
-
-
-        }
-        //
-        // GET: /News/
-        public ActionResult Index()
-        {
-
-
-
-            return RedirectToAction(BlogTypeRouteData + "/Archive");
-        }
-
+        #region Methods
 
         public ActionResult Archive(int id=1)
         {
-
-           
-
             int count = 0;
             Dictionary<DateTime, List<nContent>> cList = new Dictionary<DateTime, List<nContent>>();
-             
 
             DateTime DT = DateTime.Now;
             int idcount = 0;
@@ -334,7 +88,7 @@ namespace Ren.CMS.Blog
                 if (cList.Keys.Where(e => e == DT).Count() > 0)
                 {
                     cList[DT].AddRange(l);
-                
+
                 }
                 else
                     cList.Add(DT, l);
@@ -345,7 +99,7 @@ namespace Ren.CMS.Blog
                 {
                     DT = l.Last().CreationDate;
                     count = 0;
-                
+
                 }
                 Total = Total + Getter.TotalRows;
                 OnPage = OnPage + l.Count;
@@ -353,25 +107,18 @@ namespace Ren.CMS.Blog
 
             //Split Every 30 Rows
 
-
-
-
-         
-
             NewsArchive archive = new NewsArchive();
             archive.News = cList;
             archive.RowsOnPage = OnPage;
             archive.TotalRows = Total;
             archive.Page = id;
 
-
             return View(archive);
-}
+        }
 
         [HttpPost]
         public JsonResult ArchiveAjax(int page = 1)
         {
-
             ContentManagement.GetContent AjaxContent = new ContentManagement.GetContent(acontenttypes: new string[] {ContentType }, languages: new string[] { Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage }, pageSize: 50, pageIndex: page);
             var list = AjaxContent.getList();
             if(list.Count <= 0)
@@ -384,80 +131,49 @@ namespace Ren.CMS.Blog
             list.ForEach(e => listC.Add(new { DateString = e.CreationDate.ToString("dd.MM.yyyy HH:mm"), Row = e }));
 
             List<object> Contents = new List<object>();
-            Contents.Add(new { 
-            
+            Contents.Add(new {
+
                 Key = key,
                 KeyText = keyText,
                 List = listC
-            
-            
+
             });
 
-  
-
-
             return Json(new { Contents = Contents, TotalRows = AjaxContent.TotalRows, Rows = list.Count });
-        
         }
 
-
-        private nContent _AddComment(ref NewsComment Comment, int refId = 0)
+        public ActionResult Category(string category, int page = 1, string subname = null)
         {
-           
+            ContentManagement.GetContent GetC = new ContentManagement.GetContent(new string[]{this.ContentType},category,"{prefix}Content.cDate","DESC",false,page,20);
 
-            int idForRef = Comment.NewsID;
-         
-            ContentManagement.GetContent Check = new ContentManagement.GetContent(id: Comment.NewsID);
+            string c = "";
+            List<nContent> Li = GetC.getList();
+            if (Li.Count > 0) c = Li[0].CategoryName;
+            else return RedirectToAction( this.BlogTypeRouteData + "/Archive", "News");
+            nPagingCollection pages = new nPagingCollection(GetC.TotalRows, 10);
+            ViewData["TotalRows"] = GetC.TotalRows;
+            ViewBag.CatName = c;
+            ViewData["Show"] = Li.Count;
+            ViewData["Pages"] = pages;
+            ViewData["Page"] = page;
+            ViewData["Entries"] = Li;
 
-            if (Check.getList().Where(e => e.ContentType ==ContentType || e.ContentType == "eComment").Count() == 0) return null;
-            
-            var element = Check.getList().First();
-            element.GenerateLink();
-            
-            if (refId > 0)
-            {
-                //Check Ref exists:
-                ContentManagement.GetContent CheckRef = new ContentManagement.GetContent(id: refId);
-                if (CheckRef.getList().Where(e => e.ContentType ==ContentType || e.ContentType == "eComment").Count() == 0)
-                    
-                    return null;
-
-
-                 idForRef = refId;
-            }
-
-
-            
-            nContent NewComment = this.Map(Comment);
-      
-             
-
-            ContentManagement CM = new ContentManagement();
-
-            bool success = CM.InsertContent(ref NewComment);
-            
-            Comment.ScrollTo = NewComment.ID;
-            if (!success)
-                return null;
-            return element;
-        
+            return View();
         }
 
         // bool captchaValid, string returnUrl
         public ActionResult Comments(int id)
-        { 
-                //Get News 
+        {
+            //Get News
 
             ContentManagement.GetContent Get = new ContentManagement.GetContent(id: id);
 
             var newsl = Get.getList();
 
-            
-
             if (newsl.Count == 0 || newsl.First().ContentType !=ContentType)
             {
                 return RedirectToAction(BlogTypeRouteData + "/Archive", "Blog");
-            
+
             }
             var news = newsl.First();
 
@@ -470,8 +186,61 @@ namespace Ren.CMS.Blog
             DetailView.mode = "all";
 
             return View(DetailView);
+        }
 
-        
+        [HttpPost]
+        public JsonResult GetAnswerInfo(int id)
+        {
+            ContentManagement.GetContent Get = new ContentManagement.GetContent(id: id);
+
+            var entry = Get.getList();
+
+            if (entry.Count == 0)
+            {
+
+                return Json(null);
+
+            }
+               var entryOne = entry.First();
+
+            return Json(new { CreatorName = (entryOne.CreatorSpecialName != "" ? entryOne.CreatorSpecialName : entryOne.CreatorName), ID = entryOne.ID });
+        }
+
+        //
+        // GET: /News/
+        public ActionResult Index()
+        {
+            return RedirectToAction(BlogTypeRouteData + "/Archive");
+        }
+
+        public ActionResult PartialCommentAnswers(int NewsID, int CommentID, int Page = 1)
+        {
+            var newsEntry = new ContentManagement.GetContent(id: NewsID).getList();
+            if (newsEntry.Count == 0)
+            {
+
+                return Content(String.Empty);
+            }
+
+            NewsCommentAnswerView Answers = new NewsCommentAnswerView();
+            Answers.MainCommentID = CommentID;
+            Answers.NewsEntry = newsEntry.First();
+            Answers.Page = Page;
+
+            return PartialView("_CommentAnswers", Answers);
+        }
+
+        [HttpGet]
+        public ActionResult Show(int id = 0, string title= "", int page = 1)
+        {
+            var model = this.getDetailViewModel(id, page);
+            if (model == null)
+            {
+                return RedirectToActionPermanent(BlogTypeRouteData + "/Archive", "Blog");
+
+            }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -499,7 +268,6 @@ namespace Ren.CMS.Blog
                         string strTargetString = @"@123-name:";
                         string strReplace = @"<a href=""#comment-$1"">$2:</a>";
 
-
                         System.Text.RegularExpressions.MatchCollection API = new System.Text.RegularExpressions.Regex(strRegex).Matches(Model.Comment);
 
                         foreach (Match match in API)
@@ -524,13 +292,11 @@ namespace Ren.CMS.Blog
 
                         }
 
-
-
                     }
                     catch (Exception e)
                     {
                     }
-                
+
                 }
                 nContent add = this._AddComment( ref Model, refId: Model.Reference);
                 if (add != null)
@@ -539,14 +305,14 @@ namespace Ren.CMS.Blog
 
                     return Redirect(add.FullLink + "#comment-" + Model.ScrollTo);
                 }
-                else 
+                else
                 {
                     ModelState.AddModelError("form", "Es ist ein Fehler beim absenden des Kommentars aufgetreten. Bitte versuch es erneut");
                 }
             }
- 
+
             model.PostedComment = Model;
-            
+
             //Clearing Values
             if(ModelState["FormID"] != null)
             ModelState.SetModelValue("FormID", new ValueProviderResult("", "", CultureInfo.CurrentCulture));
@@ -557,57 +323,201 @@ namespace Ren.CMS.Blog
             if (ModelState["Comment"] != null)
                 ModelState.SetModelValue("Comment", new ValueProviderResult("", "", CultureInfo.CurrentCulture));
 
-
             return View(model);
-          
         }
 
-
-        public ActionResult PartialCommentAnswers(int NewsID, int CommentID, int Page = 1)
+        public ActionResult Tag(string tgn, int page = 1)
         {
-            var newsEntry = new ContentManagement.GetContent(id: NewsID).getList();
-            if (newsEntry.Count == 0)
+            ContentManagement.GetContent GetC = new ContentManagement.GetContent();
+            string[] t = new string[1];
+            t[0] =ContentType;
+
+            SqlHelper SQL = new SqlHelper();
+            SQL.SysConnect();
+            string realTag = tgn;
+            string query = "SELECT COUNT(*) as tagCount, tagName FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "Content_Tags WHERE tagNameSEO=@tagName AND contentType=@ct AND enableBrowsing=1 GROUP BY tagName";
+
+            nSqlParameterCollection N = new nSqlParameterCollection();
+
+            N.Add("@tagName", tgn);
+            N.Add("@ct",ContentType);
+            SqlDataReader R = SQL.SysReader(query, N);
+            if (!R.HasRows) return RedirectToAction("Archive", "News");
+            R.Read();
+
+            int count = 0;
+
+            if (R["tagCount"] != DBNull.Value) {
+
+                count = (int)R["tagCount"];
+                ViewBag.TagName = (string)R["tagName"];
+                realTag = (string)R["tagName"];
+
+            }
+            R.Close();
+            SQL.SysDisconnect();
+            if (count == 0) return RedirectToAction(BlogTypeRouteData +"/Archive");
+
+            GetC.GetContentByTag(realTag, t,null,"{prefix}Content.cDate","DESC",false,page,20);
+
+            List<nContent> Li = GetC.getList();
+
+            nPagingCollection pages = new nPagingCollection(GetC.TotalRows, 10);
+            ViewData["TotalRows"] = GetC.TotalRows;
+            ViewData["Show"] = Li.Count;
+            ViewData["Pages"] = pages;
+            ViewData["Page"] = page;
+            ViewData["Entries"] = Li;
+
+            return View();
+        }
+
+        private NewsDetail getDetailViewModel(int id, object page = null)
+        {
+            if (id == 0) return null;
+
+            List<Ren.CMS.Content.nContent> Entry = new List<Ren.CMS.Content.nContent>();
+
+            List<Ren.CMS.Content.nContent> Comments = new List<Ren.CMS.Content.nContent>();
+            int totalRows = 0;
+            if (id == 0) return null;
+            else
             {
 
+                int idd = id;
 
-                return Content(String.Empty);
+                if (idd == -1) return null;
+                Ren.CMS.Content.ContentManagement.GetContent G = new Ren.CMS.Content.ContentManagement.GetContent(idd);
+                Ren.CMS.Content.ContentManagement.GetContent C = new Ren.CMS.Content.ContentManagement.GetContent(new string[] { "eComment" }, languages: new string [] { Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage }, pageIndex: 1, pageSize: 10, contentRef: idd);
+
+                Entry = G.getList();
+                Comments = C.getList();
+                Comments.ForEach(a => a.CreatorName = Ren.CMS.Blog.Helpers.NewsCommentHelper.SpecialNameForGuests(a));
+
+                totalRows = C.TotalRows;
+                if (Entry.Count == 0) RedirectToActionPermanent("Code/404", "Error");
+                Entry[0].GenerateLink();
+                if (Entry[0].ContentType !=ContentType) RedirectToActionPermanent(Entry[0].TargetAction, Entry[0].TargetController);
+
             }
 
-            NewsCommentAnswerView Answers = new NewsCommentAnswerView();
-            Answers.MainCommentID = CommentID;
-            Answers.NewsEntry = newsEntry.First();
-            Answers.Page = Page;
+            if (Entry.Count == 0)
+                return null;
 
-            return PartialView("_CommentAnswers", Answers);
-              
-        
-        
-        }
+            NewsDetail DetailModel = new NewsDetail();
 
-
-        [HttpPost]
-        public JsonResult GetAnswerInfo(int id)
-        {
-
-            ContentManagement.GetContent Get = new ContentManagement.GetContent(id: id);
-
-
-            var entry = Get.getList();
-
-
-            if (entry.Count == 0)
+            DetailModel.NewsEntry = Entry.First();
+            foreach (nContentText Text in DetailModel.NewsEntry.Texts)
             {
 
-                return Json(null);
-            
-            }
-           var entryOne = entry.First();
+                if (Text.LangCode != Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage && DetailModel.NewsEntry.Texts.Any(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage))
+                    DetailModel.NewsEntry.Texts.Remove(Text);
+                else
+                {
+                     string l = Ren.CMS.CORE.Helper.CurrentLanguageHelper.DefaultLanguage;
+                     if (DetailModel.NewsEntry.Texts.Any(e => e.LangCode == l))
+                     {
+                         if (Text.LangCode != l)
+                             DetailModel.NewsEntry.Texts.Remove(Text);
 
-            return Json(new { CreatorName = (entryOne.CreatorSpecialName != "" ? entryOne.CreatorSpecialName : entryOne.CreatorName), ID = entryOne.ID });
+                     }
+                }
+
+            }
+            DetailModel.Comments = Comments;
+            DetailModel.CommentsOnPage = Comments.Count();
+            DetailModel.TotalComments = DetailModel.NewsEntry.GetCommentsCount();
+
+            return DetailModel;
         }
 
+        private nContent Map(NewsComment c)
+        {
+            if (Request.IsAuthenticated)
+            {
 
+                c.Nickname = null;
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(c.Nickname) ||
+                                String.IsNullOrWhiteSpace(c.Nickname))
+                {
 
- 
+                    c.Nickname = "Besucher";
+
+                }
+
+            }
+
+            ContentManagement.GetContent Check = new ContentManagement.GetContent(id: (c.Reference > 0 ? c.Reference : c.NewsID));
+            var e = Check.getList().First();
+
+            nContentText Text = new nContentText()
+            {
+                Id = 0,
+                LangCode = Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage,
+                LongText = c.Comment,
+                PreviewText = c.Comment,
+                MetaDescription = "",
+                MetaKeyWords = "",
+                SEOName = "",
+                Title = "eComment"
+            };
+
+            List<nContentText> texts = new List<nContentText>() { Text };
+
+            nContent Content = new nContent(
+                id: -1,
+                contentTexts: texts,
+                type: "eComment",
+                category: e.CategoryName,
+                creatorPKid: MemberShip.Helper.CmsUser.Current.ProviderUserKey,
+                CreatorSpecialName_: c.Nickname,
+                username: MemberShip.Helper.CmsUser.Current.UserName,
+                locked: false,
+                 ratinggroupid: 0,
+                cdate: DateTime.Now,
+                Cref: (c.Reference > 0 ? c.Reference : c.NewsID),
+                cid: e.CategoryID);
+
+            return Content;
+        }
+
+        private nContent _AddComment(ref NewsComment Comment, int refId = 0)
+        {
+            int idForRef = Comment.NewsID;
+
+            ContentManagement.GetContent Check = new ContentManagement.GetContent(id: Comment.NewsID);
+
+            if (Check.getList().Where(e => e.ContentType ==ContentType || e.ContentType == "eComment").Count() == 0) return null;
+
+            var element = Check.getList().First();
+            element.GenerateLink();
+
+            if (refId > 0)
+            {
+                //Check Ref exists:
+                ContentManagement.GetContent CheckRef = new ContentManagement.GetContent(id: refId);
+                if (CheckRef.getList().Where(e => e.ContentType ==ContentType || e.ContentType == "eComment").Count() == 0)
+
+                    return null;
+
+                 idForRef = refId;
+            }
+
+            nContent NewComment = this.Map(Comment);
+
+            ContentManagement CM = new ContentManagement();
+
+            bool success = CM.InsertContent(ref NewComment);
+
+            Comment.ScrollTo = NewComment.ID;
+            if (!success)
+                return null;
+            return element;
+        }
+
+        #endregion Methods
     }
 }

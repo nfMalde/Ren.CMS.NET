@@ -1,69 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using NHibernate;
-using Ren.CMS.Persistence.Domain;
-using Ren.CMS.CORE.nhibernate;
-using Ren.CMS.CORE.nhibernate.Base;
-using Ren.CMS.CORE.nhibernate.Domain;
-using Ren.CMS.Persistence.Repositories;
-namespace Ren.CMS.CORE.FileManagement
+﻿namespace Ren.CMS.CORE.FileManagement
 {
-     
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web;
 
-    public class nFile
-    {
-        public int id { get; set; }
-        public string filepath { get; set; }
-        public string aliasName { get; set; }
-        public string mimetype { get; set; }
-        public string needPermission { get; set; }
-        public bool isActive { get; set; }
-        public int ProfileID { get; set; }
+    using NHibernate;
 
-    }
+    using Ren.CMS.CORE.nhibernate;
+    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Repositories;
 
-    //TODO: Controller für Userbilder 
-    public class FileSettingModel
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-
-        public string Value { get; set; }
-
-
-    }
     public class FileManagement
     {
-        /*
-         * Structure dbo.nfcms_Files
-         * id int identity(1,1)
-         * fpath text
-         * aliasName varchar(255)
- 
-         * allow2groups varchar(255)
-         * active int 
-         * Needed Globalsetting:
-         * 
-         * FILEMANAGEMENT_WATERMARK
-         * FILEMANAGEMENT_REPLACE_IMAGE
-         * FILEMANAGEMENT_REPLACE_VIDEO
-         * 
-         * **/
+        #region Fields
 
-        private int lastFileId = 0;
-        private nFile lastFile = null;
         private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 
         #region Big freaking list of mime types
-        // combination of values from Windows 7 Registry and 
+        // combination of values from Windows 7 Registry and
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
         // some added, including .7z and .dat
         {".323", "text/h323"},
@@ -628,158 +591,161 @@ namespace Ren.CMS.CORE.FileManagement
         #endregion
 
         };
-        private string[] knownImageMime = {"image/cis-cod",	
-"image/cmu-raster",	
-"image/fif"	,
-"image/gif"	,
-"image/ief"	,
-"image/jpeg"	,
-"image/jpeg",
-"image/jpeg",
-"image/png",	
-"image/tiff",	
-"image/tiff",
-"image/vasa",		
-"image/vnd.wap.wbmp",
-"image/x-freehand",
-"image/x-freehand",
-"image/x-freehand",
-"image/x-icon" ,
-"image/x-portable-anymap",
-"image/x-portable-bitmap",
-"image/x-portable-graymap",
-"image/x-portable-pixmap",
-"image/x-rgb",
-"image/x-windowdump",
-"image/x-xbitmap" ,
-"image/x-xpixmap"  };
 
         string[] knownImageExt = {".cod",
-".ras",
-".fif",
-".gif",
-".ief",
-".jpeg",
-".jpg",
-".jpe",
-".png",
-".tiff",
-".tif",
-".mcf",
-".wbmp",
-".fh4",
-".fh5",
-".fhc",
-".ico",
-".pnm",
-".pbm",
-".pgm",
-".ppm",
-".rgb",
-".xwd",
-".xbm",
-".xpm"};
-
-
-        string[] knownVideoMime = {"video/mpeg",
-"video/x-msvideo",
-"video/x-sgi-movie",
-"video/mpeg",
-"video/mpeg",
-"video/quicktime",
-"video/quicktime",
-"video/vnd.vivo",
-"video/vnd.vivo",
-"video/mp4",
-"video/mp4",
-
-"video/x-ms-wmv",
-"video/ogg",
-"video/ogg",
-"video/webm"
-                                  };
+        ".ras",
+        ".fif",
+        ".gif",
+        ".ief",
+        ".jpeg",
+        ".jpg",
+        ".jpe",
+        ".png",
+        ".tiff",
+        ".tif",
+        ".mcf",
+        ".wbmp",
+        ".fh4",
+        ".fh5",
+        ".fhc",
+        ".ico",
+        ".pnm",
+        ".pbm",
+        ".pgm",
+        ".ppm",
+        ".rgb",
+        ".xwd",
+        ".xbm",
+        ".xpm"};
+        private string[] knownImageMime = {"image/cis-cod",	
+        "image/cmu-raster",
+        "image/fif"	,
+        "image/gif"	,
+        "image/ief"	,
+        "image/jpeg"	,
+        "image/jpeg",
+        "image/jpeg",
+        "image/png",
+        "image/tiff",
+        "image/tiff",
+        "image/vasa",
+        "image/vnd.wap.wbmp",
+        "image/x-freehand",
+        "image/x-freehand",
+        "image/x-freehand",
+        "image/x-icon" ,
+        "image/x-portable-anymap",
+        "image/x-portable-bitmap",
+        "image/x-portable-graymap",
+        "image/x-portable-pixmap",
+        "image/x-rgb",
+        "image/x-windowdump",
+        "image/x-xbitmap" ,
+        "image/x-xpixmap"  };
         string[] knownVideoExt = {".mpeg",
-".avi",
-".movie",
-".mpg",
-".mpe",
-".qt",
-".mov",
-".viv",
-".vivo",
-".mp4",
-".m4v",
-".wmv",
-".ogg",
-".ogv",
-".webm"
+        ".avi",
+        ".movie",
+        ".mpg",
+        ".mpe",
+        ".qt",
+        ".mov",
+        ".viv",
+        ".vivo",
+        ".mp4",
+        ".m4v",
+        ".wmv",
+        ".ogg",
+        ".ogv",
+        ".webm"
                                  };
-        public bool isImage(HttpPostedFileBase F)
+        string[] knownVideoMime = {"video/mpeg",
+        "video/x-msvideo",
+        "video/x-sgi-movie",
+        "video/mpeg",
+        "video/mpeg",
+        "video/quicktime",
+        "video/quicktime",
+        "video/vnd.vivo",
+        "video/vnd.vivo",
+        "video/mp4",
+        "video/mp4",
+
+        "video/x-ms-wmv",
+        "video/ogg",
+        "video/ogg",
+        "video/webm"
+                                  };
+        private nFile lastFile = null;
+
+        /*
+         * Structure dbo.nfcms_Files
+         * id int identity(1,1)
+         * fpath text
+         * aliasName varchar(255)
+
+         * allow2groups varchar(255)
+         * active int
+         * Needed Globalsetting:
+         *
+         * FILEMANAGEMENT_WATERMARK
+         * FILEMANAGEMENT_REPLACE_IMAGE
+         * FILEMANAGEMENT_REPLACE_VIDEO
+         *
+         * **/
+        private int lastFileId = 0;
+
+        #endregion Fields
+
+        #region Methods
+
+        public bool ConvertFile(nFile file, string ffmpegPath, string targetExtension=null)
         {
+            FilemanagementCrossBrowsersRepository RepoCrs = new FilemanagementCrossBrowsersRepository();
+            List<Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers> fCol = RepoCrs.GetAll().ToList();
 
-            string CT = F.ContentType.ToLower();
+            if (targetExtension != null)
+            {
+                var Dummy = new Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers();
+                Dummy.FileFormat = (targetExtension.StartsWith(".") ?
+                                           targetExtension.Substring(1)
+                                           :
+                                           targetExtension);
 
-            string EXT = Path.GetExtension(F.FileName).ToLower();
-
-
-
-            foreach (string c in this.knownImageMime)
+                var isxX = RepoCrs.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers>(e => e.FileFormat == Dummy.FileFormat));
+                if (isxX == null || isxX.Id < 1)
+                {
+                    fCol.Add(Dummy);
+                }
+            }
+            string old = HttpContext.Current.Server.MapPath(file.filepath);
+            foreach (FilemanagementCrossBrowsers format in fCol)
             {
 
-                if (c == CT) return true;
+                string proccessParameter = "-y -i \"{0}\" \"{1}\"";
+                string processParameterFF = proccessParameter;
 
+                proccessParameter = String.Format(proccessParameter,
+                   HttpContext.Current.Server.MapPath(file.filepath),
 
+                    HttpContext.Current.Server.MapPath(file.filepath + "."+ format.FileFormat));
+
+               this.RunProcess(ffmpegPath, proccessParameter);
 
             }
 
-            foreach (string ext in this.knownImageExt)
+            file.filepath = file.filepath + targetExtension;
+            file.aliasName = Path.GetFileNameWithoutExtension(file.aliasName) + "." + fCol.FirstOrDefault().FileFormat;
+            var Edit = EditFile(file);
+            if (Edit)
             {
-                if (EXT == ext) return true;
-
+                System.IO.File.Delete(old);
 
             }
-
-
-
-            return false;
+            return true;
         }
-
-
-        public bool isVideo(HttpPostedFileBase F)
-        {
-
-            string CT = F.ContentType;
-
-            string EXT = Path.GetExtension(F.FileName);
-
-
-
-            foreach (string c in this.knownVideoMime)
-            {
-
-                if (c == CT) return true;
-
-
-
-            }
-
-            foreach (string ext in this.knownVideoExt)
-            {
-                if (EXT == ext) return true;
-
-
-            }
-
-
-
-            return false;
-
-        }
-
 
         public void DeleteFile(string aliasName)
         {
-
             nFile F = this.getFile(aliasName, false);
 
             string fname = Path.GetFileNameWithoutExtension(F.filepath);
@@ -793,22 +759,19 @@ namespace Ren.CMS.CORE.FileManagement
 
                 var list = CR.GetAll();
 
-
                 list.ToList().ForEach(e => files2Delete.Add(
 
                     HttpContext.Current.Server.MapPath(path + fname + "." + e.FileFormat)
                     ));
             }
 
-
             foreach (string p in files2Delete)
             {
-                
+
                 if (System.IO.File.Exists(p))
                 {
 
                     System.IO.File.Delete(p);
-
 
                 }
             }
@@ -821,9 +784,114 @@ namespace Ren.CMS.CORE.FileManagement
             SQL.SysNonQuery(q, PCOL);
             SQL.SysDisconnect();
         }
+
+        public bool EditFile(nFile f)
+        {
+            BaseRepository<Ren.CMS.CORE.nhibernate.Domain.File> repo = new BaseRepository<nhibernate.Domain.File>();
+            Ren.CMS.CORE.nhibernate.Domain.File fx = repo.GetOne(
+                expression: NHibernate.Criterion.Expression.Where<Ren.CMS.CORE.nhibernate.Domain.File>(fo => fo.Id == f.id));
+
+            if (fx == null) return false;
+
+            fx.Fpath = f.filepath;
+            fx.Active = f.isActive == true ? 1 : 0;
+            fx.AliasName = f.aliasName;
+            fx.FileSize = Convert.ToInt32(new FileInfo(HttpContext.Current.Server.MapPath(f.filepath)).Length);
+            fx.NeedPermission = f.needPermission;
+            fx.ProfileID = f.ProfileID;
+
+            repo.Update(fx);
+            string mime =
+                (
+                _mappings.Any(e => e.Key.EndsWith( Path.GetExtension(f.filepath) )) ?
+                _mappings.Where(e => e.Key.EndsWith(Path.GetExtension(f.filepath))).First().Value
+                :
+                "stream/download");
+
+            RegisterExtension(
+            (Path.GetExtension(f.filepath).StartsWith(".") ?
+            Path.GetExtension(f.filepath) :
+            "." + Path.GetExtension(f.filepath))
+            , mime);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the replacement file for a given filename. Image files will recieve a 404 Image and Videos a 404 Video
+        /// </summary>
+        /// <param name="aliasName">aliasName of the image that was not found</param>
+        /// <returns>nFile Model</returns>
+        public nFile getErrorFile(string aliasName = "error.jpg")
+        {
+            return this.get404File(aliasName);
+        }
+
+        public nFile getFile(string name, bool fileIsActive = true)
+        {
+            int isActive = 1;
+            if (!fileIsActive) isActive = 0;
+
+            BaseRepository<nhibernate.Domain.File> FileRepo = new BaseRepository<nhibernate.Domain.File>();
+
+            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name)) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name && e.Active == 1)));
+
+            if (fR != null)
+            {
+
+                FilemanagementCrossBrowsersRepository fmx =  new FilemanagementCrossBrowsersRepository();
+
+                string browserExt = (fmx.GetByBrowserID(HttpContext.Current.Request.Browser.Browser) ?? fmx.GetDefault() ?? new FilemanagementCrossBrowsers()).FileFormat;
+
+                string pName = Path.GetFileNameWithoutExtension(fR.Fpath) + "." + browserExt;
+                string myPath =
+                    (fR.Fpath.Replace(Path.GetFileName(fR.Fpath), ""));
+
+                var f = new nFile()
+                {
+                    aliasName = fR.AliasName,
+                    filepath = fR.Fpath,
+                    id = fR.Id,
+                    isActive = (fR.Active == 1),
+                    ProfileID = (Convert.ToInt32(fR.ProfileID)),
+                    needPermission = fR.NeedPermission,
+                    mimetype = this.getMIMETypeForExtension(Path.GetExtension(fR.Fpath))
+                };
+
+                if (f.mimetype.ToLower().StartsWith("video"))
+                {
+                    string browser = HttpContext.Current.Request.Browser.Browser.ToLower();
+                    string newPath = myPath + pName;
+                    if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(newPath)))
+                    {
+                        f.filepath = newPath;
+                        f.mimetype = this.getMIMETypeForExtension(Path.GetExtension(f.filepath));
+                    }
+                }
+
+                if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(f.filepath)))
+                {
+
+                    return f;
+                }
+                else
+                {
+
+                    return this.get404File(name);
+
+                }
+
+            }
+            else
+            {
+
+                return this.get404File(name);
+
+            }
+        }
+
         public string getMIMETypeForExtension(string extension)
         {
-
             SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
             Sql.SysConnect();
             ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
@@ -839,9 +907,6 @@ namespace Ren.CMS.CORE.FileManagement
 
                 mime = (string)R["MIMEType"];
 
-
-
-
             }
             if (mime == "" || mime == null || mime == "application/octet-stream")
             {
@@ -856,27 +921,189 @@ namespace Ren.CMS.CORE.FileManagement
             Sql.SysDisconnect();
 
             return mime;
-
-
-
-
         }
-        /// <summary>
-        /// Gets the replacement file for a given filename. Image files will recieve a 404 Image and Videos a 404 Video
-        /// </summary>
-        /// <param name="aliasName">aliasName of the image that was not found</param>
-        /// <returns>nFile Model</returns>
-        public nFile getErrorFile(string aliasName = "error.jpg")
+
+        public string getVideoThumpnailRawImage(Guid attachID, string ffmegPath)
         {
+            Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository Repo = new Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository();
 
-            return this.get404File(aliasName);
+            var attachment = Repo.GetByPKid(attachID);
 
+            if (attachment == null) throw new Exception("Attachment not found!");
 
+            FileManagement FX = new FileManagement();
+
+            var f = FX.getFile(attachment.FName, false);
+            string video = f.filepath;
+            if (f == null || f.id < 1)
+            {
+
+                video = attachment.FPath + "/" + attachment.FName;
+
+            }
+
+            string[] thmppath = {
+                                                    "~/Binaries",
+                                                    "~/Binaries/Converter",
+                                                    "~/Binaries/Converter/Videothumpnails"
+                                                    , "~/Binaries/Converter/Videothumpnails/"+ attachment.Pkid
+                                                };
+
+            foreach (string d in thmppath)
+                if (!Directory.Exists(HttpContext.Current.Server.MapPath(d)))
+                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(d));
+            //Run FFMPEG
+            string WorkingDirectory = thmppath.Last();
+            WorkingDirectory = HttpContext.Current.Server.MapPath(WorkingDirectory);
+            if (!System.IO.Directory.GetFiles(WorkingDirectory).Any(e => Path.GetFileName(e).StartsWith("thump") && Path.GetFileName(e).EndsWith(".jpg")))
+            {
+                string output = WorkingDirectory + "\\thump.%d.jpg";
+                string ffmpegParameter = "-i \"{0}\" -f image2 -vf fps=fps=1/10 \"{1}\""; //Every TEN seconds.
+                ffmpegParameter = String.Format(ffmpegParameter,
+                    HttpContext.Current.Server.MapPath(video),
+                    output);
+
+                while (FX.RunProcess(ffmegPath, ffmpegParameter) != "ok") ;
+            }
+            var FileList = System.IO.Directory.GetFiles(WorkingDirectory);
+
+            int i = FileList.Length - 1;
+            //Got max index
+
+            if (i > 2)
+            {
+                return FileList[i / 2];
+            }
+            return FileList.Last();
+        }
+
+        public bool isImage(HttpPostedFileBase F)
+        {
+            string CT = F.ContentType.ToLower();
+
+            string EXT = Path.GetExtension(F.FileName).ToLower();
+
+            foreach (string c in this.knownImageMime)
+            {
+
+                if (c == CT) return true;
+
+            }
+
+            foreach (string ext in this.knownImageExt)
+            {
+                if (EXT == ext) return true;
+
+            }
+
+            return false;
+        }
+
+        public bool isVideo(HttpPostedFileBase F)
+        {
+            string CT = F.ContentType;
+
+            string EXT = Path.GetExtension(F.FileName);
+
+            foreach (string c in this.knownVideoMime)
+            {
+
+                if (c == CT) return true;
+
+            }
+
+            foreach (string ext in this.knownVideoExt)
+            {
+                if (EXT == ext) return true;
+
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Registers an file extension to the filemanagement system. Usually there is no need to execute this. After registering a new file the contenttype and extension will be registered too.
+        /// </summary>
+        /// <param name="extension">The File Extension with dot.  (Example: .jpg, .jpeg, .gif)</param>
+        /// <param name="mimetype">The MIME Type of the File for example  image/Jpeg</param>
+        public void RegisterExtension(string extension, string mimetype)
+        {
+            this._registerExtension(extension, mimetype);
+        }
+
+        /// <summary>
+        /// Register a single file to the FileManagementSystem.
+        /// </summary>
+        /// <param name="File">nFile Model for registering</param>
+        /// <param name="postFieldName">HTTP Post Field Name</param>
+        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
+        /// <param name="deleteExistingFile">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
+        public void RegisterFile(nFile File, string postFieldName, bool deleteExistingFile = false, string[] allowedExtensions = null)
+        {
+            if (deleteExistingFile == true) this._unregisterFile(File.aliasName);
+
+            this._registerFile(File, postFieldName, allowedExtensions);
+        }
+
+        /// <summary>
+        /// Register a single file to the FileManagementSystem.
+        /// </summary>
+        /// <param name="File">nFile Model for registering</param>
+        /// <param name="postFieldName">HTTP Post Field Name</param>
+        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
+        /// <param name="deleteExistingFile">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
+        public void RegisterFile(nFile File, HttpPostedFileBase postFieldName, bool deleteExistingFile = false, string[] allowedExtensions = null)
+        {
+            if (deleteExistingFile == true) this._unregisterFile(File.aliasName);
+
+            this._registerFile(File, postFieldName, allowedExtensions);
+        }
+
+        /// <summary>
+        /// Registers a couple of files to the FileManagementSystem. Requires one postfield with type "file" per  File
+        /// </summary>
+        /// <param name="File">nFile Model Array for registering</param>
+        /// <param name="postFieldNames">String Array of postFieldNames</param>
+        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
+        /// <param name="deleteExistingFiles">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
+        public void RegisterFiles(nFile[] File, string[] postFieldNames, bool deleteExistingFiles = false, string[] allowedExtensions = null)
+        {
+            if (File.Length == postFieldNames.Length)
+            {
+
+                for (int x = 0; x < File.Length; x++)
+                {
+
+                    if (deleteExistingFiles == true) this._unregisterFile(File[x].aliasName);
+
+                    this._registerFile(File[x], postFieldNames[x], allowedExtensions);
+
+                }
+
+            }
+        }
+
+        public string RunProcess(string ffmpegExe, string cmd)
+        {
+            //Get the application path
+            string exepath = ffmpegExe;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = exepath;
+            //Path of exe that will be executed, only for "filebuffer" it will be "wmvtool2.exe"
+            proc.StartInfo.Arguments = cmd;
+            //The command which will be executed
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.RedirectStandardOutput = false;
+            proc.Start();
+
+            while (proc.HasExited == false)
+            { }
+            return "ok";
         }
 
         private nFile get404File(string name)
         {
-
             Settings.GlobalSettings GS = new Settings.GlobalSettings();
             nFile f404 = new nFile();
 
@@ -904,237 +1131,18 @@ namespace Ren.CMS.CORE.FileManagement
                 }
                 f404.filepath = rpv.ToString();
 
-
-
             }
             else
             {
-
 
                 f404.filepath = "/Storage/Default/filenotfound.html";
                 f404.mimetype = this.getMIMETypeForExtension(".html");
 
             }
 
-
-
             return f404;
-
         }
 
-
-
-
-
-
-
-        /// <summary>
-        /// Register a single file to the FileManagementSystem.
-        /// </summary>
-        /// <param name="File">nFile Model for registering</param>
-        /// <param name="postFieldName">HTTP Post Field Name</param>
-        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
-        /// <param name="deleteExistingFile">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
-        public void RegisterFile(nFile File, string postFieldName, bool deleteExistingFile = false, string[] allowedExtensions = null)
-        {
-            if (deleteExistingFile == true) this._unregisterFile(File.aliasName);
-
-
-
-            this._registerFile(File, postFieldName, allowedExtensions);
-
-
-        }
-        /// <summary>
-        /// Register a single file to the FileManagementSystem.
-        /// </summary>
-        /// <param name="File">nFile Model for registering</param>
-        /// <param name="postFieldName">HTTP Post Field Name</param>
-        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
-        /// <param name="deleteExistingFile">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
-        public void RegisterFile(nFile File, HttpPostedFileBase postFieldName, bool deleteExistingFile = false, string[] allowedExtensions = null)
-        {
-            if (deleteExistingFile == true) this._unregisterFile(File.aliasName);
-
-
-
-            this._registerFile(File, postFieldName, allowedExtensions);
-
-
-        }
-
-        public string RunProcess(string ffmpegExe, string cmd)
-        {
-            
-      
-            //Get the application path
-            string exepath = ffmpegExe;
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.FileName = exepath;
-            //Path of exe that will be executed, only for "filebuffer" it will be "wmvtool2.exe"
-            proc.StartInfo.Arguments = cmd;
-            //The command which will be executed
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.StartInfo.RedirectStandardOutput = false;
-            proc.Start();
-
-            while (proc.HasExited == false)
-            { }
-            return "ok";
-        }
-
-
-
-        public bool ConvertFile(nFile file, string ffmpegPath, string targetExtension=null)
-        {
-            FilemanagementCrossBrowsersRepository RepoCrs = new FilemanagementCrossBrowsersRepository();
-            List<Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers> fCol = RepoCrs.GetAll().ToList();
-
-            if (targetExtension != null)
-            {
-                var Dummy = new Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers();
-                Dummy.FileFormat = (targetExtension.StartsWith(".") ?
-                                           targetExtension.Substring(1)
-                                           :
-                                           targetExtension);
-
-                var isxX = RepoCrs.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers>(e => e.FileFormat == Dummy.FileFormat));
-                if (isxX == null || isxX.Id < 1)
-                {
-                    fCol.Add(Dummy);
-                }
-            }
-            string old = HttpContext.Current.Server.MapPath(file.filepath);
-            foreach (FilemanagementCrossBrowsers format in fCol)
-            {
-               
-                string proccessParameter = "-y -i \"{0}\" \"{1}\"";
-                string processParameterFF = proccessParameter;
-
-                proccessParameter = String.Format(proccessParameter,
-                   HttpContext.Current.Server.MapPath(file.filepath),
-
-                    HttpContext.Current.Server.MapPath(file.filepath + "."+ format.FileFormat));
-          
-
-
-               this.RunProcess(ffmpegPath, proccessParameter);
-                
-
-            
-
-              
-            }
-
-
-            file.filepath = file.filepath + targetExtension;
-            file.aliasName = Path.GetFileNameWithoutExtension(file.aliasName) + "." + fCol.FirstOrDefault().FileFormat;
-            var Edit = EditFile(file);
-            if (Edit)
-            {
-                System.IO.File.Delete(old);
-
-            }
-            return true;
-        
-        }
-
-        public bool EditFile(nFile f)
-        {
-
-            BaseRepository<Ren.CMS.CORE.nhibernate.Domain.File> repo = new BaseRepository<nhibernate.Domain.File>();
-            Ren.CMS.CORE.nhibernate.Domain.File fx = repo.GetOne(
-                expression: NHibernate.Criterion.Expression.Where<Ren.CMS.CORE.nhibernate.Domain.File>(fo => fo.Id == f.id));
-
-
-            if (fx == null) return false;
-
-            fx.Fpath = f.filepath;
-            fx.Active = f.isActive == true ? 1 : 0;
-            fx.AliasName = f.aliasName;
-            fx.FileSize = Convert.ToInt32(new FileInfo(HttpContext.Current.Server.MapPath(f.filepath)).Length);
-            fx.NeedPermission = f.needPermission;
-            fx.ProfileID = f.ProfileID;
-
-     
-            repo.Update(fx);
-            string mime =
-                (
-                _mappings.Any(e => e.Key.EndsWith( Path.GetExtension(f.filepath) )) ?
-                _mappings.Where(e => e.Key.EndsWith(Path.GetExtension(f.filepath))).First().Value
-                :
-                "stream/download");
-
-
-
-            RegisterExtension(
-            (Path.GetExtension(f.filepath).StartsWith(".") ? 
-            Path.GetExtension(f.filepath) :
-            "." + Path.GetExtension(f.filepath))
-            , mime);
-
-
-            return true;
-         
-        
-        
-        }
-
-
-
-        private void _unregisterFile(string aliasFileName)
-        {
-
-            SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
-            ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-
-            Sql.SysConnect();
-
-            string query = "SELECT fpath FROM " + TA.getSqlPrefix + "Files WHERE aliasName=@name";
-            SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-
-            PCOL.Add("@name", aliasFileName);
-            SqlDataReader R = Sql.SysReader(query, PCOL);
-            if (R.HasRows)
-            {
-                R.Read();
-
-                string fp = R["fpath"].ToString();
-                fp = HttpContext.Current.Server.MapPath(fp);
-                System.IO.File.Delete(fp);
-
-
-
-
-            }
-
-            R.Close();
-
-
-            SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
-
-            PCOL2.Add("@aname", aliasFileName);
-            string delete = "DELETE " + TA.getSqlPrefix + "Files WHERE aliasName=@aname";
-            Sql.SysNonQuery(delete, PCOL2);
-
-            Sql.SysDisconnect();
-
-
-        }
-        /// <summary>
-        /// Registers an file extension to the filemanagement system. Usually there is no need to execute this. After registering a new file the contenttype and extension will be registered too.
-        /// </summary>
-        /// <param name="extension">The File Extension with dot.  (Example: .jpg, .jpeg, .gif)</param>
-        /// <param name="mimetype">The MIME Type of the File for example  image/Jpeg</param>
-        public void RegisterExtension(string extension, string mimetype)
-        {
-
-
-
-            this._registerExtension(extension, mimetype);
-
-        }
         private void _registerExtension(string ext, string mimetype)
         {
             ext = ext.ToLower();
@@ -1193,15 +1201,9 @@ namespace Ren.CMS.CORE.FileManagement
                 if (mimetype != mime2)
                 {
 
-
                     Sql.SysNonQuery(updateExt, PCOL2);
 
-
-
                 }
-
-
-
 
             }
             else
@@ -1214,17 +1216,10 @@ namespace Ren.CMS.CORE.FileManagement
             if (!R.IsClosed) R.Close();
 
             Sql.SysDisconnect();
-
-
-
-
-
-
         }
 
         private void _registerFile(nFile Filep, string postFieldName, string[] allowedExtensions = null)
         {
-
             if (!String.IsNullOrEmpty(Filep.filepath))
             {
 
@@ -1236,11 +1231,7 @@ namespace Ren.CMS.CORE.FileManagement
                 string path = HttpContext.Current.Request.Files[postFieldName].FileName;
                 path = HttpContext.Current.Server.MapPath(path);
 
-
                 //Generate Filename
-
-
-
 
                 string targetPath = Filep.filepath;
                 if (targetPath.Contains("\\"))
@@ -1256,8 +1247,6 @@ namespace Ren.CMS.CORE.FileManagement
                     if (targetPath.StartsWith("/")) targetPath = "~" + targetPath;
                     else if (!targetPath.StartsWith("~")) targetPath = "~/" + targetPath;
 
-
-
                 }
 
                 if (targetPath.Contains("?") || targetPath.Contains("#") || targetPath.Contains(' ')) throw new Exception("nfCMS FileManagement does not accept '?' or '#' characters or white spaces in Path");
@@ -1265,7 +1254,6 @@ namespace Ren.CMS.CORE.FileManagement
                 {
 
                     targetPath = targetPath.Remove(targetPath.LastIndexOf("/"));
-
 
                 }
                 string[] pathSplitted = targetPath.Split('/');
@@ -1290,7 +1278,6 @@ namespace Ren.CMS.CORE.FileManagement
 
                         }
 
-
                     }
 
                 }
@@ -1312,7 +1299,6 @@ namespace Ren.CMS.CORE.FileManagement
                     else
                     {
 
-
                         foreach (string ext in allowedExtensions)
                         {
 
@@ -1322,11 +1308,9 @@ namespace Ren.CMS.CORE.FileManagement
 
                     }
 
-
                 }
                 else
                 {
-
 
                     fileIsOk = true;
                 }
@@ -1336,17 +1320,14 @@ namespace Ren.CMS.CORE.FileManagement
                 if (fileIsOk)
                 {
 
-
                     HttpPostedFile Sv = HttpContext.Current.Request.Files[postFieldName];
                     Sv.SaveAs(HttpContext.Current.Server.MapPath(targetPath));
                     // @File.Copy(path, targetPath);
-
 
                     if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(targetPath)))
                     {
 
                         uploadOK = true;
-
 
                         string query = "INSERT INTO " + TA.getSqlPrefix + "Files (fpath, aliasName, needPermission, fileSize, active, ProfileID) VALUES(@fpath,@aliasName,@allow2groups,@fsize,1,@ProfileID)";
                         string aliasName = (String.IsNullOrEmpty(Filep.aliasName) ? Path.GetFileName(path) : Filep.aliasName);
@@ -1360,14 +1341,9 @@ namespace Ren.CMS.CORE.FileManagement
                         if (Filep.ProfileID < 1) Filep.ProfileID = 1;
                         SqlPara.Add("@ProfileID", Filep.ProfileID);
 
-
-
-
                         Sql.SysConnect();
 
                         Sql.SysNonQuery(query, SqlPara);
-
-
 
                         Sql.SysDisconnect();
                         //Register Extension / Refresh Extension Registration
@@ -1375,18 +1351,13 @@ namespace Ren.CMS.CORE.FileManagement
 
                     }
 
-
                 }
 
-
-
             }
-
-
         }
+
         private void _registerFile(nFile Filep, HttpPostedFileBase fileBase, string[] allowedExtensions = null)
         {
-
             if (!String.IsNullOrEmpty(Filep.filepath))
             {
 
@@ -1398,11 +1369,7 @@ namespace Ren.CMS.CORE.FileManagement
                 string path = fileBase.FileName;
                 path = HttpContext.Current.Server.MapPath(path);
 
-
                 //Generate Filename
-
-
-
 
                 string targetPath = Filep.filepath;
                 if (targetPath.Contains("\\"))
@@ -1418,8 +1385,6 @@ namespace Ren.CMS.CORE.FileManagement
                     if (targetPath.StartsWith("/")) targetPath = "~" + targetPath;
                     else if (!targetPath.StartsWith("~")) targetPath = "~/" + targetPath;
 
-
-
                 }
 
                 if (targetPath.Contains("?") || targetPath.Contains("#") || targetPath.Contains(' ')) throw new Exception("nfCMS FileManagement does not accept '?' or '#' characters or white spaces in Path");
@@ -1427,7 +1392,6 @@ namespace Ren.CMS.CORE.FileManagement
                 {
 
                     targetPath = targetPath.Remove(targetPath.LastIndexOf("/"));
-
 
                 }
                 string[] pathSplitted = targetPath.Split('/');
@@ -1454,7 +1418,6 @@ namespace Ren.CMS.CORE.FileManagement
 
                         }
 
-
                     }
 
                 }
@@ -1476,7 +1439,6 @@ namespace Ren.CMS.CORE.FileManagement
                     else
                     {
 
-
                         foreach (string ext in allowedExtensions)
                         {
 
@@ -1486,11 +1448,9 @@ namespace Ren.CMS.CORE.FileManagement
 
                     }
 
-
                 }
                 else
                 {
-
 
                     fileIsOk = true;
                 }
@@ -1500,16 +1460,13 @@ namespace Ren.CMS.CORE.FileManagement
                 if (fileIsOk)
                 {
 
-                     
                     fileBase.SaveAs(HttpContext.Current.Server.MapPath(targetPath));
                     // @File.Copy(path, targetPath);
-
 
                     if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(targetPath)))
                     {
 
                         uploadOK = true;
-
 
                         string query = "INSERT INTO " + TA.getSqlPrefix + "Files (fpath, aliasName, needPermission, fileSize, active, ProfileID) VALUES(@fpath,@aliasName,@allow2groups,@fsize,1,@ProfileID)";
                         string aliasName = (String.IsNullOrEmpty(Filep.aliasName) ? Path.GetFileName(path) : Filep.aliasName);
@@ -1523,14 +1480,9 @@ namespace Ren.CMS.CORE.FileManagement
                         if (Filep.ProfileID < 1) Filep.ProfileID = 1;
                         SqlPara.Add("@ProfileID", Filep.ProfileID);
 
-
-
-
                         Sql.SysConnect();
 
                         Sql.SysNonQuery(query, SqlPara);
-
-
 
                         Sql.SysDisconnect();
                         //Register Extension / Refresh Extension Registration
@@ -1538,349 +1490,59 @@ namespace Ren.CMS.CORE.FileManagement
 
                     }
 
-
                 }
 
-
-
             }
-
-
         }
 
-        public partial class nFileProfileManagement
+        private void _unregisterFile(string aliasFileName)
         {
-            #region PrivateFunctions
-            private bool valueExists(int settingID, int profileID)
+            SqlHelper.SqlHelper Sql = new SqlHelper.SqlHelper();
+            ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+
+            Sql.SysConnect();
+
+            string query = "SELECT fpath FROM " + TA.getSqlPrefix + "Files WHERE aliasName=@name";
+            SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+
+            PCOL.Add("@name", aliasFileName);
+            SqlDataReader R = Sql.SysReader(query, PCOL);
+            if (R.HasRows)
             {
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string query = "SELECT * FROM " + TA.getSqlPrefix + "FileSettingValues WHERE ProfileID=@profid AND SettingID=@settid";
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                SQL.SysConnect();
-                PCOL.Add("@profid", profileID);
-                PCOL.Add("@settid", settingID);
+                R.Read();
 
-                SqlDataReader R = SQL.SysReader(query, PCOL);
-                bool ret = R.HasRows;
-                R.Close();
-                SQL.SysDisconnect();
-
-                return ret;
+                string fp = R["fpath"].ToString();
+                fp = HttpContext.Current.Server.MapPath(fp);
+                System.IO.File.Delete(fp);
 
             }
 
-            private bool settingExists(string name)
-            {
+            R.Close();
 
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+            SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
 
+            PCOL2.Add("@aname", aliasFileName);
+            string delete = "DELETE " + TA.getSqlPrefix + "Files WHERE aliasName=@aname";
+            Sql.SysNonQuery(delete, PCOL2);
 
-                string query = "SELECT * FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name";
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                SQL.SysConnect();
-
-                PCOL.Add("@name", name);
-                SqlDataReader R = SQL.SysReader(query, PCOL);
-                bool ret = R.HasRows;
-                R.Close();
-                SQL.SysDisconnect();
-
-
-                return ret;
-
-
-            }
-
-            private void addSetting(int profileid, string name, string value = "")
-            {
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-
-
-                string query = "INSERT INTO " + TA.getSqlPrefix + "FileManagementFileSettings (SettingName)  VALUES(@name)";
-
-
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-
-                PCOL.Add("@name", name);
-
-                SQL.SysConnect();
-
-                SQL.SysNonQuery(query, PCOL);
-
-                int id = SQL.getLastId(TA.getSqlPrefix + "FileManagementFileSettings");
-
-                string query2 = "INSERT INTO " + TA.getSqlPrefix + "FileManagementProfiles2FileSettings(ProfileID,SettingID) VALUES(@pid,@id)";
-                SqlHelper.nSqlParameterCollection PCOl2 = new SqlHelper.nSqlParameterCollection();
-                PCOl2.Add("@pid", profileid);
-                PCOl2.Add("@id", id);
-
-                SQL.SysNonQuery(query2, PCOl2);
-                SQL.SysDisconnect();
-
-
-                //Now the Value
-
-                this.addValue(profileid, id, value);
-
-
-
-            }
-            private void addValue(int profileID, int settingID, string value)
-            {
-
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                SQL.SysConnect();
-
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string query3 = "INSERT INTO " + TA.getSqlPrefix + "FileSettingValues (ProfileID,SettingID,SettingValue) VALUES(@pid,@id,@val)";
-                SqlHelper.nSqlParameterCollection PCOl3 = new SqlHelper.nSqlParameterCollection();
-
-                PCOl3.Add("@pid", profileID);
-                PCOl3.Add("@id", settingID);
-                PCOl3.Add("@val", value);
-                SQL.SysNonQuery(query3, PCOl3);
-            }
-            private void changeValue(int profileID, string settingName, string newValue)
-            {
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                SQL.SysConnect();
-
-
-                string query = "UPDATE " + TA.getSqlPrefix + "FileSettingValues SET SettingValue=@val WHERE ProfileID=@pid AND SettingID=(SELECT id FROM " +
-                                TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name)";
-
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-
-                PCOL.Add("@val", newValue);
-                PCOL.Add("@pid", profileID);
-                PCOL.Add("@name", settingName);
-
-                SQL.SysNonQuery(query, PCOL);
-
-                SQL.SysDisconnect();
-
-            }
-            private void update_profile(int profileID, string newName)
-            {
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string pref = TA.getSqlPrefix;
-
-                SQL.SysConnect();
-                string query = "UPDATE " + pref + "FileManagementProfiles SET ProfileName=@name WHERE id=@id";
-
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                PCOL.Add("@name", newName);
-                PCOL.Add("@id", profileID);
-
-                SQL.SysNonQuery(query, PCOL);
-
-
-                SQL.SysDisconnect();
-
-
-            }
-
-
-            private void delete_profile(int profileID)
-            {
-
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string pref = TA.getSqlPrefix;
-
-                SQL.SysConnect();
-                string query = "DELETE " + pref + "FileManagementProfiles WHERE id=@id";
-
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-
-                PCOL.Add("@id", profileID);
-
-                SQL.SysNonQuery(query, PCOL);
-                SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
-
-                PCOL2.Add("@id", profileID);
-                string query2 = "DELETE " + pref + "FileManagementProfiles2FileSettings WHERE ProfileID=@id";
-
-                SQL.SysNonQuery(query2, PCOL2);
-
-
-                SQL.SysDisconnect();
-            }
-
-            #endregion
-
-            #region Public Methods
-            public int createProfile(string name, List<FileSettingModel> settings)
-            {
-
-                nFileProfiles Prof = new nFileProfiles(name);
-
-                if (Prof.ID == 0)
-                {
-
-                    SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                    ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                    SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-
-                    PCOL.Add("@name", name);
-
-                    string query = "INSERT INTO " + TA.getSqlPrefix + "FileManagementProfiles (ProfileName) VALUES(@name)";
-                    SQL.SysConnect();
-                    SQL.SysNonQuery(query, PCOL);
-
-                    SQL.SysDisconnect();
-
-                    Prof = new nFileProfiles(name);
-
-
-
-                }
-                else
-                {
-                    throw new Exception("Profile Name allready exists");
-
-                }
-                foreach (FileSettingModel Setting in settings)
-                {
-
-                    if (!this.settingExists(Setting.Name))
-                    {
-                        this.addSetting(Prof.ID, Setting.Name, Setting.Value);
-                    }
-                    else
-                    {
-                        FileSettingModel temp = Prof.getProfileSetting(Setting.Name);
-
-                        if (this.valueExists(temp.ID, Prof.ID))
-                            this.changeValue(temp.ID, Setting.Name, Setting.Value);
-                        else
-                            this.addValue(Prof.ID, temp.ID, Setting.Value);
-                    }
-
-
-
-                }
-
-
-
-
-                return Prof.ID;
-            }
-            public void updateProfile(int profileid, string newName)
-            {
-                this.update_profile(profileid, newName);
-
-
-            }
-
-            public void deleteProfile(int profileID)
-            {
-                this.delete_profile(profileID);
-            }
-            public void setSetting(int profileID, string settingName, string value)
-            {
-
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                SQL.SysConnect();
-
-
-                int id = 0;
-
-                string query = "SELECT id FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name";
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                PCOL.Add("@name", settingName);
-
-                SqlDataReader R = SQL.SysReader(query, PCOL);
-                if (R.HasRows)
-                {
-
-                    R.Read();
-                    id = (int)R["id"];
-
-
-                }
-                R.Close();
-                SQL.SysDisconnect();
-                if (id == 0) this.addSetting(profileID, settingName, value);
-                else
-                {
-                    if (this.valueExists(id, profileID)) this.changeValue(profileID, settingName, value);
-                    else this.addValue(profileID, id, value);
-                }
-            }
-            public void setSetting(int profileID, int settingID, string value)
-            {
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                SQL.SysConnect();
-
-
-                string settingName = "";
-
-                string query = "SELECT SettingName FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE id=@id";
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                PCOL.Add("@id", settingID);
-
-                SqlDataReader R = SQL.SysReader(query, PCOL);
-                if (R.HasRows)
-                {
-
-                    R.Read();
-                    settingName = (string)R["SettingName"];
-
-
-                }
-                R.Close();
-                SQL.SysDisconnect();
-                if (settingName == "") throw new Exception("Setting does not exists");
-
-                if (valueExists(settingID, profileID)) this.changeValue(profileID, settingName, value);
-                else this.addValue(profileID, settingID, value);
-
-
-
-            }
-            public void setSetting(FileSettingModel Setting, int profileID)
-            {
-                if (this.settingExists(Setting.Name))
-                {
-
-                    if (this.valueExists(Setting.ID, profileID))
-                    {
-                        this.changeValue(profileID, Setting.Name, Setting.Value);
-
-                    }
-                    else
-                    {
-                        this.addValue(profileID, Setting.ID, Setting.Value);
-
-                    }
-
-                }
-                else
-                {
-                    this.addSetting(profileID, Setting.Name, Setting.Value);
-
-                }
-            }
-            #endregion
-
+            Sql.SysDisconnect();
         }
+
+        #endregion Methods
+
+        #region Nested Types
 
         public partial class FilemanagementControllers
         {
-            private List<string> _acceptedProfiles = new List<string>();
+            #region Fields
 
             private List<string> _acceptedMimeTypes = new List<string>();
+            private List<string> _acceptedProfiles = new List<string>();
+            private int _id = 0;
 
+            #endregion Fields
 
-
+            #region Constructors
 
             public FilemanagementControllers(string controllerName)
             {
@@ -1905,13 +1567,9 @@ namespace Ren.CMS.CORE.FileManagement
 
                         id = (int)R["id"];
 
-
                     }
 
-
-
                 }
-
 
                 R.Close();
 
@@ -1929,7 +1587,6 @@ namespace Ren.CMS.CORE.FileManagement
 
                         this._acceptedProfiles.Add((string)P["ProfileName"]);
 
-
                     }
                     P.Close();
 
@@ -1946,104 +1603,58 @@ namespace Ren.CMS.CORE.FileManagement
                     }
                     M.Close();
 
-
                 }
 
                 SQL.SysDisconnect();
                 this._id = id;
-
             }
-            private int _id = 0;
-            public int getID()
+
+            #endregion Constructors
+
+            #region Methods
+
+            public void addIfNotAcceptedMime(string mime, int controllerID)
             {
+                if (this.mimeIsAccepted(mime, controllerID))
+                {
+                    SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                    ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                    string prefix = TA.getSqlPrefix;
 
-                return this._id;
+                    SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
+                    PP.Add("@cid", controllerID);
+                    PP.Add("@mime", mime);
 
+                    string query = "INSERT INTO " + prefix + "FilemanagementControllersAcceptMimeTypes (MimeType,cid) VALUES(@mime, @cid)";
+
+                    SQL.SysConnect();
+
+                    SQL.SysNonQuery(query, PP);
+                    SQL.SysDisconnect();
+                }
             }
-            public bool FileIsAccepted(nFile FileEntry)
+
+            public void addIfNotAcceptedProfile(string profileName, int controllerID)
             {
-
-                /*Profile
-                 */
-
-                //If NULL or 0  set to DEFAULT ID: 1
-                int fakeProfileID = 1;
-
-
-                if (FileEntry.ProfileID != null && FileEntry.ProfileID > 0)
+                nFileProfiles Prof = new nFileProfiles(profileName);
+                if (Prof.ID > 0 && !this.profileIsAccepted(profileName, controllerID))
                 {
-                    fakeProfileID = FileEntry.ProfileID;
 
+                    SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                    ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                    string prefix = TA.getSqlPrefix;
 
+                    SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
+                    PP.Add("@cid", controllerID);
+                    PP.Add("@pid", Prof.ID);
+
+                    string query = "INSERT INTO " + prefix + "FilemanagementControllersAcceptProfiles (pid,cid) VALUES(@pid, @cid)";
+
+                    SQL.SysConnect();
+
+                    SQL.SysNonQuery(query, PP);
+                    SQL.SysDisconnect();
                 }
-
-                nFileProfiles Prof = new nFileProfiles(fakeProfileID);
-
-
-                /*MimeType
-                 */
-                string MIMETYPE = FileEntry.mimetype;
-
-                //Query Prof
-                IEnumerable<string> ProfileNames = from profname in this._acceptedProfiles
-                                                   where profname == Prof.ProfileName
-
-
-                                                   select profname;
-
-                bool profile_accepted = false;
-                foreach (string found in ProfileNames)
-                {
-                    profile_accepted = true;
-                    break;
-                }
-
-
-                //Query MIME
-
-
-                IEnumerable<string> MIMES = from mimex in this._acceptedMimeTypes where mimex.ToLower() == FileEntry.mimetype.ToLower() || mimex.Contains('*') select mimex;
-                bool mime_accepted = false;
-                foreach (string mim in MIMES)
-                {
-                    if (mim.Contains('*'))
-                    {
-
-                        if (mim == "*") mime_accepted = true;
-                        else
-                        {
-
-                            string xmi = mim.Remove(mim.LastIndexOf('*'));
-                            if (xmi.Length <= mim.Length)
-                            {
-                                if (xmi == mim.Substring(0, xmi.Length))
-                                {
-                                    mime_accepted = true;
-
-
-                                }
-                            }
-                        }
-
-
-
-
-                    }
-                    else
-                        mime_accepted = true;
-                    break;
-
-
-                }
-
-
-
-
-                if (mime_accepted && profile_accepted) return true;
-                else return false;
-
-
-
             }
 
             public bool ControllerExists(string controllerName)
@@ -2076,9 +1687,82 @@ namespace Ren.CMS.CORE.FileManagement
                 }
                 return false;
             }
+
+            public bool FileIsAccepted(nFile FileEntry)
+            {
+                /*Profile
+                 */
+
+                //If NULL or 0  set to DEFAULT ID: 1
+                int fakeProfileID = 1;
+
+                if (FileEntry.ProfileID != null && FileEntry.ProfileID > 0)
+                {
+                    fakeProfileID = FileEntry.ProfileID;
+
+                }
+
+                nFileProfiles Prof = new nFileProfiles(fakeProfileID);
+
+                /*MimeType
+                 */
+                string MIMETYPE = FileEntry.mimetype;
+
+                //Query Prof
+                IEnumerable<string> ProfileNames = from profname in this._acceptedProfiles
+                                                   where profname == Prof.ProfileName
+
+                                                   select profname;
+
+                bool profile_accepted = false;
+                foreach (string found in ProfileNames)
+                {
+                    profile_accepted = true;
+                    break;
+                }
+
+                //Query MIME
+
+                IEnumerable<string> MIMES = from mimex in this._acceptedMimeTypes where mimex.ToLower() == FileEntry.mimetype.ToLower() || mimex.Contains('*') select mimex;
+                bool mime_accepted = false;
+                foreach (string mim in MIMES)
+                {
+                    if (mim.Contains('*'))
+                    {
+
+                        if (mim == "*") mime_accepted = true;
+                        else
+                        {
+
+                            string xmi = mim.Remove(mim.LastIndexOf('*'));
+                            if (xmi.Length <= mim.Length)
+                            {
+                                if (xmi == mim.Substring(0, xmi.Length))
+                                {
+                                    mime_accepted = true;
+
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                        mime_accepted = true;
+                    break;
+
+                }
+
+                if (mime_accepted && profile_accepted) return true;
+                else return false;
+            }
+
+            public int getID()
+            {
+                return this._id;
+            }
+
             public int registerFilemanagementController(string controllername)
             {
-
                 if (this.ControllerExists(controllername))
                 {
 
@@ -2097,8 +1781,35 @@ namespace Ren.CMS.CORE.FileManagement
                 SQL.SysDisconnect();
                 this._id = newID;
                 return newID;
-
             }
+
+            private bool mimeIsAccepted(string mime, int controllerID)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string prefix = TA.getSqlPrefix;
+
+                SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
+                PP.Add("@cid", controllerID);
+                PP.Add("@mime", mime);
+
+                string query = "SELECT * FROM " + prefix + "FilemanagementControllersAcceptMimeTypes WHERE MimeType=@mime AND cid=@cid";
+                SQL.SysConnect();
+
+                SqlDataReader R = SQL.SysReader(query, PP);
+                bool exists = false;
+                if (R.HasRows)
+                {
+
+                    exists = true;
+                }
+                R.Close();
+
+                SQL.SysDisconnect();
+
+                return exists;
+            }
+
             private bool profileIsAccepted(string profileName, int controllerID)
             {
                 nFileProfiles Prof = new nFileProfiles(profileName);
@@ -2130,157 +1841,318 @@ namespace Ren.CMS.CORE.FileManagement
 
                 }
 
-
                 return true;
-
-
             }
-            public void addIfNotAcceptedProfile(string profileName, int controllerID)
-            {
 
-                nFileProfiles Prof = new nFileProfiles(profileName);
-                if (Prof.ID > 0 && !this.profileIsAccepted(profileName, controllerID))
+            #endregion Methods
+        }
+
+        public partial class nFileProfileManagement
+        {
+            #region Methods
+
+            public int createProfile(string name, List<FileSettingModel> settings)
+            {
+                nFileProfiles Prof = new nFileProfiles(name);
+
+                if (Prof.ID == 0)
                 {
 
                     SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
                     ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                    string prefix = TA.getSqlPrefix;
+                    SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
 
-                    SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
-                    PP.Add("@cid", controllerID);
-                    PP.Add("@pid", Prof.ID);
+                    PCOL.Add("@name", name);
 
-                    string query = "INSERT INTO " + prefix + "FilemanagementControllersAcceptProfiles (pid,cid) VALUES(@pid, @cid)";
-
+                    string query = "INSERT INTO " + TA.getSqlPrefix + "FileManagementProfiles (ProfileName) VALUES(@name)";
                     SQL.SysConnect();
+                    SQL.SysNonQuery(query, PCOL);
 
-                    SQL.SysNonQuery(query, PP);
                     SQL.SysDisconnect();
+
+                    Prof = new nFileProfiles(name);
+
+                }
+                else
+                {
+                    throw new Exception("Profile Name allready exists");
+
+                }
+                foreach (FileSettingModel Setting in settings)
+                {
+
+                    if (!this.settingExists(Setting.Name))
+                    {
+                        this.addSetting(Prof.ID, Setting.Name, Setting.Value);
+                    }
+                    else
+                    {
+                        FileSettingModel temp = Prof.getProfileSetting(Setting.Name);
+
+                        if (this.valueExists(temp.ID, Prof.ID))
+                            this.changeValue(temp.ID, Setting.Name, Setting.Value);
+                        else
+                            this.addValue(Prof.ID, temp.ID, Setting.Value);
+                    }
+
                 }
 
-
-
+                return Prof.ID;
             }
 
-
-            private bool mimeIsAccepted(string mime, int controllerID)
+            public void deleteProfile(int profileID)
             {
+                this.delete_profile(profileID);
+            }
 
+            public void setSetting(int profileID, string settingName, string value)
+            {
                 SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
                 ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string prefix = TA.getSqlPrefix;
-
-                SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
-                PP.Add("@cid", controllerID);
-                PP.Add("@mime", mime);
-
-                string query = "SELECT * FROM " + prefix + "FilemanagementControllersAcceptMimeTypes WHERE MimeType=@mime AND cid=@cid";
                 SQL.SysConnect();
 
-                SqlDataReader R = SQL.SysReader(query, PP);
-                bool exists = false;
+                int id = 0;
+
+                string query = "SELECT id FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name";
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                PCOL.Add("@name", settingName);
+
+                SqlDataReader R = SQL.SysReader(query, PCOL);
                 if (R.HasRows)
                 {
 
-                    exists = true;
+                    R.Read();
+                    id = (int)R["id"];
+
                 }
                 R.Close();
-
                 SQL.SysDisconnect();
-
-                return exists;
-
-            }
-
-            public void addIfNotAcceptedMime(string mime, int controllerID)
-            {
-                if (this.mimeIsAccepted(mime, controllerID))
+                if (id == 0) this.addSetting(profileID, settingName, value);
+                else
                 {
-                    SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
-                    ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                    string prefix = TA.getSqlPrefix;
-
-                    SqlHelper.nSqlParameterCollection PP = new SqlHelper.nSqlParameterCollection();
-                    PP.Add("@cid", controllerID);
-                    PP.Add("@mime", mime);
-
-                    string query = "INSERT INTO " + prefix + "FilemanagementControllersAcceptMimeTypes (MimeType,cid) VALUES(@mime, @cid)";
-
-                    SQL.SysConnect();
-
-                    SQL.SysNonQuery(query, PP);
-                    SQL.SysDisconnect();
+                    if (this.valueExists(id, profileID)) this.changeValue(profileID, settingName, value);
+                    else this.addValue(profileID, id, value);
                 }
             }
 
+            public void setSetting(int profileID, int settingID, string value)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                SQL.SysConnect();
 
+                string settingName = "";
+
+                string query = "SELECT SettingName FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE id=@id";
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                PCOL.Add("@id", settingID);
+
+                SqlDataReader R = SQL.SysReader(query, PCOL);
+                if (R.HasRows)
+                {
+
+                    R.Read();
+                    settingName = (string)R["SettingName"];
+
+                }
+                R.Close();
+                SQL.SysDisconnect();
+                if (settingName == "") throw new Exception("Setting does not exists");
+
+                if (valueExists(settingID, profileID)) this.changeValue(profileID, settingName, value);
+                else this.addValue(profileID, settingID, value);
+            }
+
+            public void setSetting(FileSettingModel Setting, int profileID)
+            {
+                if (this.settingExists(Setting.Name))
+                {
+
+                    if (this.valueExists(Setting.ID, profileID))
+                    {
+                        this.changeValue(profileID, Setting.Name, Setting.Value);
+
+                    }
+                    else
+                    {
+                        this.addValue(profileID, Setting.ID, Setting.Value);
+
+                    }
+
+                }
+                else
+                {
+                    this.addSetting(profileID, Setting.Name, Setting.Value);
+
+                }
+            }
+
+            public void updateProfile(int profileid, string newName)
+            {
+                this.update_profile(profileid, newName);
+            }
+
+            private void addSetting(int profileid, string name, string value = "")
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+
+                string query = "INSERT INTO " + TA.getSqlPrefix + "FileManagementFileSettings (SettingName)  VALUES(@name)";
+
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+
+                PCOL.Add("@name", name);
+
+                SQL.SysConnect();
+
+                SQL.SysNonQuery(query, PCOL);
+
+                int id = SQL.getLastId(TA.getSqlPrefix + "FileManagementFileSettings");
+
+                string query2 = "INSERT INTO " + TA.getSqlPrefix + "FileManagementProfiles2FileSettings(ProfileID,SettingID) VALUES(@pid,@id)";
+                SqlHelper.nSqlParameterCollection PCOl2 = new SqlHelper.nSqlParameterCollection();
+                PCOl2.Add("@pid", profileid);
+                PCOl2.Add("@id", id);
+
+                SQL.SysNonQuery(query2, PCOl2);
+                SQL.SysDisconnect();
+
+                //Now the Value
+
+                this.addValue(profileid, id, value);
+            }
+
+            private void addValue(int profileID, int settingID, string value)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                SQL.SysConnect();
+
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string query3 = "INSERT INTO " + TA.getSqlPrefix + "FileSettingValues (ProfileID,SettingID,SettingValue) VALUES(@pid,@id,@val)";
+                SqlHelper.nSqlParameterCollection PCOl3 = new SqlHelper.nSqlParameterCollection();
+
+                PCOl3.Add("@pid", profileID);
+                PCOl3.Add("@id", settingID);
+                PCOl3.Add("@val", value);
+                SQL.SysNonQuery(query3, PCOl3);
+            }
+
+            private void changeValue(int profileID, string settingName, string newValue)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                SQL.SysConnect();
+
+                string query = "UPDATE " + TA.getSqlPrefix + "FileSettingValues SET SettingValue=@val WHERE ProfileID=@pid AND SettingID=(SELECT id FROM " +
+                                TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name)";
+
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+
+                PCOL.Add("@val", newValue);
+                PCOL.Add("@pid", profileID);
+                PCOL.Add("@name", settingName);
+
+                SQL.SysNonQuery(query, PCOL);
+
+                SQL.SysDisconnect();
+            }
+
+            private void delete_profile(int profileID)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string pref = TA.getSqlPrefix;
+
+                SQL.SysConnect();
+                string query = "DELETE " + pref + "FileManagementProfiles WHERE id=@id";
+
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+
+                PCOL.Add("@id", profileID);
+
+                SQL.SysNonQuery(query, PCOL);
+                SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
+
+                PCOL2.Add("@id", profileID);
+                string query2 = "DELETE " + pref + "FileManagementProfiles2FileSettings WHERE ProfileID=@id";
+
+                SQL.SysNonQuery(query2, PCOL2);
+
+                SQL.SysDisconnect();
+            }
+
+            private bool settingExists(string name)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+
+                string query = "SELECT * FROM " + TA.getSqlPrefix + "FileManagementFileSettings WHERE SettingName=@name";
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                SQL.SysConnect();
+
+                PCOL.Add("@name", name);
+                SqlDataReader R = SQL.SysReader(query, PCOL);
+                bool ret = R.HasRows;
+                R.Close();
+                SQL.SysDisconnect();
+
+                return ret;
+            }
+
+            private void update_profile(int profileID, string newName)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string pref = TA.getSqlPrefix;
+
+                SQL.SysConnect();
+                string query = "UPDATE " + pref + "FileManagementProfiles SET ProfileName=@name WHERE id=@id";
+
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                PCOL.Add("@name", newName);
+                PCOL.Add("@id", profileID);
+
+                SQL.SysNonQuery(query, PCOL);
+
+                SQL.SysDisconnect();
+            }
+
+            private bool valueExists(int settingID, int profileID)
+            {
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string query = "SELECT * FROM " + TA.getSqlPrefix + "FileSettingValues WHERE ProfileID=@profid AND SettingID=@settid";
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                SQL.SysConnect();
+                PCOL.Add("@profid", profileID);
+                PCOL.Add("@settid", settingID);
+
+                SqlDataReader R = SQL.SysReader(query, PCOL);
+                bool ret = R.HasRows;
+                R.Close();
+                SQL.SysDisconnect();
+
+                return ret;
+            }
+
+            #endregion Methods
         }
 
         public partial class nFileProfiles
         {
+            #region Fields
 
             private DataTable settings = new DataTable();
-            private string _profilename = "";
             private int _id = 0;
-            private void _init(int profileID)
-            {
-                settings.Columns.Add("id", typeof(int));
-                settings.Columns.Add("SettingName", typeof(string));
-                settings.Columns.Add("Value", typeof(string));
-                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
-                string prefix = TA.getSqlPrefix;
-                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+            private string _profilename = "";
 
-                SQL.SysConnect();
-                string query = "SELECT * FROM " + prefix + "FileManagementProfiles WHERE id=@id";
-                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
-                PCOL.Add("@id", profileID);
-                SqlDataReader MainRow = SQL.SysReader(query, PCOL);
+            #endregion Fields
 
-                if (MainRow.HasRows)
-                {
-                    MainRow.Read();
-
-                    this._profilename = (string)MainRow["ProfileName"];
-                    this._id = (int)MainRow["id"];
-
-
-                }
-
-                MainRow.Close();
-
-                if (this._profilename != "")
-                {
-                    string getSettings = "SELECT s.id as SettingID, s.SettingName as SettingName, v.SettingValue as SettingValue FROM " + prefix + "FileManagementFileSettings s INNER JOIN " + prefix + "FileManagementProfiles2FileSettings p ON(s.id = p.SettingID)" +
-                                         " INNER JOIN " + prefix + "FileSettingValues v ON(s.id = v.SettingID) WHERE p.ProfileID = @id AND v.ProfileID=@id";
-
-                    SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
-                    PCOL2.Add("@id", profileID);
-
-                    SqlDataReader row = SQL.SysReader(getSettings, PCOL2);
-
-                    if (row.HasRows)
-                    {
-
-                        while (row.Read())
-                        {
-                            this.settings.Rows.Add((int)row["SettingID"], (string)row["SettingName"], (string)row["SettingValue"]);
-
-                        }
-
-                    }
-                    row.Close();
-                }
-
-
-
-            }
+            #region Constructors
 
             public nFileProfiles(int profileID)
             {
-
                 this._init(profileID);
-
             }
 
             public nFileProfiles(string profileName)
@@ -2314,16 +2186,37 @@ namespace Ren.CMS.CORE.FileManagement
                 R.Close();
                 SQL.SysDisconnect();
 
-
                 this._init(id);
-
-
-
             }
+
+            #endregion Constructors
+
+            #region Properties
+
+            public int ID
+            {
+                get
+                {
+
+                    return this._id;
+
+                }
+            }
+
+            public string ProfileName
+            {
+                get
+                {
+                    return this._profilename;
+                }
+            }
+
+            #endregion Properties
+
+            #region Methods
 
             public FileSettingModel getProfileSetting(string settingName)
             {
-
                 FileSettingModel MDL = new FileSettingModel();
                 DataRow[] Row = this.settings.Select("SettingName='" + settingName + "'");
                 if (Row.Length > 0)
@@ -2341,209 +2234,124 @@ namespace Ren.CMS.CORE.FileManagement
                 return MDL;
             }
 
-
-            public int ID
+            private void _init(int profileID)
             {
-                get
+                settings.Columns.Add("id", typeof(int));
+                settings.Columns.Add("SettingName", typeof(string));
+                settings.Columns.Add("Value", typeof(string));
+                ThisApplication.ThisApplication TA = new ThisApplication.ThisApplication();
+                string prefix = TA.getSqlPrefix;
+                SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();
+
+                SQL.SysConnect();
+                string query = "SELECT * FROM " + prefix + "FileManagementProfiles WHERE id=@id";
+                SqlHelper.nSqlParameterCollection PCOL = new SqlHelper.nSqlParameterCollection();
+                PCOL.Add("@id", profileID);
+                SqlDataReader MainRow = SQL.SysReader(query, PCOL);
+
+                if (MainRow.HasRows)
                 {
+                    MainRow.Read();
 
-                    return this._id;
-
+                    this._profilename = (string)MainRow["ProfileName"];
+                    this._id = (int)MainRow["id"];
 
                 }
 
-            }
+                MainRow.Close();
 
-            public string ProfileName
-            {
-                get
+                if (this._profilename != "")
                 {
-                    return this._profilename;
-                }
-            }
+                    string getSettings = "SELECT s.id as SettingID, s.SettingName as SettingName, v.SettingValue as SettingValue FROM " + prefix + "FileManagementFileSettings s INNER JOIN " + prefix + "FileManagementProfiles2FileSettings p ON(s.id = p.SettingID)" +
+                                         " INNER JOIN " + prefix + "FileSettingValues v ON(s.id = v.SettingID) WHERE p.ProfileID = @id AND v.ProfileID=@id";
 
+                    SqlHelper.nSqlParameterCollection PCOL2 = new SqlHelper.nSqlParameterCollection();
+                    PCOL2.Add("@id", profileID);
 
+                    SqlDataReader row = SQL.SysReader(getSettings, PCOL2);
 
-
-
-
-        }
-
-
-        public string getVideoThumpnailRawImage(Guid attachID, string ffmegPath)
-        {
-
-            Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository Repo = new Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository();
-
-            var attachment = Repo.GetByPKid(attachID);
-
-            if (attachment == null) throw new Exception("Attachment not found!");
-
-            FileManagement FX = new FileManagement();
-
-            var f = FX.getFile(attachment.FName, false);
-            string video = f.filepath;
-            if (f == null || f.id < 1)
-            {
-
-                video = attachment.FPath + "/" + attachment.FName;
-
-            }
-
-            string[] thmppath = {
-                                                    "~/Binaries",
-                                                    "~/Binaries/Converter",
-                                                    "~/Binaries/Converter/Videothumpnails"
-                                                    , "~/Binaries/Converter/Videothumpnails/"+ attachment.Pkid
-                                                };
-
-            foreach (string d in thmppath)
-                if (!Directory.Exists(HttpContext.Current.Server.MapPath(d)))
-                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(d));
-            //Run FFMPEG
-            string WorkingDirectory = thmppath.Last();
-            WorkingDirectory = HttpContext.Current.Server.MapPath(WorkingDirectory);
-            if (!System.IO.Directory.GetFiles(WorkingDirectory).Any(e => Path.GetFileName(e).StartsWith("thump") && Path.GetFileName(e).EndsWith(".jpg")))
-            {
-                string output = WorkingDirectory + "\\thump.%d.jpg";
-                string ffmpegParameter = "-i \"{0}\" -f image2 -vf fps=fps=1/10 \"{1}\""; //Every TEN seconds.
-                ffmpegParameter = String.Format(ffmpegParameter,
-                    HttpContext.Current.Server.MapPath(video),
-                    output);
-
-
-
-
-                while (FX.RunProcess(ffmegPath, ffmpegParameter) != "ok") ;
-            }
-            var FileList = System.IO.Directory.GetFiles(WorkingDirectory);
-
-            int i = FileList.Length - 1;
-            //Got max index
-
-            if (i > 2)
-            {
-                return FileList[i / 2];
-            }
-            return FileList.Last();
-        }
-
-        /// <summary>
-        /// Registers a couple of files to the FileManagementSystem. Requires one postfield with type "file" per  File
-        /// </summary>
-        /// <param name="File">nFile Model Array for registering</param>
-        /// <param name="postFieldNames">String Array of postFieldNames</param>
-        /// <param name="allowedExtensions">Optional: A String array of allowed extensions (.ext,.txt,.aspx ...etc)</param>
-        /// <param name="deleteExistingFiles">If true, files with the nFile.aliasName of the uploaded File will be deleted before.</param>
-        public void RegisterFiles(nFile[] File, string[] postFieldNames, bool deleteExistingFiles = false, string[] allowedExtensions = null)
-        {
-
-            if (File.Length == postFieldNames.Length)
-            {
-
-
-                for (int x = 0; x < File.Length; x++)
-                {
-
-                    if (deleteExistingFiles == true) this._unregisterFile(File[x].aliasName);
-
-                    this._registerFile(File[x], postFieldNames[x], allowedExtensions);
-
-
-
-                }
-
-
-
-            }
-
-
-
-        }
-        public nFile getFile(string name, bool fileIsActive = true)
-        {
-            int isActive = 1;
-            if (!fileIsActive) isActive = 0;
-
-            BaseRepository<nhibernate.Domain.File> FileRepo = new BaseRepository<nhibernate.Domain.File>();
-
-            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name)) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name && e.Active == 1)));
-          
-             
-
-            if (fR != null)
-            {
-                
-                FilemanagementCrossBrowsersRepository fmx =  new FilemanagementCrossBrowsersRepository();
-
-                string browserExt = (fmx.GetByBrowserID(HttpContext.Current.Request.Browser.Browser) ?? fmx.GetDefault() ?? new FilemanagementCrossBrowsers()).FileFormat;
-
-                string pName = Path.GetFileNameWithoutExtension(fR.Fpath) + "." + browserExt;
-                string myPath =
-                    (fR.Fpath.Replace(Path.GetFileName(fR.Fpath), ""));
-
-
-                var f = new nFile()
-                {
-                    aliasName = fR.AliasName,
-                    filepath = fR.Fpath,
-                    id = fR.Id,
-                    isActive = (fR.Active == 1),
-                    ProfileID = (Convert.ToInt32(fR.ProfileID)),
-                    needPermission = fR.NeedPermission,
-                    mimetype = this.getMIMETypeForExtension(Path.GetExtension(fR.Fpath))
-                };
-
-                if (f.mimetype.ToLower().StartsWith("video"))
-                {
-                    string browser = HttpContext.Current.Request.Browser.Browser.ToLower();
-                    string newPath = myPath + pName;
-                    if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(newPath)))
+                    if (row.HasRows)
                     {
-                        f.filepath = newPath;
-                        f.mimetype = this.getMIMETypeForExtension(Path.GetExtension(f.filepath));
+
+                        while (row.Read())
+                        {
+                            this.settings.Rows.Add((int)row["SettingID"], (string)row["SettingName"], (string)row["SettingValue"]);
+
+                        }
+
                     }
+                    row.Close();
                 }
-
-                if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(f.filepath)))
-                {
-
-
-
-
-                    return f;
-                }
-                else
-                {
-
-
-                    return this.get404File(name);
-
-                }
-
-
-
-            }
-            else
-            {
-
-
-
-                return this.get404File(name);
-
             }
 
-
-
+            #endregion Methods
         }
 
-
-
-
+        #endregion Nested Types
     }
 
+    //TODO: Controller für Userbilder
+    public class FileSettingModel
+    {
+        #region Properties
 
+        public int ID
+        {
+            get; set;
+        }
 
+        public string Name
+        {
+            get; set;
+        }
 
+        public string Value
+        {
+            get; set;
+        }
 
+        #endregion Properties
+    }
+
+    public class nFile
+    {
+        #region Properties
+
+        public string aliasName
+        {
+            get; set;
+        }
+
+        public string filepath
+        {
+            get; set;
+        }
+
+        public int id
+        {
+            get; set;
+        }
+
+        public bool isActive
+        {
+            get; set;
+        }
+
+        public string mimetype
+        {
+            get; set;
+        }
+
+        public string needPermission
+        {
+            get; set;
+        }
+
+        public int ProfileID
+        {
+            get; set;
+        }
+
+        #endregion Properties
+    }
 }

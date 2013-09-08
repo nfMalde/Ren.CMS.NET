@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Ren.CMS.CORE.Security;
-using System.Web.Mvc;
-using System.Data.SqlClient;
-using Ren.CMS.CORE.Language.LanguageDefaults;
-namespace Ren.CMS.Helpers
+﻿namespace Ren.CMS.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Web;
+    using System.Web.Mvc;
+
+    using Ren.CMS.CORE.Language.LanguageDefaults;
+    using Ren.CMS.CORE.Security;
+
     public static class LanguageHelper
     {
-        
+        #region Methods
 
-         /// <summary>
+        /// <summary>
         /// Returns quickly an language line as HTML String.
         /// </summary>
         /// <param name="helper">Attached to the HTML Helper</param>
@@ -23,10 +25,8 @@ namespace Ren.CMS.Helpers
         /// <returns></returns>
         public static HtmlString LanguageLine(this HtmlHelper helper, LanguageDefaultValues DefaultReturnValue)
         {
-
             return new HtmlString(DefaultReturnValue.ReturnLangLine());
         }
-
 
         /// <summary>
         /// Returns quickly an language line as HTML String.
@@ -39,20 +39,12 @@ namespace Ren.CMS.Helpers
         /// <returns></returns>
         public static HtmlString LanguageLine(this HtmlHelper helper, string LangLineName, string Package = "Root",  Dictionary<string,string> DefaultReturnValue = null, string LangCode = "__USER__")
         {
-
-             
-
             Ren.CMS.CORE.Language.Language Lang = new CORE.Language.Language(LangCode, Package);
             string returnValue = Lang.getLine(LangLineName, DefaultReturnValue);
-             
-
-            
 
             return new HtmlString(returnValue);
-
-
-                
         }
 
+        #endregion Methods
     }
 }
