@@ -23,10 +23,8 @@
 
                 try
                 {
-                    var routeData = ((MvcHandler)HttpContext.Current.Handler).RequestContext.RouteData;
 
-                    if (routeData.Values["renCMSLanguage"] != null)
-                        language = (string)routeData.Values["renCMSLanguage"] ?? DefaultLanguage;
+                    language = GetLanguageRoutData();
 
                     BaseRepository<LangCode> L = new BaseRepository<LangCode>();
                     var lc = L.GetOne(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == language));
@@ -55,5 +53,19 @@
         }
 
         #endregion Properties
+
+        #region Methods
+
+        public static string GetLanguageRoutData()
+        {
+            var routeData = ((MvcHandler)HttpContext.Current.Handler).RequestContext.RouteData;
+            string language = null;
+            if (routeData.Values["renCMSLanguage"] != null)
+                language = (string)routeData.Values["renCMSLanguage"] ?? null;
+
+            return language;
+        }
+
+        #endregion Methods
     }
 }

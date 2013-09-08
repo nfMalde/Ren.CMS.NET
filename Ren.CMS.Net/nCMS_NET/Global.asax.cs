@@ -8,7 +8,11 @@ namespace Ren.CMS
     using System.Web.Mvc;
     using System.Web.Routing;
 
+    using Ren.CMS.CORE.CustomWebConfig.Accessors;
+    using Ren.CMS.CORE.Helper;
     using Ren.CMS.CORE.Helper.RoutingHelper;
+    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.CORE.nhibernate.Domain;
     using Ren.CMS.ViewEngine;
 
     // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7
@@ -217,6 +221,44 @@ namespace Ren.CMS
             );
         }
 
+        protected void Application_BeginRequest(object sender, EventArgs ex)
+        {
+            string type = Request.RequestType;
+            string[] ignore = { "post", "httppost" };
+
+            if (!ignore.Any(e => e == type.ToLower()) && !PathIsIgnored())
+            {
+
+                    //  throw new Exception(GetPreRoutData());
+
+                    if (GetPreRoutData() == null)
+                    {
+                        string ISO = writeLanguageForUser();
+
+                        BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
+                        if (Repo.GetMany(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == ISO)).Count() == 0)
+                        {
+                            ISO = writeLanguageForUser(); ;
+
+                        }
+
+                        Response.Redirect(GetFullUrl(ISO));
+
+                    }
+                    else
+                    {
+                       string  ISO = GetPreRoutData();
+                       BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
+                       if (Repo.GetMany(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == ISO)).Count() == 0)
+                       {
+                           Response.Redirect(GetFullUrl(writeLanguageForUser()));
+                       }
+
+                    }
+
+            }
+        }
+
         protected void Application_Start()
         {
             ViewEngines.Engines.Clear();
@@ -226,6 +268,91 @@ namespace Ren.CMS
             RegisterGlobalFilters(GlobalFilters.Filters);
             MvcContrib.UI.InputBuilder.InputBuilder.BootStrap();
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        private string GetFullUrl(string ISO)
+        {
+            string currentURL = Request.Url.AbsolutePath;
+
+            string url = currentURL.Trim();
+
+            string fullUrl = "/" + ISO + url + (Request.QueryString.Count > 0 ? "?" + Request.QueryString.ToString() : String.Empty);
+
+            return fullUrl;
+        }
+
+        private string GetPreRoutData()
+        {
+            HttpContextBase currentContext = new HttpContextWrapper(HttpContext.Current);
+            RouteData routeData = RouteTable.Routes.GetRouteData(currentContext);
+
+            if (!routeData.Values.Any(r => r.Key == "renCMSLanguage"))
+                return null;
+
+            return routeData.Values.Where(r => r.Key == "renCMSLanguage").First().Value.ToString();
+        }
+
+        private bool PathIsIgnored()
+        {
+            string currentURL = Request.Url.AbsolutePath;
+
+            string url = currentURL.Trim();
+
+            bool r = RedirectIgnoreConfig.GetConfig().CheckUrlIsIgnored(url);
+
+            return r;
+        }
+
+        private string writeLanguageForUser()
+        {
+            string ISO = String.Empty;
+            //We got no Language!
+            //Step 1: Try to find Language by Browser Settings
+            string[] UserLangs = Request.UserLanguages;
+
+            BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
+            string code = (Request.UserLanguages ?? Enumerable.Empty<string>()).FirstOrDefault();
+            if (code == "de")
+                code = "de-DE";
+            var c = Repo.GetOne(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == code));
+            if (c != null)
+            {
+
+                ISO = c.Code;
+
+            }
+
+            if (ISO == String.Empty)
+            {
+                var langcodes = Repo.GetMany();
+
+                    string[] codex = code.Split('-');
+
+                    if (codex.Count() > 0)
+                    {
+
+                        string prelang = codex.First();
+
+                        foreach (var c2 in langcodes)
+                        {
+
+                            if (c2.Code.StartsWith(prelang))
+                            {
+                                ISO = c2.Code;
+
+                                break;
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            if (ISO == String.Empty)
+                ISO = CurrentLanguageHelper.DefaultLanguage;
+
+            return ISO;
         }
 
         #endregion Methods
