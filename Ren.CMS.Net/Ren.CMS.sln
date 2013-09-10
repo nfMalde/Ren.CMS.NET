@@ -1,49 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS", "nCMS_NET\Ren.CMS.csproj", "{A8DE7EDE-F02B-4D54-9CC3-238956886DE6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogModule", "NewsModule\BlogModule.csproj", "{821784F9-01CA-4483-A5F3-AD5320FFEF36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleModule", "MvcApplication1\ArticleModule.csproj", "{B25B5C2D-8580-4E00-B68D-5A33CA79C2D4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallModule", "InstallModule\InstallModule.csproj", "{AEECAF45-AEEF-4D6C-95B7-35C44DC88DE2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.API", "Ren.CMS.API\Ren.CMS.API.csproj", "{C137DDD8-BE79-4956-8C87-A8B1B21D33A1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Content", "Ren.CMS.Content\Ren.CMS.Content.csproj", "{C5FFC3EE-217F-4468-9B2B-037DC92BBBB1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Pagination", "Ren.CMS.Pagination\Ren.CMS.Pagination.csproj", "{20515862-4C1B-4B88-98C4-1391B4FF1C36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Extensions.ArticleExt", "Ren.CMS.Extensions.ArticleExt\Ren.CMS.Extensions.ArticleExt.csproj", "{B6C757D2-86E2-4D4A-9A5A-AE13BA7A8D73}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.nModules", "Ren.CMS.nModules\Ren.CMS.nModules.csproj", "{98707A63-4000-4EF3-B003-B345906BCBD0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.CORE", "Ren.CMS.CORE\Ren.CMS.CORE.csproj", "{63304ABC-25B8-404C-85D3-724173DFDFE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.CoreModels", "Ren.CMS.CoreModels\Ren.CMS.CoreModels.csproj", "{66CE1BFC-9C14-4636-B1BD-A0FDC7E3E3DF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.SessionRepository", "ClassLibrary1\Ren.CMS.SessionRepository.csproj", "{0415E250-C965-48BE-A003-37CD89875F65}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.ContentHelpers.Blog", "Ren.CMS.ContentHelpers.Blog\Ren.CMS.ContentHelpers.Blog.csproj", "{E8F5BB79-AC16-4506-9FE1-7F51DFE0D2EB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalleryModule", "GalleryModule\GalleryModule.csproj", "{63457497-594E-4093-83FD-0129E52CA6B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumpnailModule", "ThumpnailModule\ThumpnailModule.csproj", "{1B17DB37-062A-4251-A666-75954C4E225F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{66B6F2B1-4DC1-40A1-8602-271B1ACD3A0D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{D959DE15-CEEC-42D3-BCCA-73FFCD636BE2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{ECB04908-5CAB-431F-8063-1C78F9E3AB51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Persistence", "Ren.CMS.Persistence\Ren.CMS.Persistence.csproj", "{F2F2DF55-784E-4FFF-B71A-F1B779B9E5ED}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Config", "Ren.CMS.Config\Ren.CMS.Config.csproj", "{A4F4A9E2-733A-4BEC-B64E-840BE608C9EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.Config.Helper", "Ren.Config.Helper\Ren.Config.Helper.csproj", "{A062FBC9-EF6A-4D7E-99C0-6D04FC0A8D4B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Models.SharedElements", "Ren.CMS.Models.SharedElements\Ren.CMS.Models.SharedElements.csproj", "{603D4CE5-A908-4F44-9FF5-58EDD9869309}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS", "Ren.CMS.Web\Ren.CMS.csproj", "{A8DE7EDE-F02B-4D54-9CC3-238956886DE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +85,10 @@ Global
 		{603D4CE5-A908-4F44-9FF5-58EDD9869309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{603D4CE5-A908-4F44-9FF5-58EDD9869309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{603D4CE5-A908-4F44-9FF5-58EDD9869309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E4D9E8-85E1-4D12-B413-04D20C992341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E4D9E8-85E1-4D12-B413-04D20C992341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E4D9E8-85E1-4D12-B413-04D20C992341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E4D9E8-85E1-4D12-B413-04D20C992341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
