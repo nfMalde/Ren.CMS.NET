@@ -1,0 +1,285 @@
+﻿@using Ren.CMS.Content
+@using Ren.CMS.Models.Core
+@using Ren.CMS.Helpers
+<link rel="stylesheet" href="@Url.Content("/Content/nftheme/css/Home/Home-Index.css")" type="text/css"/>
+<link rel="stylesheet" href="@Url.Content("/Content/nftheme/css/Shared/Blog.css")" type="text/css"/>
+
+
+@{
+    ViewBag.Title = "Übersicht";
+
+    
+    
+    
+    ContentManagement.GetContent getContent = new ContentManagement.GetContent(new string[] { "eNews", "eArticle" }, pageSize:20, pageIndex:1, languages: new string[]{ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage });
+    ContentManagement.GetContent mostDiscussed = new ContentManagement.GetContent(new string[] { "*" }, pageSize: 3, pageIndex: 1, countReferences: true, referenceContentTypes: new string[] { "eComment", "ePost" }, OrderBy: "ReferenceCount", OrderType: "DESC");
+    ContentManagement.GetContent forum = new ContentManagement.GetContent(new string[] { "eThreads" });
+    
+    
+    
+    
+    var list = getContent.getList();
+
+ 
+    var slidercontents =  list.GetRange(0,(list.Count > 5 ? 5 : list.Count));
+    list = list.Skip(slidercontents.Count).ToList();
+    var media = 
+        (slidercontents.Count > 5 ? list.GetRange((slidercontents.Count > 0 ? slidercontents.Count -1 : 0), ((list.Count - slidercontents.Count) > 2 ? 2 :((list.Count - slidercontents.Count) > 0 ? (list.Count - slidercontents.Count) : 0)) )
+        : new List<nContent>());
+        
+        if(list.Count > 2)
+    {
+    list.Skip(2);
+    }
+    var newsbox = list.Where(e => e.ContentType == "eNews").ToList();
+
+    newsbox = newsbox.GetRange(0, (newsbox.Count > 2 ? 2 : newsbox.Count));
+
+
+
+    var articlebox = list.Where(e => e.ContentType == "eArticle").ToList();
+        articlebox = articlebox.GetRange(0,(articlebox.Count > 2 ? 2 : articlebox.Count));
+    
+     
+    
+    
+    nSliderModel Slider = new nSliderModel();
+    Slider.ContentCollection = slidercontents;
+
+    Html.RenderPartial("Slider", Slider);
+
+
+        
+    }
+ 
+<div class="row">
+<div class="span8">
+
+
+  
+
+    @foreach(nContent C in media)
+    {
+        <article>
+        <div class="media blog">
+        @{
+            var Att = C.Attachments("image", "indeximg");
+            C.GenerateLink();
+            }
+        
+       
+            <div class="media-body blog-body">
+                <hgroup>
+					<h1><a href="@C.FullLink">@C.Texts.First().Title</a></h1>
+                    <span class="subheader">
+                        <time datetime="@(C.CreationDate.ToString("yyyy-MM-dd")+"T"+C.CreationDate.ToString("hh:mm"))+02:00" title="Veröffentlicht am @C.CreationDate.ToString() Uhr">@C.CreationDate.ToString()</time>
+
+                        von
+
+						<a title="Profil des Autors" href="/Profile/@C.CreatorName" rel="author">@C.CreatorName</a>	&nbsp;					
+                        <a title="Jetzt kommentieren!" href="@C.FullLink"><i class="icon-comment"></i>
+                        @(new ContentManagement.GetContent(acontenttypes: new string[] { "eComment" }, contentRef: C.ID).getList().Count)</a>
+                    </span>
+				</hgroup>
+ 
+                 @if (Att.Count > 0)
+                 { 
+           
+        
+                 <div class="blog-image">
+
+                <img class="blog-image" src="@Att.First().Path" title="@C.Texts.First().Title" />   
+                </div>
+                 }
+                 
+                @Html.Raw(C.Texts.First().PreviewText)
+
+                
+            </div>
+             
+ 
+
+        </div>
+    
+        </article>
+    }
+
+
+ 
+
+    <div class="entry-box-row">
+    <div class="EntryBoxLeft span4">
+        <div class="well well-small"><strong>Am meisten disktutiert</strong></div>
+<ul class="nav nav-list">
+@if(mostDiscussed.getList().Count > 0){
+foreach (nContent C in mostDiscussed.getList())
+{
+    C.GenerateLink();
+    string title = C.Texts.First().Title;
+    ContentManagement.GetContent Co = new ContentManagement.GetContent(new string[] { "*" }, contentRef: C.ID);
+   
+    
+    if (C.ReferenceID > 0)
+    {
+        Co = null;
+        nContent RefContent = new ContentManagement.GetContent(C.ReferenceID).getList().First();
+        RefContent.GenerateLink();
+        C.FullLink = RefContent.FullLink;
+        Co = new ContentManagement.GetContent(new string[] { "*" }, contentRef: RefContent.ID);
+        
+        
+   
+        
+        if (String.IsNullOrEmpty(title))
+        {
+            title = RefContent.Texts.First().Title;
+        }
+    }
+    Co.getList();
+    int i = Co.TotalRows;
+    
+      <li>
+      <a href="@C.FullLink">@title <small><i class="icon-comment"></i>@i</small></a>
+         
+      </li>
+    
+
+
+
+
+
+
+
+
+}
+
+
+}
+else{
+
+       <li class="nav-header">
+        
+            
+                Keine Einträge vorhanden
+            
+         
+      </li>
+
+
+}
+
+</ul>
+    </div>
+
+
+       
+
+
+       <div class="span4">
+        <div class="well well-small"><strong>Neues aus dem Forum</strong></div>
+<ul class="nav nav-list">
+
+@if(forum.getList().Count > 0)
+{
+foreach (nContent C in forum.getList())
+{
+    C.GenerateLink();
+    string title = C.Texts.First().Title;
+
+    if (C.ReferenceID > 0)
+    { 
+        nContent RefContent = new ContentManagement.GetContent(C.ReferenceID).getList().First();
+        RefContent.GenerateLink();
+        C.FullLink = RefContent.FullLink;
+        if (String.IsNullOrEmpty(title))
+        {
+            title = RefContent.Texts.First().Title;
+        }
+    
+    }
+      <li>
+      <a href="@C.FullLink">@title</a>
+         
+      </li>
+    
+
+
+
+
+
+
+
+
+}
+
+}
+else
+{
+
+        <li class="nav-header">
+        
+             
+                Keine Einträge vorhanden
+            
+         
+      </li>
+
+}
+
+
+
+</ul>
+    </div>
+
+    </div>
+
+</div>
+
+<div class="span3 pull-right">
+<div class="well well-small index-content-header"><strong>Letzte News</strong></div>
+<ul class="thumbnails helper-relative">
+@foreach (nContent News in newsbox)
+{
+    News.GenerateLink();
+    
+  <li>
+    <div class="thumbnail clearfix" style="">
+        <a href="@News.FullLink" class="helper-block">
+      <img data-src="holder.js/300x200" alt="" src="@News.Attachments("image","indeximg").First().Path">
+      <h4>@News.Texts.First().Title</h4> 
+       </a>
+    </div>
+  </li>
+  
+
+}
+
+</ul>
+
+<div class="well well-small index-content-header"><strong>Neue Spieletests</strong></div>
+<ul class="thumbnails">
+@foreach (nContent Article in articlebox)
+{
+    Article.GenerateLink();
+    
+  <li>
+    <div class="thumbnail clearfix" style="">
+<a href="@Article.FullLink" class="">
+      <img data-src="holder.js/300x200" alt="" src="@Article.Attachments("image","indeximg").First().Path">
+      <h4>@Article.Texts.First().Title</h4>
+</a>
+    </div>
+  </li>
+  
+
+}
+
+</ul>
+
+
+
+
+    </div>
+
+
+    </div>

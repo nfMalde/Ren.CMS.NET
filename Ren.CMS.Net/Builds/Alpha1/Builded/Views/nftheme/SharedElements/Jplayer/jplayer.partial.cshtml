@@ -1,0 +1,32 @@
+﻿@model Ren.CMS.Models.SharedElements.jplayer
+@using Ren.Config.Helper
+
+@* CSS *@
+<link rel="stylesheet" href="/Scripts/shared/video-js/video-js.css" />
+@* Script *@
+ <script src="/Scripts/shared/video-js/video.js"></script>
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <script>
+      videojs.options.flash.swf = "/Scripts/shared/video-js/video-js.swf";
+  </script>
+@* Player *@
+@{
+    
+    Ren.CMS.CORE.FileManagement.FileManagement FM = new Ren.CMS.CORE.FileManagement.FileManagement();
+    Ren.CMS.Persistence.Repositories.FilemanagementCrossBrowsersRepository Fcr = new Ren.CMS.Persistence.Repositories.FilemanagementCrossBrowsersRepository("video");
+
+    string ext = "."+ Fcr.GetForCurrentBrowser().FileFormat;
+
+
+
+    string mime = FM.getMIMETypeForExtension(ext);    
+
+}
+
+  <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="@Model.Width" height="@Model.Height"
+      poster="@Model.Poster"
+      data-setup="{}">
+    <source src="@Model.FilePath" type='@mime' />
+       
+  </video>

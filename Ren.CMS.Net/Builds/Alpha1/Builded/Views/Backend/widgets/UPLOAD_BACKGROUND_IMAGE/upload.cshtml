@@ -1,0 +1,189 @@
+﻿<style>
+
+
+
+
+
+</style>
+
+<script>
+
+    $(function () {
+
+
+
+        $('#ChangePic').button();
+        $('#submitbgimg').button();
+    });
+
+
+</script>
+ <script>
+
+     function ajaxRunnin() {
+         $('.xhide').fadeOut('slow', function () {
+
+
+
+
+
+
+         });
+         $('.loaderx').fadeIn(500, null);
+
+
+
+
+     }
+
+     function ajax_end() {
+
+         $('.loaderx').fadeOut(500, function () {
+
+
+
+
+
+         });
+
+         //$('.xhide').fadeIn(500, null);
+
+
+
+
+
+
+     }
+     var isFirstLoad = true;
+
+     function UploadImage() {
+
+         ajaxRunnin();
+         $('#fileDiv').fadeOut();
+
+         $("#ImgForm").submit();
+     }
+
+
+
+     function UploadImage_Complete() {
+
+
+         ajax_end();
+
+
+         //Check to see if this is the first load of the iFrame
+         
+        
+         //Reset the image form so the file won't get uploaded again
+         document.getElementById("ImgForm").reset();
+
+         //Grab the content of the textarea we named jsonResult .  This shold be loaded into 
+         //the hidden iFrame.
+         var newImg = $.parseJSON($("#UploadTarget").contents().find("#jsonResult")[0].innerHTML);
+
+         //If there was an error, display it to the user
+         if (newImg.IsValid == false) {
+             alert(newImg.Message);
+             return;
+         }
+
+         //Create a new image and insert it into the Images div.  Just to be fancy, 
+         //we're going to use a "FadeIn" effect from jQuery
+         $('#img').fadeIn();
+         var img = new Image();
+         var oldimg = $('#img').find("img");
+         $(oldimg).fadeOut(500, null);
+         img.src = newImg.ImagePath;
+         img.style.maxHeight = '150px';
+         img.style.maxWidth = '150px';
+         //Hide the image before adding to the DOM
+         $(img).hide(); $('#img').html("");
+         $('#img').append('<p>Upload erfolgreich abgeschlossen:</p>');
+         $('#img').append(img);
+         $('#img').append("<button id=\"widget-bgimg-continue\">Weiter...</button>");
+         $('#widget-bgimg-continue').button();
+         $('#widget-bgimg-continue').click(function () {
+
+
+             $('#img').fadeOut(function () {
+
+                 $('#fileDiv').fadeIn();
+
+
+
+             });
+
+
+         });
+
+         //Now fade the image in
+         
+         $(img).fadeIn(500, null);
+         $('#img').fadeIn();
+     }
+
+     $(function () {
+         $('.file_uploader').change(function () {
+
+
+             $('#ajax_action_in').find('p').text($(this).val());
+             UploadImage();
+
+         });
+         $('#ChangePic').click(function () {
+
+
+             var e = $('.file_uploader');
+
+             e.click();
+
+
+
+
+         });
+
+
+
+     });
+             </script>
+
+
+   <div class="ajax_action_in" id="fileDiv" class="flright flclear">
+ @using (Html.BeginForm("SaveDesktopImage", "BackendHandler/Account", FormMethod.Post,
+    new
+    {
+        enctype = "multipart/form-data",
+        id = "ImgForm",
+        name = "ImgForm",
+        target = "UploadTarget"
+    }))
+ {
+  
+
+          
+          <input type="button" id="ChangePic" class="changeProfilePic xhide" value="Datei auswählen" />
+          <p style="font-size:10px">
+
+             Keine neue Datei ausgewählt
+
+          </p>
+          <div style="display:none">
+          <input style="display:none" value="Datei auswählen" type="file" class="file_uploader" name="Picture" />
+    </div>   
+     <input id="submitbgimg" type="submit"
+ value="Hochladen" />
+ 
+ }
+   </div>  
+ 
+<div style="display:none;" id="img">
+    Upload abgeschlossen.
+
+</div>
+<div class="loaderx" style="display:none">
+<img alt="Loading..." title="Loading..." id="load_images" src="/Content/Themes/nftheme/images/ajax-loader.gif" style="border:none; " /> Wird hochgeladen...
+</div>
+       <iframe id="UploadTarget" name="UploadTarget" onload="UploadImage_Complete();" style="position: absolute; left: -999em; top: -999em;"></iframe>
+
+ 

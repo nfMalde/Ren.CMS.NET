@@ -1,0 +1,57 @@
+﻿@{
+    
+    if (Request.Form["widgetHeaderData[contentType]"] == null)
+   {
+       Html.Raw("<b>Falsche Parameter. Kein Inhalt verfügbar</b>");
+       Response.End();
+   }
+    string contentType = Request.Form["widgetHeaderData[contentType]"].ToString();
+    SqlHelper SQL = new SqlHelper();
+
+    Ren.CMS.CORE.ThisApplication.ThisApplication TA = new Ren.CMS.CORE.ThisApplication.ThisApplication();
+
+
+    string prefix = TA.getSqlPrefix;
+
+    string query = "SELECT createPartial FROM " + prefix + "Content_Types WHERE name=@name";
+    nSqlParameterCollection PCOL = new nSqlParameterCollection();
+
+    PCOL.Add("@name", contentType);
+
+    SQL.SysConnect();
+
+    System.Data.SqlClient.SqlDataReader CT = SQL.SysReader(query, PCOL);
+    
+    if(!CT.HasRows)
+    {
+
+        Html.Raw("<b>ContenType existiert nicht.</b>");
+        CT.Close();
+        SQL.SysDisconnect();
+        Response.End();
+    
+    }
+
+    CT.Read();
+    string partial = "~/Views/Backend/widgets/CREATE_CONTENT/";
+    
+    if(CT["createPartial"] != DBNull.Value)
+    {
+
+        partial += (string)CT["createPartial"] + ".cshtml"; ;
+        
+        
+    
+    }
+    else
+    {
+        partial += "default.cshtml";
+    }
+    CT.Close();
+
+    SQL.SysDisconnect();
+    Ren.CMS.Models.Core.nContentPostModel PostModel = new Ren.CMS.Models.Core.nContentPostModel();
+    PostModel.ContentType = contentType;
+    Html.RenderPartial(partial, PostModel);
+    }
+

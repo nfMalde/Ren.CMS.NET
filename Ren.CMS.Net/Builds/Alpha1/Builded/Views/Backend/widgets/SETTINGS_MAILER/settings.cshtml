@@ -1,0 +1,68 @@
+﻿
+@{
+    GlobalSettings GS = new GlobalSettings();
+    List<nSetting> Settings = GS.listSettings("MAIL_SETTINGS");
+    
+    
+    
+//3 Tabs
+//1: SMTP Settings
+//2: Retrieval Settings
+//3: Mail Templates    
+string partial = "~/Views/Backend/widgets/SETTINGS_MAILER/";
+
+
+    
+    
+    }
+
+
+<div id="@Html.ProtectID("mailer_settings_tab")">
+
+    <ul>
+        <li><a href="#@Html.ProtectID("smtp")">SMTP Settings</a></li>
+        <li><a href="#@Html.ProtectID("retrieval")">Retrieval</a></li>
+        <li><a href="#@Html.ProtectID("templates")">Templates</a></li>
+
+
+    </ul>
+
+    <div id="@Html.ProtectID("smtp")">
+       @{
+           Html.RenderPartial(partial + "smtp.cshtml");
+           
+           
+           }
+    </div>
+
+    <div id="@Html.ProtectID("retrieval")">
+       @{
+            
+           
+           
+           }
+    </div>
+
+    <div id="@Html.ProtectID("templates")">
+       @{
+            
+           
+           
+           }
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#@Html.ProtectID("mailer_settings_tab")').tabs();
+
+
+    });
+
+
+
+</script>

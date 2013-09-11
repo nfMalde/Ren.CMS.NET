@@ -1,0 +1,73 @@
+﻿@model Ren.CMS.Blog.Models.NewsCommentAnswerView
+@using Ren.CMS.Content
+@using Ren.CMS.Helpers.Content
+@{
+    
+    var Answers = Model.CommentAnswers; 
+    
+    
+    
+    }
+
+@if(Model.CommentAnswersCountTotal > 0){
+<div class="well well-small blog-answers pull-right span6">
+@foreach (nContent Answer in Answers)
+{
+         <div class="media" id="comment-@Answer.ID">
+             <div class="pull-left blog-comment-leftcol">            
+                 @if(Answer.CreatedByregistieredUser()){
+         <a href="/Profile/@HttpUtility.UrlEncode(Answer.CreatorName)" class="pull-left">
+            <small>@Answer.CreatorName</small> 
+
+             <img class="media-object blog-comment-avatar" data-src="holder.js/64x64">
+         </a>
+
+            }
+             else{
+      <small>@Answer.CreatorSpecialName  </small> 
+            <img class="media-object blog-comment-avatar" data-src="holder.js/64x64">
+            
+            }
+
+             </div>
+
+         <div class="media-body">
+
+
+
+
+             @Html.Raw(Answer.LongText)
+
+
+          <div class="blog-answer-line">
+
+              <span class="pull-left">
+
+                  <small>
+
+                      Am @Answer.CreationDate.ToString("dd.MM.yyyy") um @Answer.CreationDate.ToString("HH:mm") Uhr
+
+
+                  </small>
+
+              </span>
+
+              <a href="#" class="btn blog-comment-answer-inside pull-right" data-target="answer-@Model.MainCommentID" data-ref="@Answer.ID">Antworten</a>
+              
+          </div>
+
+         </div>
+
+     </div>
+}
+
+@if (Model.CommentAnswerCountOnPage < Model.CommentAnswersCountTotal)
+{
+              @Html.ActionLink("Alle Antworten anzeigen...", "Comments/" + Model.NewsEntry.ID, "News", routeValues: new { area = "" }, htmlAttributes:
+                      new { @class = "btn btn-link show-more-comments", data_eid = Model.NewsEntry.ID, data_ref = "comment-" + Answers.Last().ID }) 
+    
+}
+
+
+    </div>
+}

@@ -1,0 +1,38 @@
+﻿@using Ren.CMS.Helpers
+
+@{
+    
+    GlobalSettings GS = new GlobalSettings();
+
+    List<nSetting> smtps = GS.listSettings("SMTP", true);
+    
+    
+  
+    
+    
+    
+    
+    }
+
+
+@foreach (nSetting Setting in smtps)
+{
+     @Html.Label(Setting.Name, Setting.Label);
+    <br />
+    if (Setting.SettingType == nSettingType.SettingArray)
+    {
+
+        nSettingStore Store = new nSettingStore(Setting);
+
+        Html.ChosenBox<nSettingStoreItem>(Setting.Name, "Label", "Value", Store.getStore);
+    }
+    else
+    {
+        @Html.TextBox(Setting.Name, Setting.Value); 
+    
+    }
+  
+    
+
+
+}

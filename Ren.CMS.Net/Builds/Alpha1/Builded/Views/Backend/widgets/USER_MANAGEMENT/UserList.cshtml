@@ -1,0 +1,217 @@
+﻿@using Ren.CMS.CORE.Language.LanguageDefaults
+@using Ren.CMS.Helpers
+@using Ren.CMS.Models.FlexiGrid
+@using Ren.CMS.Models.Backend.Users;
+
+@{
+    
+    
+    //Getting User Groups
+
+    CreateUserFormDialog CreateUser = new CreateUserFormDialog();
+    EditUserFormDialog EditUser = new EditUserFormDialog();
+
+    Ren.CMS.Models.FormDialog.FormDialogSettings CreateUserSetup = CreateUser.FormDialogSetup(Html, Html.ProtectID("formDialogCreateUser").ToString());
+
+    Ren.CMS.Models.FormDialog.FormDialogSettings EditUserSetup = EditUser.FormDialogSetup(Html, Html.ProtectID("formDialogEditUser").ToString());
+    string ELEMENTID = CreateUserSetup.ElementID;
+    }
+
+ 
+    
+
+
+<script>
+    var customRenderers = {
+        password: function (dom, cfg) { $(dom).attr("disabled", "disabled"); return dom; },
+        send_mail: function (dom, cfg) { $(dom).attr("disabled", "disabled"); return dom; },
+        email : function (dom, cfg) {
+                          
+            $(dom).keyup(function () {
+
+
+                if (this.value) {
+                    if (this.value != "") {
+
+                        $('#@CreateUserSetup.Elements.Where(element => element.Name == "inform_user").First().ID').attr("disabled", null);
+                                       return;
+
+
+                                   }
+                               }
+                $('#@CreateUserSetup.Elements.Where(element => element.Name == "inform_user").First().ID').attr("disabled", "disabled");
+
+
+                           });
+
+            $(dom).change(function(){ $(this).keydown(); });
+            return dom;
+        },
+        GeneratePWD: function (dom, cfg) {
+            
+            $(dom).find("div :input").each(function() {
+                $(this).change(function () {
+                    
+
+                    var val = $(this).val();
+                    if (val == "true") {
+
+                        $('#@CreateUserSetup.Elements.Where(element => element.Name == "password").First().ID').attr("disabled", "disabled");
+                        $('#@CreateUserSetup.Elements.Where(element => element.Name == "password_confirm").First().ID').attr("disabled", "disabled");
+
+
+                    }
+                    else {
+
+
+              
+                        $('#@CreateUserSetup.Elements.Where(element => element.Name == "password").First().ID').attr("disabled", null);
+                        $('#@CreateUserSetup.Elements.Where(element => element.Name == "password_confirm").First().ID').attr("disabled", null);
+
+
+                    }
+                });
+            });
+            return dom;
+        }}; 
+
+
+    var grid@(Html.ProtectJSFunc("addUser")) = function () {
+
+
+        $('#@ELEMENTID').dialog("open");
+
+
+
+
+    };
+    
+
+
+    var customRenderersEditMode = {
+        password: function (dom, cfg) { $(dom).attr("disabled", "disabled"); return dom; },
+        send_mail: function (dom, cfg) { $(dom).attr("disabled", "disabled"); return dom; },
+        email: function (dom, cfg) {
+
+            $(dom).keyup(function () {
+
+
+                if (this.value) {
+                    if (this.value != "") {
+
+                        $('#@EditUserSetup.Elements.Where(element => element.Name == "inform_user").First().ID').attr("disabled", null);
+                        return;
+
+
+                    }
+                }
+                $('#@EditUserSetup.Elements.Where(element => element.Name == "inform_user").First().ID').attr("disabled", "disabled");
+
+
+            });
+
+            $(dom).change(function () { $(this).keydown(); });
+            return dom;
+        },
+     GeneratePWD: function (dom, cfg) {
+
+         $(dom).find("div :input").each(function () {
+             $(this).change(function () {
+
+
+                 var val = $(this).val();
+                 if (val == "true") {
+
+                     $('#@EditUserSetup.Elements.Where(element => element.Name == "password").First().ID').attr("disabled", "disabled");
+                        $('#@EditUserSetup.Elements.Where(element => element.Name == "password_confirm").First().ID').attr("disabled", "disabled");
+
+
+                    }
+                    else {
+
+
+
+                        $('#@EditUserSetup.Elements.Where(element => element.Name == "password").First().ID').attr("disabled", null);
+                        $('#@EditUserSetup.Elements.Where(element => element.Name == "password_confirm").First().ID').attr("disabled", null);
+
+
+                    }
+                });
+            });
+            return dom;
+        }
+ };
+
+
+    var grid@(Html.ProtectJSFunc("addUser")) = function () {
+
+
+        $('#@ELEMENTID').dialog("open");
+
+
+
+
+    };
+
+</script>
+@Html.FormDialog(CreateUserSetup)
+@Html.FormDialog(EditUserSetup)
+
+@{
+    
+  
+
+    FlexiSettings UsersGrid = new FlexiSettings();
+    UsersGrid.Url = "/BackendHandler/Users/UserList";
+    UsersGrid.ElementID = Html.ProtectID("user_list").ToString();
+    UsersGrid.Width = "100%";
+    UsersGrid.Height = "auto";
+    UsersGrid.ColumnModel.Add(new FlexiColModel(Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_PKID).ToString(), "PKID", 220, 35));
+    UsersGrid.ColumnModel.Add(new FlexiColModel(Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_UNAME).ToString(), "UNAME", 110, 35));
+    UsersGrid.ColumnModel.Add(new FlexiColModel(Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_PGROUP).ToString(), "PGROUP", 90, 35));
+    UsersGrid.ColumnModel.Add(new FlexiColModel(Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_LOCKED).ToString(), "LOCKED", 70, 35));
+    UsersGrid.Title = Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_GRID_TITLE).ToString();
+    UsersGrid.UsePager = true;
+    UsersGrid.UseRP = true;
+    UsersGrid.SingleSelect = true;
+    UsersGrid.ShowTableToggleBtn = false;
+    UsersGrid.Buttons.Add(new FlexiButtons(Html.LanguageLine(LanguageDefaultsManageUsers.LANG_M_USERS_GRID_BTN_ADD).ToString(), "grid" + Html.ProtectJSFunc("addUser")));
+    
+    }
+
+ <div>
+
+      @Html.GenerateFlexiGrid(UsersGrid)
+
+ </div>
+
+<script type="text/javascript">
+
+
+
+
+    $(function () {
+
+        $('#@Html.ProtectID("user_list")').flexOptions({
+            onDoubleClick: function (row) {
+                row = $(row).attr("id");
+                row = row.substring(3);
+
+                $.post("/BackendHandler/Users/GetUserData", { PKID: row }, function (data)
+                {
+                    if (data.success == true) {
+                        for (key in data.UserData)
+                            $('#@EditUserSetup.ElementID').formDialog("setValue", key, data.UserData[key]);
+                        $('#@EditUserSetup.ElementID').dialog("open");
+                        return;
+                    }
+                    console.log(data);
+
+                }, 'json');
+
+
+            }
+       
+        });
+    });
+</script>
