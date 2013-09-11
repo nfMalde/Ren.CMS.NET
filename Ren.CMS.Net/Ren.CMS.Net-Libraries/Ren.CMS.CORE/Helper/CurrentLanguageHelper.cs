@@ -8,8 +8,8 @@
     using System.Web;
     using System.Web.Mvc;
 
-    using Ren.CMS.CORE.nhibernate.Base;
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Domain;
 
     public static class CurrentLanguageHelper
     {

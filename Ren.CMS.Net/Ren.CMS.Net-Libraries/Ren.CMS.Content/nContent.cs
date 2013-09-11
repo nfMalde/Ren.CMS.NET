@@ -8,7 +8,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Domain;
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
 
@@ -361,7 +361,7 @@
 
         public List<nAttachment> Attachments(string attachmentType = "ALL", string attachmentArgument = "ALL")
         {
-            Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository Repo = new CORE.nhibernate.Repositories.ContentAttachmentRepository();
+            Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Persistence.Repositories.ContentAttachmentRepository();
             var list = (attachmentType != "ALL" && attachmentArgument != "ALL" ?
                 Repo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.AttachmentType == attachmentType && e.AttachmentArgument == attachmentArgument && e.Nid == this.ID)) :
                 (attachmentType == "ALL" && attachmentArgument != "ALL" ?
@@ -451,9 +451,9 @@
 
         public void RegisterNewAttachment(string attachmentType, string fileName, string filePath, string thumpNail = "", string AttachmentArgument = "", string AttachmentTitle = "")
         {
-            Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository Repo = new CORE.nhibernate.Repositories.ContentAttachmentRepository();
+            Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Persistence.Repositories.ContentAttachmentRepository();
 
-            Ren.CMS.CORE.nhibernate.Domain.ContentAttachment Model = new CORE.nhibernate.Domain.ContentAttachment();
+            Ren.CMS.Persistence.Domain.ContentAttachment Model = new Persistence.Domain.ContentAttachment();
             Model.Nid = this.ID;
             Model.ATitle = AttachmentTitle;
             Model.AttachmentArgument = AttachmentArgument;

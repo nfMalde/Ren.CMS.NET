@@ -1,4 +1,4 @@
-﻿namespace Ren.CMS.CORE.nhibernate.Base
+﻿namespace Ren.CMS.Persistence.Base
 {
     using System;
     using System.Collections.Generic;

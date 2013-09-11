@@ -20,13 +20,13 @@
     @{
         string langcode = Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage;
  
-        Ren.CMS.CORE.nhibernate.Base.BaseRepository<Ren.CMS.CORE.nhibernate.Domain.tbLanguage> L = new Ren.CMS.CORE.nhibernate.Base.BaseRepository<Ren.CMS.CORE.nhibernate.Domain.tbLanguage>();
+        Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage> L = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage>();
        
     
        
         
 
-        var ls = L.GetMany(NHibernate.Criterion.Expression.Where<Ren.CMS.CORE.nhibernate.Domain.tbLanguage>(e => e.Code== langcode), NHibernate.Criterion.Projections.Property<Ren.CMS.CORE.nhibernate.Domain.tbLanguage>(e => e.Package));
+        var ls = L.GetMany(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.tbLanguage>(e => e.Code== langcode), NHibernate.Criterion.Projections.Property<Ren.CMS.Persistence.Domain.tbLanguage>(e => e.Package));
 
         var lsl = ls.ToList();
         Dictionary<string, Dictionary<string, string>> Holder = new Dictionary<string, Dictionary<string, string>>();

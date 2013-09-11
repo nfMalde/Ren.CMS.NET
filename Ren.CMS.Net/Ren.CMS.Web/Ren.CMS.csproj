@@ -43,6 +43,7 @@
     <PrecompileBeforePublish>false</PrecompileBeforePublish>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DesktopBuildPackageLocation>..\Builds\Alpha1\Pkg\Ren.CMS.zip</DesktopBuildPackageLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,7 +58,8 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="DirectShowLib-2005">
+    <Reference Include="DirectShowLib-2005, Version=2.1.0.0, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ExternDLLs\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -251,6 +253,8 @@
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Properties\PublishProfiles\Package.pubxml" />
+    <None Include="Properties\PublishProfiles\Release.pubxml" />
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -548,7 +552,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Compile Include="Models\FileManagementModel.cs" />
-    <None Include="Properties\PublishProfiles\ToBeta.pubxml" />
     <Content Include="Global.asax" />
     <Content Include="HtmlPage1.html" />
     <Content Include="hibernate.cfg.xml">
@@ -1016,8 +1019,6 @@
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <None Include="Properties\PublishProfiles\Profil1.pubxml" />
-    <None Include="Properties\PublishProfiles\Profil2.pubxml" />
     <Content Include="Views\Backend\_Layout.cshtml" />
     <Content Include="Views\Backend\OS.cshtml" />
     <Content Include="Views\Backend\_Shurtcut.cshtml" />

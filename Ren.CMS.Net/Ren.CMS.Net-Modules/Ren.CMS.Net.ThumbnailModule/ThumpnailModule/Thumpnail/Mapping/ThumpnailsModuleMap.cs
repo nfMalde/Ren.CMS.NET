@@ -9,11 +9,11 @@ namespace ThumpnailModule.Thumpnail.Mapping
     using NHibernate.Mapping.ByCode.Conformist;
 
     using Ren.CMS.CORE.Config;
-    using Ren.CMS.CORE.nhibernate;
+    using Ren.CMS.Persistence;
 
     using ThumpnailModule.Thumpnail.Domain;
 
-    [Ren.CMS.CORE.nhibernate.Base.PersistenceMapping]
+    [Ren.CMS.Persistence.Base.PersistenceMapping]
     public class ThumpnailsModuleMap : ClassMapping<TBThumpnailsModule>
     {
         #region Constructors

@@ -7,7 +7,7 @@
 @{
     //Prerender Texts
 
-    var langcodes = new Ren.CMS.CORE.nhibernate.Base.BaseRepository<Ren.CMS.CORE.nhibernate.Domain.LangCode>().GetMany().ToList();
+    var langcodes = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode>().GetMany().ToList();
     ViewData["LangCodes"] = langcodes;
     var list = Model.Texts.ToList();
     foreach(var code in langcodes)

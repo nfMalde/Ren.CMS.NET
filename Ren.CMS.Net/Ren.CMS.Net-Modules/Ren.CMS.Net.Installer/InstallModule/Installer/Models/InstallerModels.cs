@@ -5,6 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Xml;
+using Ren.CMS.Persistence;
+using NHibernate.Tool.hbm2ddl;
+
+
 
 namespace InstallModule.Installer.Models
 {
@@ -128,9 +132,12 @@ namespace InstallModule.Installer.Models
 
 
         public void SetupTables()
-        { 
-        
-        
+        {
+            var config = NHibernateHelper.GetConfiguration();
+
+
+            new SchemaExport(config).Execute(true, true, false);
+          
         
         }
 

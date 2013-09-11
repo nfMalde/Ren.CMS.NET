@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // übernehmen, indem Sie "*" eingeben:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: Ren.CMS.CORE.nhibernate.Base.PersistenceAssembly]
+[assembly: Ren.CMS.Persistence.Base.PersistenceAssembly]

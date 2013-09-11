@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Domain;
 
     public class ContentText
     {

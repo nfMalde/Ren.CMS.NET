@@ -1,4 +1,4 @@
-namespace Ren.CMS.CORE.nhibernate.Mapping
+namespace Ren.CMS.Persistence.Mapping
 {
     using System;
     using System.Collections.Generic;
@@ -8,9 +8,9 @@ namespace Ren.CMS.CORE.nhibernate.Mapping
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
 
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Domain;
 
-    [Ren.CMS.CORE.nhibernate.Base.PersistenceMapping]
+    [Ren.CMS.Persistence.Base.PersistenceMapping]
     public class BackendUserDesktopMap : ClassMapping<BackendUserDesktop>
     {
         #region Constructors

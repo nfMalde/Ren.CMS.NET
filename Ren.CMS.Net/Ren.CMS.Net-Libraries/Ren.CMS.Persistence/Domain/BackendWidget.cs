@@ -1,4 +1,4 @@
-namespace Ren.CMS.CORE.nhibernate.Domain
+namespace Ren.CMS.Persistence.Domain
 {
     using System;
     using System.Collections.Generic;

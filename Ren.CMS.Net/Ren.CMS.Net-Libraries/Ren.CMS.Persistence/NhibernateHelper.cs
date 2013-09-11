@@ -1,4 +1,4 @@
-﻿namespace Ren.CMS.CORE.nhibernate
+﻿namespace Ren.CMS.Persistence
 {
     using System;
     using System.Collections.Generic;
@@ -11,8 +11,8 @@
     using NHibernate.Cfg.MappingSchema;
     using NHibernate.Mapping.ByCode;
 
-    using Ren.CMS.CORE.nhibernate.Domain;
-    using Ren.CMS.CORE.nhibernate.Mapping;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Mapping;
 
     public class NHibernateHelper
     {
@@ -24,7 +24,7 @@
         private static List<Type> mappingHolder = new List<Type>();
         private static ISession _currentSession = null;
         private static ISessionFactory _sessionFactory;
-
+   
         #endregion Fields
 
         #region Properties
@@ -42,14 +42,14 @@
                     {
                         foreach (object attribute in assembly.GetCustomAttributes(true))
                         {
-                            if (attribute is Ren.CMS.CORE.nhibernate.Base.PersistenceAssembly)
+                            if (attribute is Ren.CMS.Persistence.Base.PersistenceAssembly)
                                 configuration.AddAssembly(assembly);
                             try
                             {
                                 //Adding the mappings:
                                 foreach (Type t in assembly.GetTypes())
                                 {
-                                    if (mappingHolder.Where(x => x == t).Count() == 0 && t.GetCustomAttributes().Where(e => e is Ren.CMS.CORE.nhibernate.Base.PersistenceMapping).Count() > 0)
+                                    if (mappingHolder.Where(x => x == t).Count() == 0 && t.GetCustomAttributes().Where(e => e is Ren.CMS.Persistence.Base.PersistenceMapping).Count() > 0)
                                     {
                                         Mapper.AddMapping(t);
 
@@ -88,13 +88,22 @@
             return SessionFactory.OpenSession();
         }
 
+        public static Configuration GetConfiguration()
+        {
+
+
+            return configuration;
+        
+        
+        }
+
         private static void ConfigureAssemblies()
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (object attribute in assembly.GetCustomAttributes(true))
                 {
-                    if (attribute is Ren.CMS.CORE.nhibernate.Base.PersistenceAssembly)
+                    if (attribute is Ren.CMS.Persistence.Base.PersistenceAssembly)
                         configuration.AddAssembly(assembly);
                 }
             }

@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Web;
 
-    using Ren.CMS.CORE.nhibernate;
-    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.Persistence;
+    using Ren.CMS.Persistence.Base;
 
     using ThumpnailModule.Thumpnail.Domain;
     using ThumpnailModule.Thumpnail.Mapping;

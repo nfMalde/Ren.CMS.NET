@@ -8,10 +8,10 @@
     using NHibernate.Mapping.ByCode;
     using NHibernate.Mapping.ByCode.Conformist;
 
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Domain;
     using Ren.CMS.Persistence.Domain;
 
-    [Ren.CMS.CORE.nhibernate.Base.PersistenceMapping]
+    [Ren.CMS.Persistence.Base.PersistenceMapping]
     public class FilemanagementCrossBrowsersMap : ClassMapping<FilemanagementCrossBrowsers>
     {
         #region Constructors

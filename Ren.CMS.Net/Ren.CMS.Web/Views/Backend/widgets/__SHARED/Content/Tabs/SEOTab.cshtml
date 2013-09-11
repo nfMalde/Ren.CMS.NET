@@ -4,7 +4,7 @@
 
 @{
     
-    var langcodes = (List<Ren.CMS.CORE.nhibernate.Domain.LangCode>)ViewData["LangCodes"];
+    var langcodes = (List<Ren.CMS.Persistence.Domain.LangCode>)ViewData["LangCodes"];
     string active = Ren.CMS.CORE.Helper.CurrentLanguageHelper.DefaultLanguage;
 
     if (!langcodes.Any(e => e.Code == active) && langcodes.Count > 0)

@@ -11,11 +11,11 @@
     using NHibernate.Criterion;
 
     using Ren.CMS.CORE.FileManagement;
-    using Ren.CMS.CORE.nhibernate;
-    using Ren.CMS.CORE.nhibernate.Base;
-    using Ren.CMS.CORE.nhibernate.Domain;
-    using Ren.CMS.CORE.nhibernate.Mapping;
-    using Ren.CMS.CORE.nhibernate.Repositories;
+    using Ren.CMS.Persistence;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Mapping;
+    using Ren.CMS.Persistence.Repositories;
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
     using Ren.CMS.Persistence.Domain;

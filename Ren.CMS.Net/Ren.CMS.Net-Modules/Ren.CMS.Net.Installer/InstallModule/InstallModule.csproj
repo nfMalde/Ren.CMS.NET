@@ -39,6 +39,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DirectShowLib-2005">
+      <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\DirectShowLib-2005.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\bin\MvcContrib.dll</HintPath>
     </Reference>
@@ -50,6 +57,10 @@
     </Reference>
     <Reference Include="MvcContrib.WatiN">
       <HintPath>..\bin\MvcContrib.WatiN.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="Microsoft.CSharp" />
@@ -339,6 +350,10 @@
     <ProjectReference Include="..\..\..\Ren.CMS.Net-Libraries\Ren.CMS.Pagination\Ren.CMS.Pagination.csproj">
       <Project>{20515862-4c1b-4b88-98c4-1391b4ff1c36}</Project>
       <Name>Ren.CMS.Pagination</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Ren.CMS.Net-Libraries\Ren.CMS.Persistence\Ren.CMS.Persistence.csproj">
+      <Project>{f2f2df55-784e-4fff-b71a-f1b779b9e5ed}</Project>
+      <Name>Ren.CMS.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

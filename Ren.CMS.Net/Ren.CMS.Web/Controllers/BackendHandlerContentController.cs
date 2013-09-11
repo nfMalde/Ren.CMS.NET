@@ -14,9 +14,9 @@
     using Ren.CMS.CORE.FileManagement;
     using Ren.CMS.CORE.Language;
     using Ren.CMS.CORE.Language.LanguageDefaults;
-    using Ren.CMS.CORE.nhibernate.Base;
-    using Ren.CMS.CORE.nhibernate.Domain;
-    using Ren.CMS.CORE.nhibernate.Repositories;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Repositories;
     using Ren.CMS.CORE.Permissions;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.CORE.SqlHelper;

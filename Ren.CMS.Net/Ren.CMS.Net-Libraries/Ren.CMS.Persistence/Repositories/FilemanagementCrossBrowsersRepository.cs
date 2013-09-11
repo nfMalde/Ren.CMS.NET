@@ -9,8 +9,8 @@
 
     using NHibernate;
 
-    using Ren.CMS.CORE.nhibernate;
-    using Ren.CMS.CORE.nhibernate.Base;
+    using Ren.CMS.Persistence;
+    using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
 
     public class FilemanagementCrossBrowsersRepository : BaseRepository<FilemanagementCrossBrowsers>

@@ -1,4 +1,4 @@
-﻿namespace Ren.CMS.CORE.nhibernate.Repositories
+﻿namespace Ren.CMS.Persistence.Repositories
 {
     using System;
     using System.Collections.Generic;
@@ -12,9 +12,9 @@
     using NHibernate.Criterion;
     using NHibernate.Tool.hbm2ddl;
 
-    using Ren.CMS.CORE.nhibernate;
-    using Ren.CMS.CORE.nhibernate.Domain;
-    using Ren.CMS.CORE.nhibernate.Mapping;
+    using Ren.CMS.Persistence;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Mapping;
     using Ren.CMS.Persistence.Domain;
 
     public class ContentRepository : Base.BaseRepository<TContent>

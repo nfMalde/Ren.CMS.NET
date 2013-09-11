@@ -11,8 +11,8 @@ namespace Ren.CMS
     using Ren.CMS.CORE.CustomWebConfig.Accessors;
     using Ren.CMS.CORE.Helper;
     using Ren.CMS.CORE.Helper.RoutingHelper;
-    using Ren.CMS.CORE.nhibernate.Base;
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Domain;
     using Ren.CMS.ViewEngine;
 
     // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7

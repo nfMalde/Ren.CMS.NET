@@ -13,9 +13,9 @@
 
     using NHibernate;
 
-    using Ren.CMS.CORE.nhibernate;
-    using Ren.CMS.CORE.nhibernate.Base;
-    using Ren.CMS.CORE.nhibernate.Domain;
+    using Ren.CMS.Persistence;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Domain;
     using Ren.CMS.Persistence.Domain;
     using Ren.CMS.Persistence.Repositories;
 
@@ -787,9 +787,9 @@
 
         public bool EditFile(nFile f)
         {
-            BaseRepository<Ren.CMS.CORE.nhibernate.Domain.File> repo = new BaseRepository<nhibernate.Domain.File>();
-            Ren.CMS.CORE.nhibernate.Domain.File fx = repo.GetOne(
-                expression: NHibernate.Criterion.Expression.Where<Ren.CMS.CORE.nhibernate.Domain.File>(fo => fo.Id == f.id));
+            BaseRepository<Ren.CMS.Persistence.Domain.File> repo = new BaseRepository<Persistence.Domain.File>();
+            Ren.CMS.Persistence.Domain.File fx = repo.GetOne(
+                expression: NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(fo => fo.Id == f.id));
 
             if (fx == null) return false;
 
@@ -832,9 +832,9 @@
             int isActive = 1;
             if (!fileIsActive) isActive = 0;
 
-            BaseRepository<nhibernate.Domain.File> FileRepo = new BaseRepository<nhibernate.Domain.File>();
+            BaseRepository<Persistence.Domain.File> FileRepo = new BaseRepository<Persistence.Domain.File>();
 
-            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name)) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<nhibernate.Domain.File>(e => e.AliasName == name && e.Active == 1)));
+            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.AliasName == name)) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.AliasName == name && e.Active == 1)));
 
             if (fR != null)
             {
@@ -925,7 +925,7 @@
 
         public string getVideoThumpnailRawImage(Guid attachID, string ffmegPath)
         {
-            Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository Repo = new Ren.CMS.CORE.nhibernate.Repositories.ContentAttachmentRepository();
+            Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Ren.CMS.Persistence.Repositories.ContentAttachmentRepository();
 
             var attachment = Repo.GetByPKid(attachID);
 
