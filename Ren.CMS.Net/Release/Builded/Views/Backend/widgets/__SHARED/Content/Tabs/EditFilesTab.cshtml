@@ -1,0 +1,321 @@
+﻿ 
+@model Ren.CMS.Models.Core.nContentPostModel
+<fieldset>
+    <legend>Dateien</legend>
+
+
+
+<div id="edit_attachment">
+     <fieldset>
+         <legend>Datei anpassen</legend>
+         <input type="hidden" id="AID" />
+         <table>
+
+             <tr>
+                 <td><b>Datei Titel:</b></td>
+                 <td><input type="text" id="fileTitel" /></td>
+
+             </tr>
+             <tr>
+                 <td><b>Datei Rolle:</b></td>
+                 <td>
+                     <select id="fileRole">
+
+
+                     </select>
+
+                 </td>
+
+             </tr>
+             <tr>
+                <td><b>Datei Informationen/Copyrights/Quellen</b></td>
+                 <td><textarea id="remark" name="remark" style="width:100%; height:100%;"></textarea></td>
+             </tr>
+         </table>
+     </fieldset>
+
+
+     </div>
+        <div id="delete_attachment">
+
+            Sind Sie sicher, dass Sie diese Datei löschen möchten?
+
+            <input type="hidden" id="DELID" />
+
+        </div>
+<div style="width:100%">
+
+    <script>
+        function deleteAttachment(attachID)
+        {
+        
+            $('#DELID').val(attachID);
+
+            $('#delete_attachment').dialog("open");
+        
+        
+        }
+
+        function editAttachment(attachID){
+            
+            $.post('/BackendHandler/Content/GetAttachmentInfo', {id:attachID}, function(data){
+              
+                $('#AID').val(attachID);
+                $('#fileTitel').val(data.title);
+                $('#remark').val(data.remark);
+                $('#fileRole option').each(function(){
+             
+                
+                    $(this).remove();
+
+
+                
+                
+                });
+
+
+                for(x = 0; x<data.roles.length; x++)
+                {
+                    if(data.roles[x].value == data.role)
+                
+                    $('#fileRole').append("<option selected=\"selected\" value=\""+ data.roles[x].value +"\">"+ data.roles[x].text +"</option>");
+                    else
+                        $('#fileRole').append("<option  value=\""+ data.roles[x].value +"\">"+ data.roles[x].text +"</option>");
+                   
+                
+                }
+
+                $('#edit_attachment').dialog("open");
+            
+            }, 'json');
+        
+        
+        
+        }
+        $(document).ready(function(){
+        
+            Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
+        
+        
+        });
+
+        $(function(){
+        
+        
+            $('#delete_attachment').dialog({
+                autoOpen: false,
+                width:400,
+                height:250,
+                modal: true,
+                buttons:
+                    {
+                        "Ja": function(){
+                            $.post("/BackendHandler/Content/DeleteAttachment", {id: $('#DELID').val()}, function(){
+                            
+
+                                $('#edit-content-default-attachments').flexReload(); 
+                                Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
+                                $('#delete_attachment').dialog("close");
+                                
+                            
+                            
+                            });
+                        
+                        },
+                        "Nein": function(){
+                            $('#delete_attachment').dialog("close");
+                        
+                        }
+
+                    
+                    
+                    }
+            });
+                
+        
+        });
+
+        $(function(){
+        
+            $('#edit_attachment').dialog({
+                autoOpen: false,
+                width:650,
+                modal: true,
+                title: 'Anpassen',
+                height:370,
+                buttons:{
+                
+                    'Speichern': function(){
+                    
+                        var parameter = {
+                        
+                            id: $('#AID').val(),
+
+                            title: $('#fileTitel').val(),
+
+                            role: $('#fileRole option:selected').val(),
+
+                            remark: $('#remark').val()
+                        
+                        
+                        };
+                    
+                        $.post("/BackendHandler/Content/EditAttachment", parameter, function(data){
+                            $('#edit-content-default-attachments').flexReload(); 
+                            Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
+                            $('#edit_attachment').dialog("close");
+                            
+                        
+                        });
+                    },
+
+                    'Abbrechen': function(){  $('#edit_attachment').dialog("close");}
+
+                
+                }
+            
+            
+            
+            
+            });
+        
+        
+        });
+         
+        
+        $(function(){
+            $('#file-upload-form').dialog({ 
+
+                autoOpen: false,
+                width: 500,
+                height: 200,
+                modal: true,
+                buttons: {
+                    "Fertig" : function() { 
+                        
+                        $('#edit-content-default-attachments').flexReload();
+                        $('#progress .bar').css(
+                       'width',
+                       0 + '%'
+                   );
+                        $('#files').html("");
+
+                        $(this).dialog("close"); 
+                    
+                       
+                    
+                    }
+                }
+
+            });
+
+            $('#upload-attachments').button();
+            $('#upload-attachments').click(function(){
+            
+                $('#file-upload-form').dialog("open");
+            
+            });
+            //Fileupload Init
+ 
+            // Change this to the location of your server-side upload handler:
+          
+            $('#Filedata').fileupload({
+                url: "/BackendHandler/Content/AddAttachment",
+                formData:[
+                
+                { 
+                    name: 'id',
+                    value: '@Model.ID'
+                }
+                ],
+                dataType: 'json',
+                done: function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        $('<p/>').text(file.name).append('<span class="glyphicon glyphicon-ok"></span>')
+                            .appendTo('#files').addClass("text-success");
+                    });
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+       
+        });
+    </script>
+          
+    <div id="file-upload-form">
+
+            <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="icon-plus icon-white"></i>
+        <span>Select files...</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="Filedata" type="file" name="Filedata[]" multiple>
+    </span>
+    <br>
+    <br>
+    <!-- The global progress bar -->
+    <div id="progress" class="progress progress-success progress-striped">
+        <div class="bar"></div>
+    </div>
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+
+
+    </div>
+                
+       <button id="upload-attachments">Dateien hochladen</button>
+    
+    <table style="display:none" id="edit-content-default-attachments">
+                
+                
+            </table>
+
+  
+
+                </div>
+            <script>
+
+                $(function () {
+
+                    $('#edit-content-default-attachments').flexigrid({
+
+                        url: "/BackendHandler/Content/GetAttachments/"+ @Model.ID,
+                        dataType: "json",
+                        width:'auto',
+                        colModel: [
+                                    { display: 'Dateiname', name: 'Filename', width: 150, sortable: true, align: 'left' },
+                                    { display: 'Titel', name: 'title', width: 150, sortable: true, align: 'left' },
+                                    { display: 'Rolle', name: 'Role', width: 100, sortable: true, align: 'left' },
+                                    { display: 'Dateityp', name: 'Type', width: 100, sortable: true, align: 'left' },
+
+                                    { display: 'Optionen', name: 'Options', width: 250, sortable: true, align: 'left' }
+                        ],
+                        useRP: false,
+                        onSuccess: function(){    
+                            Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
+                          
+                        
+                        }
+
+                          
+                              
+                               
+                           
+                           
+                    
+
+ 
+
+                    });
+
+
+                });
+
+
+            </script>   </fieldset>

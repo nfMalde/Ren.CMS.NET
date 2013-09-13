@@ -1,0 +1,185 @@
+﻿@{
+    Layout = null;
+}
+@model Ren.CMS.Models.Backend.Layout.WidgetReturn
+<style type="text/css">
+    #widget-@Model.widgetName
+    {
+        display:none;
+        width: @(Model.definedWidth+"px");
+        height: @(Model.definedHeight+"px");
+    }
+    .ui-icon-gripsmall-diagonal-se
+    {
+        float:right !important;
+        position:relative !important;
+       
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var el = "#widget-@Model.widgetName";
+        $(el).removeClass("backend-widget-inactive");
+
+        $('.backend-widget-active').each(function () {
+
+            $(this).removeClass("backend-widget-active");
+
+            $(this).addClass("backend-widget-inactive");
+
+
+            console.log("Window @Model.widgetName is now active");
+
+        });
+
+        $(el).addClass('backend-widget-active');
+
+
+
+    });
+
+    $(function () {
+        
+        $("#widget-@Model.widgetName").click(function () {
+
+
+            $(this).removeClass("backend-widget-inactive");
+
+            $('.backend-widget-active').each(function () {
+
+                $(this).removeClass("backend-widget-active");
+
+                $(this).addClass("backend-widget-inactive");
+
+
+
+
+            });
+
+            $(this).addClass('backend-widget-active');
+
+        });
+
+        $("#widget-@Model.widgetName").draggable({
+            handle: 'div.ui-widget-header'
+
+        });
+
+        $("#widget-@Model.widgetName").find("div.ui-widget-header").dblclick(function () {
+
+            var h = ((function () {
+
+                var d = $('#frame-desktop-board').innerHeight();
+                var s = $('#frame-desktop-menubar').innerHeight() * 3;
+                
+                return (d - s) - 6;
+
+
+            })());
+ 
+            $('#widget-@Model.widgetName').animate({
+                width: "100%",
+                height: h,
+                left: "0px",
+                top: "0px",
+                "margin" : "0px"
+
+            });
+        });
+
+        $("#widget-@Model.widgetName").draggable({
+            handle: 'div.ui-widget-header'
+
+        });
+        $("#widget-@Model.widgetName").resizable({
+            animate: true,
+            minWidth: 282,
+            minHeight: 100
+        });
+
+        $('#widget-@Model.widgetName-close').click(function () {
+
+
+            new widgetAction("widget:@Model.widgetName:close");
+
+
+
+        });
+
+        $('#widget-@Model.widgetName-hide').click(function () {
+
+
+            new widgetAction("widget:@Model.widgetName:hide");
+
+
+
+             });
+    });
+
+
+</script>
+@{
+    
+    string whData = Model.widgetHeaderData;
+
+    
+    
+    }
+
+
+<textarea style="display:none" id="widget-header-data-@Model.widgetName">
+
+    @whData
+
+
+</textarea>
+<div id="widget-@Model.widgetName" class="backend-widget">
+     
+ <div id="widget-@Model.widgetName-header" class="ui-widget backend-widget-header">
+
+
+    <div  class="headerPadding ui-widget-header ui-accordion-header ui-helper-reset ui-helper-clearfix ui-state-default ui-corner-top ui-accordion-icons">
+     
+        
+   <div class="headerTitleWidget">     
+  <div style="float:left; width:16px; height:16px">
+
+
+      <img class="widgetIcon" src="@Model.Icon" />
+
+  </div>
+       
+  <div class="wgtTitle" style="margin-left:10px; float: left">@Model.widgetTitle</div>
+  
+  <div style="float: right">
+      <span id="widget-@Model.widgetName-hide" title="Minimieren" class="ui-icon ui-icon-squaresmall-minus" style="display:inline-block; cursor:pointer"></span>
+      <span id="widget-@Model.widgetName-close" title="Schließen" class="ui-icon ui-icon-squaresmall-close" style="display:inline-block; cursor:pointer"></span>
+
+
+
+  </div>
+  
+  
+       </div>
+    </div>  
+ 
+    </div>   
+    <div class="ui-widget backend-widget-content" style="height:100%">
+    <div style="height:100%; overflow-y:auto; overflow-x:auto" class="backend-widget-content ui-widget-content ui-corner-bottom ui-helper-clearfix contentPadding">
+
+        @{
+            string widgetFolderName = Model.widgetName.Replace(' ', '_').Replace(";", "").Replace("?", "");
+            Ren.CMS.Models.Backend.Layout.WidgetReturn WR1 = new Ren.CMS.Models.Backend.Layout.WidgetReturn();
+            WR1.widgetTitle = Model.widgetTitle;
+
+            Html.RenderPartial("~/Views/Backend/widgets/" + widgetFolderName + "/" + Model.widgetPartialView + ".cshtml");
+            
+            
+            }
+
+    </div>
+    </div>
+</div>
+
+
+

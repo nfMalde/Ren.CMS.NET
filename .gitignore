@@ -48,7 +48,7 @@ local.properties
 # Build results
 
 [Dd]ebug/
-[Rr]elease/
+Ren.CMS.Net/Ren.CMS.*/[Rr]elease/
 x64/
 build/
 [Bb]in/

@@ -1,0 +1,14 @@
+﻿ @model Ren.CMS.Models.Core.nContentIncludedModel
+ 
+ 
+ <div class="listentry_bottom">
+ <p>
+ @Model.Entry.LongText
+ </p>
+
+
+<p style="font-size:9t; color:#aaa">
+Tags:&nbsp;<i>@Html.Raw(ViewData["readyTags"].ToString())</i>
+</p>
+
+ </div>

@@ -1,0 +1,92 @@
+﻿ 
+@{
+  
+    SqlHelper SQL = new SqlHelper();
+    SQL.SysConnect();
+    Ren.CMS.CORE.ThisApplication.ThisApplication TA = new Ren.CMS.CORE.ThisApplication.ThisApplication();
+
+    string prefix = TA.getSqlPrefix;
+
+    string query = "SELECT * FROM "+ prefix +"Backend_Desktop_Icons";
+
+
+    System.Data.SqlClient.SqlDataReader Apps = SQL.SysReader(query);
+
+
+
+    Language Lang = new Language("__USER__", "DESKTOP_ICONS");
+       
+    
+}
+
+<fieldset style="width: auto; height:90%">
+    <legend>Anwendungen</legend>
+
+    <div style="width: 100%; height: 90%; overflow-y: scroll; background:#1f1f1f; padding:5px; border: solid 1px #AAA">
+
+        @if (Apps.HasRows)
+        {
+            while (Apps.Read())
+            { 
+               int id = (int)Apps["id"];
+                
+                
+                <script>
+
+                    $(function () {
+                        $('#app-@id').dblclick(function () {
+
+                            new widgetAction('@((string)Apps["action"])');
+
+
+                        });
+                        $('#app-@id').draggable(
+                            {   
+                                helper: 'clone',
+                                drag: function (e, u)
+                                {
+
+                                    $(this).css("z-index", "10000000");
+
+                                }
+
+
+                            }
+
+
+
+                            );
+
+                    });
+
+                </script>
+            <div class="ShortCut2" style="float:left" id="app-@id">
+                <div class="ShortCutIcon" style="text-align:center">
+
+                    <img src="@("/BackendFileHandler/Icons/" + (string)Apps["Icon"])" />
+
+                </div>
+                <div class="ShortCutText">
+
+                    <span>@Lang.getLine((string)Apps["langLine"])</span>
+                </div>
+
+                
+            </div> 
+            
+                
+            
+            
+            }
+
+
+        }
+
+    </div>
+    <p>Ziehen Sie eine Anwendung auf den Desktop um eine Verknüpfung zu erstellen.</p>
+</fieldset>
+@{
+    Apps.Close();
+    SQL.SysDisconnect();
+    
+    }

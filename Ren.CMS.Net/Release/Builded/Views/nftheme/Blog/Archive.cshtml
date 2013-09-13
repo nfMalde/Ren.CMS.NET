@@ -1,0 +1,47 @@
+﻿@using Ren.CMS.Helpers
+@model Ren.CMS.Blog.Models.NewsArchive
+
+@{
+    Html.AddScriptFile(Url.Content("~/Scripts/nftheme/shared/blog/Archive.js"));
+    
+    
+    }
+
+
+ <div class="">
+ <div class="entrylist">
+ 
+     @foreach(KeyValuePair<DateTime,List<Ren.CMS.Content.nContent>> pair in Model.News){
+         <div class="well well-small">
+             <strong>News seit @pair.Key.ToString("dd.MM.yyyy HH:mm")</strong>
+         </div>
+ <ul class="nav nav-list" id="@("List_"+pair.Key.ToString("ddMMyyyyhhmm"))">
+
+    @foreach(Ren.CMS.Content.nContent Cont in pair.Value){
+        Cont.GenerateLink();
+   <li><a href="@Cont.FullLink"><span>@Cont.CreationDate.ToString("dd.MM.yyyy HH:mm") &nbsp; <b>@Cont.Texts.First().Title</b> &nbsp; @Cont.Texts.First().PreviewText</span></a></li>
+    
+    }
+
+
+
+</ul>
+     }
+</div>
+</div>
+
+<div class="row">
+<div class="">
+<div class="span3 pager pull-left">
+<p id="count">
+   Zeige Newsbeträge <span id="pagecount">@Model.RowsOnPage</span> von <span id="countTotal">@Model.TotalRows</span>
+</p>
+</div>
+<ul class="pager span3 pull-right">
+  <li id="pager"><a data-loading-text="Lade..." data-complete-text="Ältere News" href="@Url.Content("~/News/Archive/" + (Model.Page +1))">Ältere News</a></li>
+ 
+</ul>
+
+</div>
+
+</div>

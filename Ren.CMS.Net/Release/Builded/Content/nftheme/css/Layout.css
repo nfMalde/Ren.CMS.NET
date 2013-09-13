@@ -1,0 +1,252 @@
+﻿/***Base***/
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(12,87,57,0.3); 
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    background: rgba(12,87,57,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(12,87,57,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: #146729; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+ 
+    height: 100%;
+    background: center #000 url("../img/body-back.jpg") no-repeat;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+nav
+{
+    margin-top:10px;
+}
+
+div.layout-container {
+    margin: 0 auto;
+    
+    min-height: 600px;
+    background: #FFF;
+ 
+}
+
+/****Header*****/
+div.layout-header {
+
+    
+ 
+    padding-top: 1px;
+ 
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+div.layout-header-logo {
+    width: 255px;
+    height: 88px;
+    overflow: hidden;
+    float: left;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+}
+
+div.layout-header-logo img {
+    border: none;
+    margin: 0px;
+}
+
+div.layout-header div.menu a:hover {
+    
+}
+
+div.layout-header-top {
+    height: 84px;
+
+}
+
+div.layout-header-right {
+    float: right;
+    width: 430px;
+    height: 80px;
+    margin-top: 9px;
+    font-size: 10pt !important;
+    text-align: left;
+}
+
+/****User Bar****/
+li.welcome-user
+{
+    margin-left: 0px;
+    margin-bottom: 5px;
+}
+ul.layout-user-bar {
+    width: 100%;
+    height: 80px;
+    margin: 0;
+}
+
+ul.layout-user-bar li {
+    display: inline;
+    list-style: none;
+    margin-right: 10px;
+}
+
+ul.layout-user-bar li a:link, ul.layout-user-bar li a:visited, ul.layout-user-bar li a:active {
+    color: #000;
+    text-decoration: none;
+}
+
+
+ul.layout-user-bar li a:hover {
+    color: #146729;
+}
+
+
+strong.layout-header-user-text {
+    color: #146729;
+    font-weight: 600;
+}
+li.layout-header-user-avatar
+{
+    height: 71px;
+    width: 71px;
+    overflow: hidden;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+img.layout-header-user-avatar {
+
+    min-height: 71px;
+}
+
+/**Layout Body***/
+div.layout-body {
+    padding: 0px 15px;
+}
+
+
+
+
+
+/****Navigation*****/
+
+
+
+    div.layout-header div.menu a:link, div.layout-header div.menu a:visited, div.layout-header div.menu a:active {
+        font-size: 13pt;
+        text-decoration: none;
+        color: #9C9C9C;
+    }
+
+    a.menu-link-home {
+        color: #000 !important;
+    }
+
+    div.menu {
+        width: 100%;
+        margin-top: 10px 0;
+    }
+
+    ul.menu-ul-navigation {
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+        display: inline;
+        float: left;
+        width: 100%;
+    }
+
+    ul.menu-ul-navigation li {
+        display: inline;
+        margin-right: 20px;
+        list-style: none;
+        list-style-type: none;
+        list-style-image: none;
+        background: none;
+        position: relative;
+    }
+
+    ul.menu-ul-navigation li:hover {
+    }
+
+    ul.menu-ul-navigation li:hover div.navigation-submenu {
+        display: block;
+    }
+
+    div.navigation-submenu {
+        display: none;
+        width: 180px;
+        padding-left: 2px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        background: url("../img/submenu-bg.png");
+        border: solid 1px #000;
+        position: absolute;
+        z-index:1000;
+        list-style: none;
+        font-size: 10pt;
+    }
+
+    div.navigation-submenu ul {
+        margin: 0;
+        padding: 0px;
+        width: 180px;
+    }
+
+    div.navigation-submenu ul li {
+        list-style: none;
+        margin: 0;
+        color: #FFF;
+        float: left;
+        clear: both;
+        width: 170px;
+        text-align: left;
+        padding: 5px;
+    }
+
+    div.navigation-submenu ul li a:link,
+    div.navigation-submenu ul li a:visited,
+    div.navigation-submenu ul li a:hover,
+    div.navigation-submenu ul li a:active {
+        color: #FFF !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 10pt !important;
+    }
+
+    div.navigation-submenu ul li:hover a:link,
+    div.navigation-submenu ul li:hover a:visited,
+    div.navigation-submenu ul li:hover a:hover,
+    div.navigation-submenu ul li:hover a:active {
+        color: #000 !important;
+    }
+
+    div.navigation-submenu ul li:hover {
+        background: #FFF;
+        color: #000;
+    }
+
+
+     

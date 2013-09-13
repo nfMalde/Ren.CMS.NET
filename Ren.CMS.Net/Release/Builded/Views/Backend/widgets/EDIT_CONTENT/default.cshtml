@@ -1,0 +1,314 @@
+﻿@model Ren.CMS.Models.Core.nContentPostModel
+@using Ren.CMS.Helpers
+@using Ren.CMS.CORE.Language.LanguageDefaults
+
+@using  Ren.CMS.Models.jsTreeModels
+ 
+@{
+    //Prerender Texts
+
+    var langcodes = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode>().GetMany().ToList();
+    ViewData["LangCodes"] = langcodes;
+    var list = Model.Texts.ToList();
+    foreach(var code in langcodes)
+    {
+    
+       if(!Model.Texts.Any(e => e.LangCode == code.Code))
+       {
+           list.Add(new Ren.CMS.Models.Core.nContentPostModelText()
+           {
+
+               LangCode = code.Code
+           });
+       }
+
+       Model.Texts = list;
+    }
+    
+    
+    
+    }
+
+
+<style type="text/css">
+    .fileDiv {
+    
+    width:100%;
+     background-color:transparent;
+
+    
+    
+    }
+        .fileDiv:hover {
+
+   background-color:#e6dede;
+
+        }
+
+
+    .fileDivCell1 {
+    
+    float:left;
+    }
+     .fileDivCell2{
+    
+    float:right;
+    }
+
+
+
+    .tagsContent select {
+        width:50%;
+
+        font-size:11pt;
+    }
+    table.tblEditContent {
+    
+    width:100%;
+
+    
+    
+    }
+
+        table.tblEditContent td:first-child {
+            width:50%;
+            min-height: 30px;
+            padding:1px;
+            margin:1px;
+            vertical-align:top;
+            text-align:left;
+        }
+             table.tblEditContent tr {
+        
+        background-color:transparent;
+
+        
+        
+        }
+        table.tblEditContent tr:hover {
+        
+        background-color:#e6dede;
+
+        
+        
+        }
+   table.tblEditContent td:last-child {
+            width:50%;
+            padding:1px;
+             min-height: 30px;
+            margin:1px;
+            vertical-align:top;
+            text-align:right;
+        }
+
+        table.tblEditContent td input[type="text"] {
+        
+        height:20px;
+        
+        }
+        table.tblEditContent td input, table.tblEditContent td select, table.tblEditContent td textarea{
+            width:100%;
+        }
+        table.tblEditContent td textarea {
+        
+        height:150px;
+
+        }
+    a.create-content-help {
+    
+   cursor:help;
+    text-decoration:dotted;
+    
+    }
+
+</style> 
+
+
+<script>
+
+ 
+
+
+    $(function () {
+
+
+        $('.date').datepicker({ dateFormat: "dd.mm.yy" });
+
+    });
+
+    $(function () {
+
+        $('#widget-ui-edit-content-default').button();
+
+
+    });
+    $(function () {
+
+        $('#title-create-content').find('input').keyup(function () {
+            if( $('#enableAutomaticSEOForCreate').attr('checked')){
+
+                var val =  $(this).val();
+                $.post("/BackendHandler/Content/ValidateSEOTitle", { title: val }, function (data) {
+               
+                     $('#seotitle-create-content').find("input").val(data.seoname);
+                  
+                
+
+           },'json');
+            }
+
+        });
+
+    });
+    $(function () {
+
+
+        $('.create-content-help').each(function () {
+            try {
+                $(this).click(function () {
+
+
+
+                    var x = $(this).closest("tr");
+                    var t = (x[0].title);
+                    $('#help-dialog-create-content').html(t);
+
+                    $('#help-dialog-create-content').dialog({
+
+                        width: 600,
+                        height: 'auto',
+                        resizable: false,
+                        title: "Inhalte erstellen - Hilfe",
+                        modal: true
+
+                    });
+
+                    $('#help-dialog-create-content').dialog('open');
+
+                });
+            }
+ catch(e){}
+
+
+        });
+
+
+    });
+    $(function () {
+        $('#@Html.ProtectID("edit_content_form") :input').each(function () {
+
+            if ($(this).attr("data-name"))
+            {
+                $(this).attr("name", $(this).attr("data-name"));
+
+
+            }
+
+
+        });
+       
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+
+
+        new backenForm('#@Html.ProtectID("edit_content_form")',
+
+            {
+                backendHandler : "Content",
+                backendAction : "EditContent",
+                language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
+                beforeSubmit: function (formdata) {
+
+                    formdata.each(function () {
+                        //Encode Entitys
+                        var newV = decodeEntities($(this).val());
+
+                        
+                        $(this).val(encodeURI(newV));
+
+                    })
+
+                }
+            
+    });
+
+
+
+    });
+</script>
+ <input type="hidden" id="create-content-seo-cache" value="" />
+<div id="help-dialog-create-content" style="font-size:10px !important;"></div>
+
+
+<div id="create_content_tabs">
+
+
+
+ 
+ @using(Html.BeginForm(actionName: "EditContent" ,controllerName: "/"+ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content", method: FormMethod.Post , htmlAttributes: new { id = Html.ProtectID("edit_content_form") })){
+     
+         @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.CreatorPKID)
+      @Html.HiddenFor(m => m.ContentType)
+    
+@Html.ValidationMessageFor(m => m.CreatorPKID)
+
+@Html.ValidationMessageFor(m => m.CategoryID)
+@Html.ValidationMessageFor(m => m.Locked)
+
+ 
+
+
+<ul class="nav nav-tabs" id="myTab">
+
+    <li class="active"><a href="#tab-1" data-toggle="tab">Hauptdaten</a></li>
+    <li><a href="#tab-2">Suchmaschienenoptimierung</a></li>
+    <li><a href="#tab-3">Kategorie und Tags</a></li>
+    <li><a href="#tab-4">Dateien</a></li>
+    <li><a href="#tab-5">Fertigstellen</a></li>
+
+</ul>
+    <div id="myTabContent" class="tab-content">
+    <div id="tab-1" class="tab-pane fade in active">
+      
+          @{
+                              Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/Generaltab.cshtml"), Model);        
+            
+            }
+        </div>
+    
+    <div id="tab-2" class="tab-pane fade in">
+
+          @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/SEOTab.cshtml"), Model,ViewData);        
+            
+            }
+
+    
+        
+        </div>
+ <div class="tagsContent tab-pane fade in" id="tab-3">
+          @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/TagsTab.cshtml"), Model, ViewData);        
+            
+            }
+
+ </div>   
+    <div id="tab-4" class="ui-helper-clearfix tab-pane fade in">
+
+                      @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/EditFilesTab.cshtml"), Model, ViewData);        
+            
+            }
+       
+        </div>
+    <div id="tab-5" class="tab-pane fade in">
+                    @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/FinishTab.cshtml"), Model, ViewData);        
+            
+            }
+        </div></div>
+ }
+ </div>   
