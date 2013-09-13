@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <setParameter name="IIS Web Application Name" value="Default Web Site/Ren.CMS_deploy" />
-  <setParameter name="nfCMS-Web.config Connection String" value="Data Source=X1X2X34;Initial Catalog=ncms_net;Integrated Security=True" />
-</parameters>
