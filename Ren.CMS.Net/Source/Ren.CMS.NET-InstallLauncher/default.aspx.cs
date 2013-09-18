@@ -36,10 +36,16 @@ namespace Ren.CMS.NET_InstallLauncher
 
     public partial class launcher : System.Web.UI.Page
     {
-        private const string repoURL = "https://api.github.com/repos/nfMalde/Ren.CMS.NET/";
 
+        private string launcherProxy = "http://rencms-proxy.networkfreaks.de/Service";
 
+        
+        
+        private  string repoURL = "https://api.github.com/repos/nfMalde/Ren.CMS.NET/contents/Ren.CMS.Net/";
+        private  string licenseURL = "https://api.github.com/repos/nfMalde/Ren.CMS.NET/contents/LICENSE";
+        
 
+ 
 
         private string GitGet(string url)
         {
@@ -163,13 +169,13 @@ namespace Ren.CMS.NET_InstallLauncher
                         foreach (GitFile JSf in FilesJS)
                         {
 
-                            Extract(JSf, ("~/Launcher/js"), "Source/Installer-CAB/css");
+                            Extract(JSf, ("~/Launcher/js"), "Source/Installer-CAB/js");
 
 
                         }
 
 
-                        string LicenseResponse = GitGet("License.md");
+                        string LicenseResponse = GitGet(licenseURL);
 
                         GitFile LicenseFile = JS.Deserialize<GitFile>(LicenseResponse);
 
