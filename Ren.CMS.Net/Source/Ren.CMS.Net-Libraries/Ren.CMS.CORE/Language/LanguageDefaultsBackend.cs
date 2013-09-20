@@ -90,7 +90,7 @@
     public static class LanguageDefaultsManageUsers
     {
         #region Fields
-
+       
         public static LanguageDefaultValues LANG_FM_DIALOG_COMMENT = new LanguageDefaultValues("LANG_FM_DIALOG_COMMENT", "USERS_BACKEND"){
                                                                     {"de-DE", "Internes Kommentar"},
                                                                     {"en-US", "Internal comment"}};
@@ -166,6 +166,9 @@
         public static LanguageDefaultValues LANG_M_USERS_GRID_BTN_ADD = new LanguageDefaultValues("LANG_M_USERS_GRID_BTN_ADD", "USERS_BACKEND"){
                                                                 {"de-DE", "Benutzer erstellen"},
                                                                 {"en-US", "Create User"}};
+        public static LanguageDefaultValues LANG_M_USERS_GRID_BTN_PERMISSIONS = new LanguageDefaultValues("LANG_M_USERS_GRID_BTN_PERMISSIONS", "USERS_BACKEND"){
+                                                                {"de-DE", "Individuelle Benutzerrechte"},
+                                                                {"en-US", "Customized User Permissions"}};
         public static LanguageDefaultValues LANG_M_USERS_GRID_TITLE = new LanguageDefaultValues("LANG_M_USERS_GRID_TITLE", "USERS_BACKEND"){
                                                                 {"de-DE", "Benutzerverwaltung"},
                                                                 {"en-US", "User Management"}};
