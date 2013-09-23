@@ -223,7 +223,7 @@ namespace Ren.CMS
 
         protected void Application_BeginRequest(object sender, EventArgs ex)
         {
-            string type = Request.RequestType;
+            /*string type = Request.RequestType;
             string[] ignore = { "post", "httppost" };
 
             if (!ignore.Any(e => e == type.ToLower()) && !PathIsIgnored())
@@ -257,6 +257,7 @@ namespace Ren.CMS
                     }
 
             }
+             */
         }
 
         protected void Application_Start()

@@ -48,7 +48,7 @@
 
             );*/
 
-            context.MapRenCMSRoute("Install1", "{controller}/{action}",
+            context.MapRenCMSRoute("Install1", "Installer/{action}",
                   new { controller = "Installer", action = "Start", id = "" },
                   thisNamespace);
 
