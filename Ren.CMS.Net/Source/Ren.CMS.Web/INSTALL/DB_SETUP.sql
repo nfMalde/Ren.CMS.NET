@@ -1,4 +1,4 @@
-��USE [ncms_net]
+﻿USE [ncms_net]
 
 GO
 
