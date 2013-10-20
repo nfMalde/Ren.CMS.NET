@@ -62,7 +62,8 @@
             string language = null;
             if (routeData.Values["renCMSLanguage"] != null)
                 language = (string)routeData.Values["renCMSLanguage"] ?? null;
-
+            if (language == null)
+                language = DefaultLanguage;
             return language;
         }
 

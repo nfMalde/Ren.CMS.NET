@@ -1375,6 +1375,9 @@
 
             public bool isGuest()
             {
+                if (this.nUser == null)
+                    return true;
+
                 if (this.nUser.ProviderUserKey.ToString().ToLower() == guestpkid.ToLower()) return true;
                 else return false;
             }

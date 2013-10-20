@@ -257,37 +257,34 @@
 
         [HttpPost]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_CREATE_CONTENT")]
-        public ActionResult AddContent(string id, Models.Core.nContentPostModel MDL)
+        public JsonResult AddContent(Models.Core.nContentPostModel MDL, nContentTextBinder Binder)
         {
-            MDL.ContentType = id;
+            MDL.Texts = Binder.Bind();
+
             Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
-            if (!Cval.isValidPostModelForInsert(MDL)) return this.Content("Not Valid");
+            if (!Cval.isValidPostModelForInsert(MDL))
 
-            if (!nPermissions.hasPermission("USR_CAN_ENTER_BACKEND")) return this.Content("NO PERMISSION");
+                return Json(new
+                {
+                    success = false,
+                    message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID,
+                    modelStateKeys = ModelState.ToDictionary(e => e.Key),
+                    modelStateValues = ModelState.ToDictionary(e => e.Value)
+                });
 
-            MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.HtmlDecode(e.LongText));
+            MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.UrlDecode(e.LongText));
+            var Props = MDL.GetType().GetProperties().Where(e => e.PropertyType == typeof(string));
+            foreach (var prop in Props)
+                prop.SetValue(MDL, HttpUtility.UrlDecode((prop.GetValue(MDL) ?? String.Empty).ToString()));
 
             Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
             Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
-
-            bool ins = CtM.InsertContent(ContentModel);
-
+            CtM.InsertContent(ContentModel);
             if (MDL.Tags != null)
-            {
+                CtM.bindTagsToContent(MDL.ID, MDL.Tags);
 
-                SqlHelper SQL = new SqlHelper();
-
-                SQL.SysConnect();
-
-                int lastID = SQL.getLastId(new ThisApplication().getSqlPrefix + "Content");
-
-                CtM.bindTagsToContent(lastID, MDL.Tags);
-
-            }
-
-            if (ins) return this.Content("<b>Inhalt erfolgreich erstellt</b>");
-            else return this.Content("<b>Unbekannter Fehler beim Erstellen des Inhaltes</b>");
+            return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
         }
 
         //

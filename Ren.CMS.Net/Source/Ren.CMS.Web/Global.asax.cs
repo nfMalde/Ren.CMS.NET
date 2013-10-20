@@ -313,7 +313,7 @@ namespace Ren.CMS
 
             BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
             string code = (Request.UserLanguages ?? Enumerable.Empty<string>()).FirstOrDefault();
-            if (code == "de")
+            if (code.ToLower().StartsWith("de-") || code.ToLower() == "de")
                 code = "de-DE";
             var c = Repo.GetOne(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == code));
             if (c != null)

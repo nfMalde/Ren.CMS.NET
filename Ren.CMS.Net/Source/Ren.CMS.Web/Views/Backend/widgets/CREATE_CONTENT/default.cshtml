@@ -1,41 +1,69 @@
 ﻿@model Ren.CMS.Models.Core.nContentPostModel
-
 @using Ren.CMS.Helpers
+@using Ren.CMS.CORE.Language.LanguageDefaults
 
 @using  Ren.CMS.Models.jsTreeModels
-
+ 
 @{
-    Ren.CMS.Models.Backend.Content.CategoryModel CM = new Ren.CMS.Models.Backend.Content.CategoryModel();
-    Model.CreatorPKID = new nProvider.CurrentUser().nUser.ProviderUserKey.ToString();
-    Model.CreationDate = DateTime.Now;
-    Model.Locked = true;
+    //Prerender Texts
+
+    var langcodes = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode>().GetMany().ToList();
+    ViewData["LangCodes"] = langcodes;
+    Model.Texts = new List<Ren.CMS.Models.Core.nContentPostModelText>();
+    var list = Model.Texts.ToList();
+    foreach(var code in langcodes)
+    {
     
-    
-    //Starting jsTree Settings
+       if(!Model.Texts.Any(e => e.LangCode == code.Code))
+       {
+           list.Add(new Ren.CMS.Models.Core.nContentPostModelText()
+           {
 
-    jsTreeSettings JSTREE = new jsTreeSettings();
+               LangCode = code.Code
+           });
+       }
 
-    //Plugins
-    JSTREE.plugins.ClearPlugins();
-    JSTREE.plugins.Add(new string[] { "themes", "json_data", "ui", "crrm", "cookies",  "search", "types", "hotkeys" });
-
-    JSTREE.ajax_read.additionalRequestParameters.Add("ContentType", Model.ContentType);
-
-    JSTREE.ajax_read.url = "/BackendHandler/Content/JSTREE_CATEGORIES";
+       Model.Texts = list;
+    }
     
     
     
     }
 
 
-
 <style type="text/css">
+    .fileDiv {
+    
+    width:100%;
+     background-color:transparent;
+
+    
+    
+    }
+        .fileDiv:hover {
+
+   background-color:#e6dede;
+
+        }
+
+
+    .fileDivCell1 {
+    
+    float:left;
+    }
+     .fileDivCell2{
+    
+    float:right;
+    }
+
+
+
     .tagsContent select {
         width:50%;
 
         font-size:11pt;
     }
-    table.tblCreateContent {
+    table.tblEditContent {
     
     width:100%;
 
@@ -43,7 +71,7 @@
     
     }
 
-        table.tblCreateContent td:first-child {
+        table.tblEditContent td:first-child {
             width:50%;
             min-height: 30px;
             padding:1px;
@@ -51,21 +79,21 @@
             vertical-align:top;
             text-align:left;
         }
-             table.tblCreateContent tr {
+             table.tblEditContent tr {
         
         background-color:transparent;
 
         
         
         }
-        table.tblCreateContent tr:hover {
+        table.tblEditContent tr:hover {
         
         background-color:#e6dede;
 
         
         
         }
-   table.tblCreateContent td:last-child {
+   table.tblEditContent td:last-child {
             width:50%;
             padding:1px;
              min-height: 30px;
@@ -74,15 +102,15 @@
             text-align:right;
         }
 
-        table.tblCreateContent td input[type="text"] {
+        table.tblEditContent td input[type="text"] {
         
         height:20px;
         
         }
-        table.tblCreateContent td input, table.tblCreateContent td select, table.tblCreateContent td textarea{
+        table.tblEditContent td input, table.tblEditContent td select, table.tblEditContent td textarea{
             width:100%;
         }
-        table.tblCreateContent td textarea {
+        table.tblEditContent td textarea {
         
         height:150px;
 
@@ -110,20 +138,20 @@
     });
 
     $(function () {
-   
-        $('#@Html.ProtectID("widget-ui-create-content-default")').button();
+
+        $('#widget-ui-edit-content-default').button();
 
 
     });
     $(function () {
 
-        $('#@Html.ProtectID("title-create-content")').find('input').keyup(function () {
-            if( $('#@Html.ProtectID("enableAutomaticSEOForCreate")').attr('checked')){
+        $('#title-create-content').find('input').keyup(function () {
+            if( $('#enableAutomaticSEOForCreate').attr('checked')){
 
                 var val =  $(this).val();
                 $.post("/BackendHandler/Content/ValidateSEOTitle", { title: val }, function (data) {
                
-                     $('#@Html.ProtectID("seotitle-create-content")').find("input").val(data.seoname);
+                     $('#seotitle-create-content').find("input").val(data.seoname);
                   
                 
 
@@ -144,9 +172,9 @@
 
                     var x = $(this).closest("tr");
                     var t = (x[0].title);
-                    $('#@Html.ProtectID("help-dialog-create-content")').html(t);
+                    $('#help-dialog-create-content').html(t);
 
-                    $('#@Html.ProtectID("help-dialog-create-content")').dialog({
+                    $('#help-dialog-create-content').dialog({
 
                         width: 600,
                         height: 'auto',
@@ -156,7 +184,7 @@
 
                     });
 
-                    $('#@Html.ProtectID("help-dialog-create-content")').dialog('open');
+                    $('#help-dialog-create-content').dialog('open');
 
                 });
             }
@@ -168,285 +196,117 @@
 
     });
     $(function () {
+        $('#@Html.ProtectID("edit_content_form") :input').each(function () {
 
-        $('#@Html.ProtectID("create_content_tabs")').tabs();
+            if ($(this).attr("data-name"))
+            {
+                $(this).attr("name", $(this).attr("data-name"));
+
+
+            }
+
+
+        });
+       
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+
+
+        new backenForm('#@Html.ProtectID("edit_content_form")',
+
+            {
+                backendHandler : "Content",
+                backendAction : "AddContent",
+                language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
+                beforeSubmit: function (formdata) {
+
+                    formdata.each(function () {
+                        //Encode Entitys
+                        var newV = decodeEntities($(this).val());
+
+                        
+                        $(this).val(encodeURI(newV));
+
+                    })
+
+                }
+            
+    });
+
 
 
     });
 </script>
  <input type="hidden" id="create-content-seo-cache" value="" />
-<div id="@Html.ProtectID("help-dialog-create-content")" style="font-size:10px !important;"></div>
+<div id="help-dialog-create-content" style="font-size:10px !important;"></div>
 
 
-<div id="@Html.ProtectID("create_content_tabs")">
+<div id="create_content_tabs">
 
-@Html.ValidationSummary(true, "Inhalt konnte nicht erstellt werden: Es wurde nicht alle benötigten Felder ausgefüllt.")
 
-@using (Ajax.BeginForm("Content/AddContent/"+ Model.ContentType, "BackendHandler", new AjaxOptions { HttpMethod = "POST", OnComplete = "completeTest()", UpdateTargetId = Html.ProtectID("widget-newcontent-result") }))
-    {
-    
-    @Html.HiddenFor(m => m.CreatorPKID);
-      @Html.HiddenFor(m => m.ContentType);
+
+ 
+ @using(Html.BeginForm(actionName: "AddContent" ,controllerName: "/"+ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content", method: FormMethod.Post , htmlAttributes: new { id = Html.ProtectID("edit_content_form") })){
+     
+         @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.CreatorPKID)
+      @Html.HiddenFor(m => m.ContentType)
     
 @Html.ValidationMessageFor(m => m.CreatorPKID)
 
 @Html.ValidationMessageFor(m => m.CategoryID)
 @Html.ValidationMessageFor(m => m.Locked)
-@Html.ValidationMessageFor(m => m.LongText)
-@Html.ValidationMessageFor(m => m.MetaDescription)
-@Html.ValidationMessageFor(m => m.MetaKeyWords)
-@Html.ValidationMessageFor(m => m.PreviewText)
-@Html.ValidationMessageFor(m => m.Title)
+
  
 
 
-<ul>
+<ul class="nav nav-tabs" id="myTab">
 
-    <li><a href="#@Html.ProtectID("tabe-1")">Hauptdaten</a></li>
-    <li><a href="#@Html.ProtectID("tabe-2")">Suchmaschienenoptimierung</a></li>
-    <li><a href="#@Html.ProtectID("tabe-3")">Tags</a></li>
-    <li><a href="#@Html.ProtectID("tabe-4")">Dateien</a></li>
-    <li><a href="#@Html.ProtectID("tabe-5")">Fertigstellen</a></li>
+    <li class="active"><a href="#tab-1" data-toggle="tab">Hauptdaten</a></li>
+    <li><a href="#tab-2">Suchmaschienenoptimierung</a></li>
+    <li><a href="#tab-3">Kategorie und Tags</a></li>
+    <li><a href="#tab-4">Dateien</a></li>
+    <li><a href="#tab-5">Fertigstellen</a></li>
 
 </ul>
-    <div id="@Html.ProtectID("tabe-1")">
- <table class="tblCreateContent">
-
-
-     <tr title="Hier können Sie bei Bedarf das Erstell Datum einstellen. Manche Module veröffentlichen die Inhalte erst, wenn das Datum erreicht ist.">
-        <td>
-            <b>Erstelldatum:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-        <td>
-
-       @Html.TextBox("CreationDate", Model.CreationDate.ToString("dd.MM.yyyy"), 
- new { @class = "date" })
-
-        </td>
-
-    </tr>
-
-    <tr title="Vergeben Sie hier einen Aussagekräftigen Titel. Achten Sie darauf, dass dieser für Suchmaschienen interessant wird wenn der Titel auch im Haupttext, den Suchstichworten, dem Vorschautext und der Meta-Beschreibung vorkommt.">
-        <td>
-            <b>Titel:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-        <td id="@Html.ProtectID("title-create-content")">
-
-            @Html.TextBoxFor(m => m.Title)
-
-        </td>
-
-    </tr>
+    <div id="myTabContent" class="tab-content">
+    <div id="tab-1" class="tab-pane fade in active">
       
-     
-               <tr title="Wählen Sie hier die Kategorie für den Inhalt oder legen Sie eine an."><td>
-
-        <b>
-
-            Kategorie:
+          @{
+                              Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/Generaltab.cshtml"), Model);        
             
-        </b><br />
-        <a href="javascript: new widgetAction('widget:NEW_CATEGORY:open')">Neue Kategorie anlegen</a>
-        <br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-
-        <td>
-
-            @Html.HiddenFor(m=>m.CategoryID,new{id=Html.ProtectID("CategoryID")})
-            
-            @Html.jsTreeFull(JSTREE,Html.ProtectID("tree_cat_select"),true)
-
-            <script>
-
-                $(function () {
-
-                    $('#@Html.ProtectID("tree_cat_select")').bind("select_node.jstree", function (event, data) {
-                        // `data.rslt.obj` is the jquery extended node that was clicked
-                        var id = data.rslt.obj.attr("id");
-                        if (id == "NO") id = "";
-                        $('#@Html.ProtectID("CategoryID")').val(id);
-                         });
-
-
-                });
-
-            </script>
-            <style>
-
-                #@Html.ProtectID("tree_cat_select")
-                {
-                
-                        border: 1px solid #DDD;
-     width:100%;
-     height:100%;
-     float:left;
-                text-align:left;
-     clear:both;
-     margin-top:10px;
-     overflow:auto;
-                
-                }
-
-                .@Html.ProtectID("categoryTreeCreateContentDefaultActive") {
-                
-                
-                font-weight:bold;
-                
-                }
-
-            </style>
-            <ul id="@Html.ProtectID("categoryTreeCreateContentDefault")" class="filetree" style="text-align:left;">
-
-
-            </ul>
-        
-        </td>
-
-
-    </tr>
-
-             <tr title="Geben Sie hier den Vorschautext an. Dieser bietet Besuchern einen groben Vorgeschmack auf den Hauptinhalt.">
-        <td>
-            <b>Vorschau Text:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-        <td>
-            @Html.TextAreaFor(m=>m.PreviewText)
-
-        </td>
-
-
-
-    </tr>
-    <tr title="Geben Sie hier den Inhalt ein. Dieser wird bei der Detailansicht angezeigt.">
-
-        <td>
-            <b>Text:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-
-        <td>
-
-            @Html.EditorFor(m => m.LongText)
-
-        </td>
-    </tr>
-</table>
+            }
         </div>
     
-    <div id="@Html.ProtectID("tabe-2")">
+    <div id="tab-2" class="tab-pane fade in">
 
-
+          @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/SEOTab.cshtml"), Model,ViewData);        
+            
+            }
 
     
-        <table class="tblCreateContent">
-        <tr title="Hier wird der Titel in Suchmaschienen kompatibler Schreibweise festgelegt(Dies geschieht nach Eingabe des Titels)">
-        <td>
-            <b>Suchmaschienen URL Titel(SEO):</b><br />
-            <br />
-            <input type="checkbox" id="@Html.ProtectID("enableAutomaticSEOForCreate")" style="width:auto" checked="checked" /> Automatisch generieren
-            
-            <br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-        <td id="@Html.ProtectID("seotitle-create-content")">
-
-            @Html.TextBoxFor(m => m.SEOName)
-            
-        </td>
-
-    </tr>
-
- 
-
-    <tr title="Geben Sie hier die Suchmaschienen Beschreibung ein.">
-        <td>
-
-            <b>Meta Beschreibung (Für Suchmaschienen):</b>
-            <br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-        <td>
-            @Html.TextAreaFor(m=>m.MetaDescription)
-
-        </td>
-    </tr>
-
-    <tr title="Geben Sie hier Stichworte für die Suchmaschienen ein. Trennen Sie diese mit einem Komma.">
-
-        <td><b>Meta Stichworte (Suchstichworte)</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a></td>
-        <td>@Html.TextAreaFor(m => m.MetaKeyWords)</td>
-    </tr>
-
- </table>
+        
         </div>
- <div class="tagsContent" id="@Html.ProtectID("tabe-3")">
-      <p>
-
-          Wählen Sie Tags für den Inhalt aus. Tags werden genutzt um Inhalte nur für ein beliebtes Stichwort anzuzeigen oder Besondere Stichworte hervorzuheben.
-
-
-      </p>
-     @{
-        Ren.CMS.Content.ContentManagement.TagManagement TagM = new Ren.CMS.Content.ContentManagement.TagManagement();
-        List<Ren.CMS.Content.nContentTag> Tags = TagM.GetAllTags(Model.ContentType);
-
-
-        List<object> OptionsTags = new List<object>();
-
-        foreach (Ren.CMS.Content.nContentTag Tag in Tags)
-        {
-            OptionsTags.Add(new { ID = Tag.ID, Name = Tag.Name });
-        
-        
-        }
-
-
-         
-         }
-     
-    @Html.ListBoxFor(m => m.Tags, new MultiSelectList(OptionsTags, "ID", "Name"), new { Multiple = "multiple" })
-
-    
+ <div class="tagsContent tab-pane fade in" id="tab-3">
+          @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/TagsTab.cshtml"), Model, ViewData);        
+            
+            }
 
  </div>   
-    <div id="@Html.ProtectID("tabe-4")">
- <table class="tblCreateContent">
-    <tr>
-        <td title="Datei Anhänge sind Bilder, Videos oder Downloads. Sie können den Anhängen auch Rollen geben, wie etwa in Newsbeiträgen INDEX BILD  als Anzeige-Bild für den Newsbeitrag."><b>Dateianhänge:</b></td>
-        <td>
+    <div id="tab-4" class="ui-helper-clearfix tab-pane fade in">
 
-            <div class="ui-widget">
-	<div class="ui-state-highlight ui-corner-all" style="padding: 10px;">
-		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-		<strong>Noch nicht möglich:</strong> Sie müssen den Inhalt erst speichern, ehe Sie Anhänge registrieren können.</p>
-	</div>
-</div>
-        </td>
-
-
-    </tr></table>
+      
+       
         </div>
-    <div id="@Html.ProtectID("tabe-5")">
- <table class="tblCreateContent">
-       <tr title="Wenn diese Box nicht markiert ist, wird der Beitrag im Frontend sofort nach dem Speichern sichtbar">
-        <td><b>Freigeben:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a></td>
-        <td>
-          
-            @Html.CheckBoxFor(m => m.Locked, new { style = "width:auto"}) Nein
-
-
-        </td>
-
-    </tr>
-<tr><td><div id="@Html.ProtectID("widget-newcontent-result")"></div></td>
-    <td>
-    <input type="submit" value="Speichern" id="@Html.ProtectID("widget-ui-create-content-default")"/></td></tr>
-</table>
-        </div>
-} </div>   
+    <div id="tab-5" class="tab-pane fade in">
+                    @{
+    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/FinishTab.cshtml"), Model, ViewData);        
+            
+            }
+        </div></div>
+ }
+ </div>   

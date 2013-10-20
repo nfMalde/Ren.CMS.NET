@@ -462,6 +462,7 @@
     <Content Include="Views\Backend\widgets\__SHARED\Content\Tabs\EditFilesTab.cshtml" />
     <Content Include="Views\Backend\widgets\__SHARED\Content\Tabs\FinishTab.cshtml" />
     <Content Include="Views\Backend\widgets\__SHARED\Content\TinyMCE_.cshtml" />
+    <Content Include="Views\Backend\widgets\CREATE_CONTENT\default.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\chosen-sprite%402x.png" />
@@ -1103,7 +1104,7 @@
     <Content Include="Views\Backend\widgets\EDIT_CATEGORY\edit.cshtml" />
     <Content Include="Views\Backend\widgets\CONTENT_LIST\list.cshtml" />
     <Content Include="Views\Backend\widgets\CREATE_CONTENT\create.cshtml" />
-    <Content Include="Views\Backend\widgets\CREATE_CONTENT\default.cshtml" />
+    <Content Include="Views\Backend\widgets\CREATE_CONTENT\default.old.cshtml" />
     <Content Include="Views\Backend\widgets\EDIT_CONTENT\edit.cshtml" />
     <Content Include="Views\Backend\widgets\EDIT_CONTENT\default.cshtml" />
     <Content Include="Views\Backend\widgets\CONTENT_CATEGORIES\Kopie von content_categories.cshtml" />
