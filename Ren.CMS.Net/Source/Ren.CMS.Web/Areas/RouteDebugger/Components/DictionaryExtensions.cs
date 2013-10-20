@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-
 namespace Ren.CMS.Areas.RouteDebugger.Components
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// An exact copy of the TryGetValue method from  DictionaryExtensions.cs.
     /// </summary>
     internal static class DictionaryExtensions
     {
+        #region Methods
+
         /// <summary>
         /// Gets the value of <typeparamref name="T"/> associated with the specified key or <c>default</c> value if
         /// either the key is not present or the value is not of type <typeparamref name="T"/>. 
@@ -37,5 +39,7 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
             value = default(T);
             return false;
         }
+
+        #endregion Methods
     }
 }

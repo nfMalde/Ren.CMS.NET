@@ -1,24 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-
 namespace Ren.CMS.Areas.RouteDebugger.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Controllers;
+
     /// <summary>
     /// A static class that provides various <see cref="Type"/> related helpers.
     /// </summary>
     internal static class TypeHelper
     {
+        #region Fields
+
+        internal static readonly Type ApiControllerType = typeof(ApiController);
+        internal static readonly Type HttpControllerType = typeof(IHttpController);
+
         private static readonly Type TaskGenericType = typeof(Task<>);
 
-        internal static readonly Type HttpControllerType = typeof(IHttpController);
-        internal static readonly Type ApiControllerType = typeof(ApiController);
+        #endregion Fields
+
+        #region Methods
+
+        internal static Type ExtractGenericInterface(Type queryType, Type interfaceType)
+        {
+            Func<Type, bool> matchesInterface = t => t.IsGenericType && t.GetGenericTypeDefinition() == interfaceType;
+            return matchesInterface(queryType) ? queryType : queryType.GetInterfaces().FirstOrDefault(matchesInterface);
+        }
 
         internal static Type GetTaskInnerTypeOrNull(Type type)
         {
@@ -36,12 +48,6 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
             return null;
         }
 
-        internal static Type ExtractGenericInterface(Type queryType, Type interfaceType)
-        {
-            Func<Type, bool> matchesInterface = t => t.IsGenericType && t.GetGenericTypeDefinition() == interfaceType;
-            return matchesInterface(queryType) ? queryType : queryType.GetInterfaces().FirstOrDefault(matchesInterface);
-        }
-
         internal static Type[] GetTypeArgumentsIfMatch(Type closedType, Type matchingOpenType)
         {
             if (!closedType.IsGenericType)
@@ -53,6 +59,11 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
             return (matchingOpenType == openType) ? closedType.GetGenericArguments() : null;
         }
 
+        internal static bool HasStringConverter(Type type)
+        {
+            return TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string));
+        }
+
         internal static bool IsCompatibleObject(Type type, object value)
         {
             return (value == null && TypeAllowsNullValue(type)) || type.IsInstanceOfType(value);
@@ -61,11 +72,6 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
         internal static bool IsNullableValueType(Type type)
         {
             return Nullable.GetUnderlyingType(type) != null;
-        }
-
-        internal static bool TypeAllowsNullValue(Type type)
-        {
-            return !type.IsValueType || IsNullableValueType(type);
         }
 
         internal static bool IsSimpleType(Type type)
@@ -90,17 +96,13 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
             return TypeHelper.IsSimpleType(type);
         }
 
-        internal static bool HasStringConverter(Type type)
-        {
-            return TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string));
-        }
-
         /// <summary>
         /// Fast implementation to get the subset of a given type.
         /// </summary>
         /// <typeparam name="T">type to search for</typeparam>
         /// <returns>subset of objects that can be assigned to T</returns>
-        internal static ReadOnlyCollection<T> OfType<T>(object[] objects) where T : class
+        internal static ReadOnlyCollection<T> OfType<T>(object[] objects)
+            where T : class
         {
             int max = objects.Length;
             List<T> list = new List<T>(max);
@@ -119,5 +121,12 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
 
             return new ReadOnlyCollection<T>(list);
         }
+
+        internal static bool TypeAllowsNullValue(Type type)
+        {
+            return !type.IsValueType || IsNullableValueType(type);
+        }
+
+        #endregion Methods
     }
 }

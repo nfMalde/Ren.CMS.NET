@@ -1,19 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
-using System.Web.Http.ValueProviders;
-using System.Web.Http.ValueProviders.Providers;
-
 namespace Ren.CMS.Areas.RouteDebugger.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Http.Controllers;
+    using System.Web.Http.ModelBinding;
+    using System.Web.Http.ValueProviders;
+    using System.Web.Http.ValueProviders.Providers;
+
     /// <summary>
     /// A copy of HttpParameterBindingExtensions.cs with one change. HttpParameterBindingExtensions.WillReadUri calls the internal
     /// interface IUriValueProvderFactory, so that code is also in this method.
     /// </summary>
     internal static class HttpParameterBindingExtensions
     {
+        #region Methods
+
         public static bool WillReadUri(this HttpParameterBinding parameterBinding)
         {
             if (parameterBinding == null)
@@ -35,5 +37,7 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
 
             return false;
         }
+
+        #endregion Methods
     }
 }

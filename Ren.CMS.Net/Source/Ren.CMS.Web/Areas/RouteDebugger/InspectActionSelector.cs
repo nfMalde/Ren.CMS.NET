@@ -1,9 +1,10 @@
-using System.Linq;
-using System.Web.Http.Controllers;
-using Ren.CMS.Areas.RouteDebugger.Components;
-
 namespace Ren.CMS.Areas.RouteDebugger
 {
+    using System.Linq;
+    using System.Web.Http.Controllers;
+
+    using Ren.CMS.Areas.RouteDebugger.Components;
+
     /// <summary>
     /// This class replaces ApiControllerActionSelector (it's hooked up in RouteDebuggerConfig.cs). 
     /// It uses  _innerSelector to call into ApiControllerActionSelector methods and it calls ActionSelectSimulator methods.
@@ -18,12 +19,22 @@ namespace Ren.CMS.Areas.RouteDebugger
     /// </summary>
     public class InspectActionSelector : IHttpActionSelector
     {
+        #region Fields
+
         private IHttpActionSelector _innerSelector;
+
+        #endregion Fields
+
+        #region Constructors
 
         public InspectActionSelector(IHttpActionSelector innerSelector)
         {
             _innerSelector = innerSelector;
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         public ILookup<string, HttpActionDescriptor> GetActionMapping(HttpControllerDescriptor controllerDescriptor)
         {
@@ -43,5 +54,7 @@ namespace Ren.CMS.Areas.RouteDebugger
 
             return selectedAction;
         }
+
+        #endregion Methods
     }
 }

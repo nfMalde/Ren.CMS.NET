@@ -1,14 +1,16 @@
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http.Controllers;
-
 namespace Ren.CMS.Areas.RouteDebugger.Models
 {
+    using System.Linq;
+    using System.Net.Http;
+    using System.Web.Http.Controllers;
+
     /// <summary>
     /// Representing one action selection
     /// </summary>
     public class ActionSelectionInfo
     {
+        #region Constructors
+
         public ActionSelectionInfo(HttpActionDescriptor descriptor)
         {
             ActionName = descriptor.ActionName;
@@ -16,35 +18,65 @@ namespace Ren.CMS.Areas.RouteDebugger.Models
             Parameters = descriptor.GetParameters().Select(p => new HttpParameterDescriptorInfo(p)).ToArray();
         }
 
-        public string ActionName { get; set; }
+        #endregion Constructors
 
-        public HttpMethod[] SupportedHttpMethods { get; set; }
+        #region Properties
 
-        public HttpParameterDescriptorInfo[] Parameters { get; set; }
+        public string ActionName
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Is this action selected based on its action name?
         /// </summary>
-        public bool? FoundByActionName { get; set; }
+        public bool? FoundByActionName
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Is this action selected based on its action name and its supported http verb?
         /// </summary>
-        public bool? FoundByActionNameWithRightVerb { get; set; }
+        public bool? FoundByActionNameWithRightVerb
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Is this action selected based on its supported http verb?
         /// </summary>
-        public bool? FoundByVerb { get; set; }
+        public bool? FoundByVerb
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Do this action's parameters match the ones in query string?
         /// </summary>
-        public bool? FoundWithRightParam { get; set; }
+        public bool? FoundWithRightParam
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Is this action finally selected by selection attribute?
         /// </summary>
-        public bool? FoundWithSelectorsRun { get; set; }
+        public bool? FoundWithSelectorsRun
+        {
+            get; set;
+        }
+
+        public HttpParameterDescriptorInfo[] Parameters
+        {
+            get; set;
+        }
+
+        public HttpMethod[] SupportedHttpMethods
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

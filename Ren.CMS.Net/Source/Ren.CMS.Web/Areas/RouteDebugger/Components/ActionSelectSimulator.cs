@@ -1,14 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using Ren.CMS.Areas.RouteDebugger.Models;
-
 namespace Ren.CMS.Areas.RouteDebugger.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Reflection;
+    using System.Web.Http;
+    using System.Web.Http.Controllers;
+
+    using Ren.CMS.Areas.RouteDebugger.Models;
+
     /// <summary>
     /// Simulate the action selection and record the decision making process.
     /// 
@@ -20,37 +21,15 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
     /// </summary>
     public class ActionSelectSimulator
     {
+        #region Fields
+
         private ReflectedHttpActionDescriptor[] _actionDescriptors;
-
-        private IDictionary<ReflectedHttpActionDescriptor, string[]> _actionParameterNames
-            = new Dictionary<ReflectedHttpActionDescriptor, string[]>();
-
         private ILookup<string, ReflectedHttpActionDescriptor> _actionNameMapping;
+        private IDictionary<ReflectedHttpActionDescriptor, string[]> _actionParameterNames = new Dictionary<ReflectedHttpActionDescriptor, string[]>();
 
-        private void Initialize(HttpControllerDescriptor controllerDesc)
-        {
-            MethodInfo[] allMethods = controllerDesc.ControllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-            MethodInfo[] validMethods = Array.FindAll(allMethods, IsValidActionMethod);
+        #endregion Fields
 
-            _actionDescriptors = new ReflectedHttpActionDescriptor[validMethods.Length];
-            for (int i = 0; i < validMethods.Length; i++)
-            {
-                MethodInfo method = validMethods[i];
-                ReflectedHttpActionDescriptor actionDescriptor = new ReflectedHttpActionDescriptor(controllerDesc, method);
-                _actionDescriptors[i] = actionDescriptor;
-                HttpActionBinding actionBinding = actionDescriptor.ActionBinding;
-
-                // Building an action parameter name mapping to compare against the URI parameters coming from the request. 
-                // Here we only take into account required parameters that are simple types and come from the URI.
-                _actionParameterNames.Add(
-                    actionDescriptor,
-                    actionBinding.ParameterBindings
-                        .Where(binding => !binding.Descriptor.IsOptional && TypeHelper.IsSimpleUnderlyingType(binding.Descriptor.ParameterType) && binding.WillReadUri())
-                        .Select(binding => binding.Descriptor.Prefix ?? binding.Descriptor.ParameterName).ToArray());
-            }
-
-            _actionNameMapping = _actionDescriptors.ToLookup(actionDesc => actionDesc.ActionName, StringComparer.OrdinalIgnoreCase);
-        }
+        #region Methods
 
         /// <summary>
         /// Simulating the action selecting process. It mimics the ASP.NET Web API internal logic
@@ -119,6 +98,87 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
         }
 
         /// <summary>
+        /// This is an exact copy from ApiControllerActionSelector.
+        /// </summary>
+        private static bool IsSubset(string[] actionParameters, HashSet<string> routeAndQueryParameters)
+        {
+            foreach (string actionParameter in actionParameters)
+            {
+                if (!routeAndQueryParameters.Contains(actionParameter))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// This is an exact copy from ApiControllerActionSelector.
+        /// </summary>
+        private static bool IsValidActionMethod(MethodInfo methodInfo)
+        {
+            if (methodInfo.IsSpecialName)
+            {
+                // not a normal method, e.g. a constructor or an event
+                return false;
+            }
+
+            if (methodInfo.GetBaseDefinition().DeclaringType.IsAssignableFrom(TypeHelper.ApiControllerType))
+            {
+                // is a method on Object, IHttpController, ApiController
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Replace the private method from ApiControllerActionSelector.
+        /// 
+        /// The IActionMethodSelector interface used in the method is internal so we must make a copy. 
+        /// CacheAttrsIActionMethodSelector is also internal.
+        /// The default implementation of IActionMethodSelector finds methods marked with the NonActionAttribute, so the
+        /// code below is converted to directly filter out methods with that attribute.
+        /// </summary>
+        private static List<ReflectedHttpActionDescriptor> RunSelectionFilters(
+            HttpControllerContext controllerContext,
+            IEnumerable<HttpActionDescriptor> descriptorsFound)
+        {
+            // remove all methods which are opting out of this request
+            // to opt out, at least one attribute defined on the method must return false
+
+            List<ReflectedHttpActionDescriptor> matchesWithSelectionAttributes = null;
+            List<ReflectedHttpActionDescriptor> matchesWithoutSelectionAttributes = new List<ReflectedHttpActionDescriptor>();
+
+            foreach (ReflectedHttpActionDescriptor actionDescriptor in descriptorsFound)
+            {
+                var attrs = actionDescriptor.GetCustomAttributes<NonActionAttribute>().ToArray();
+
+                if (attrs.Length == 0)
+                {
+                    matchesWithoutSelectionAttributes.Add(actionDescriptor);
+                }
+                else
+                {
+                    // The following code will never run (it's always false)
+                    System.Diagnostics.Debug.Assert(false, "This control flow is not expected to be accessed");
+                }
+            }
+
+            // if a matching action method had a selection attribute, consider it more specific than a matching action method
+            // without a selection attribute
+            if ((matchesWithSelectionAttributes != null) && (matchesWithSelectionAttributes.Count > 0))
+            {
+                return matchesWithSelectionAttributes;
+            }
+            else
+            {
+                return matchesWithoutSelectionAttributes;
+            }
+        }
+
+        /// <summary>
         /// This is a copy of the private ApiControllerActionSelector.FindActionsForVerb. It doesn't use the cache
         /// but copies the contents of the FindActionsForVerbWorker method.
         /// </summary>
@@ -174,7 +234,7 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
 
                 if (actionsFound.Count() > 1)
                 {
-                    // select the results that match the most number of required parameters 
+                    // select the results that match the most number of required parameters
                     actionsFound = actionsFound
                         .GroupBy(descriptor => _actionParameterNames[descriptor].Length)
                         .OrderByDescending(g => g.Key)
@@ -190,85 +250,31 @@ namespace Ren.CMS.Areas.RouteDebugger.Components
             return actionsFound;
         }
 
-        /// <summary>
-        /// This is an exact copy from ApiControllerActionSelector.
-        /// </summary>
-        private static bool IsValidActionMethod(MethodInfo methodInfo)
+        private void Initialize(HttpControllerDescriptor controllerDesc)
         {
-            if (methodInfo.IsSpecialName)
+            MethodInfo[] allMethods = controllerDesc.ControllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo[] validMethods = Array.FindAll(allMethods, IsValidActionMethod);
+
+            _actionDescriptors = new ReflectedHttpActionDescriptor[validMethods.Length];
+            for (int i = 0; i < validMethods.Length; i++)
             {
-                // not a normal method, e.g. a constructor or an event
-                return false;
+                MethodInfo method = validMethods[i];
+                ReflectedHttpActionDescriptor actionDescriptor = new ReflectedHttpActionDescriptor(controllerDesc, method);
+                _actionDescriptors[i] = actionDescriptor;
+                HttpActionBinding actionBinding = actionDescriptor.ActionBinding;
+
+                // Building an action parameter name mapping to compare against the URI parameters coming from the request.
+                // Here we only take into account required parameters that are simple types and come from the URI.
+                _actionParameterNames.Add(
+                    actionDescriptor,
+                    actionBinding.ParameterBindings
+                        .Where(binding => !binding.Descriptor.IsOptional && TypeHelper.IsSimpleUnderlyingType(binding.Descriptor.ParameterType) && binding.WillReadUri())
+                        .Select(binding => binding.Descriptor.Prefix ?? binding.Descriptor.ParameterName).ToArray());
             }
 
-            if (methodInfo.GetBaseDefinition().DeclaringType.IsAssignableFrom(TypeHelper.ApiControllerType))
-            {
-                // is a method on Object, IHttpController, ApiController
-                return false;
-            }
-
-            return true;
+            _actionNameMapping = _actionDescriptors.ToLookup(actionDesc => actionDesc.ActionName, StringComparer.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        /// This is an exact copy from ApiControllerActionSelector.
-        /// </summary>
-        private static bool IsSubset(string[] actionParameters, HashSet<string> routeAndQueryParameters)
-        {
-            foreach (string actionParameter in actionParameters)
-            {
-                if (!routeAndQueryParameters.Contains(actionParameter))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Replace the private method from ApiControllerActionSelector.
-        /// 
-        /// The IActionMethodSelector interface used in the method is internal so we must make a copy. 
-        /// CacheAttrsIActionMethodSelector is also internal.
-        /// The default implementation of IActionMethodSelector finds methods marked with the NonActionAttribute, so the
-        /// code below is converted to directly filter out methods with that attribute.
-        /// </summary>
-        private static List<ReflectedHttpActionDescriptor> RunSelectionFilters(
-            HttpControllerContext controllerContext,
-            IEnumerable<HttpActionDescriptor> descriptorsFound)
-        {
-            // remove all methods which are opting out of this request
-            // to opt out, at least one attribute defined on the method must return false
-
-            List<ReflectedHttpActionDescriptor> matchesWithSelectionAttributes = null;
-            List<ReflectedHttpActionDescriptor> matchesWithoutSelectionAttributes = new List<ReflectedHttpActionDescriptor>();
-
-            foreach (ReflectedHttpActionDescriptor actionDescriptor in descriptorsFound)
-            {
-                var attrs = actionDescriptor.GetCustomAttributes<NonActionAttribute>().ToArray();
-
-                if (attrs.Length == 0)
-                {
-                    matchesWithoutSelectionAttributes.Add(actionDescriptor);
-                }
-                else
-                {
-                    // The following code will never run (it's always false)
-                    System.Diagnostics.Debug.Assert(false, "This control flow is not expected to be accessed");
-                }
-            }
-
-            // if a matching action method had a selection attribute, consider it more specific than a matching action method
-            // without a selection attribute
-            if ((matchesWithSelectionAttributes != null) && (matchesWithSelectionAttributes.Count > 0))
-            {
-                return matchesWithSelectionAttributes;
-            }
-            else
-            {
-                return matchesWithoutSelectionAttributes;
-            }
-        }
+        #endregion Methods
     }
 }

@@ -1,10 +1,12 @@
-using System.Web.Http;
-using System.Web.Mvc;
-
 namespace Ren.CMS.Areas.RouteDebugger
 {
+    using System.Web.Http;
+    using System.Web.Mvc;
+
     public class RouteDebuggerAreaRegistration : AreaRegistration
     {
+        #region Properties
+
         public override string AreaName
         {
             get
@@ -12,6 +14,10 @@ namespace Ren.CMS.Areas.RouteDebugger
                 return "RouteDebugger";
             }
         }
+
+        #endregion Properties
+
+        #region Methods
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
@@ -24,5 +30,7 @@ namespace Ren.CMS.Areas.RouteDebugger
             // implementations.
             RouteDebuggerConfig.Register(GlobalConfiguration.Configuration);
         }
+
+        #endregion Methods
     }
 }

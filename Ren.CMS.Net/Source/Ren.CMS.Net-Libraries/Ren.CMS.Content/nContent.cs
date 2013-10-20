@@ -8,9 +8,9 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    using Ren.CMS.Persistence.Domain;
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
+    using Ren.CMS.Persistence.Domain;
 
     public class nContent
     {

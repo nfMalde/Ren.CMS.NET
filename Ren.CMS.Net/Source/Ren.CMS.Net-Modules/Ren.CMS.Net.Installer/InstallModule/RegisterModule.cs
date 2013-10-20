@@ -10,9 +10,8 @@
     using MvcContrib;
     using MvcContrib.PortableAreas;
 
-    using Ren.CMS.ViewEngine;
     using Ren.CMS.CORE.Helper.RoutingHelper;
-
+    using Ren.CMS.ViewEngine;
 
     public class InstallRegistration : PortableAreaRegistration
     {
@@ -51,7 +50,6 @@
             context.MapRenCMSRoute("Install1", "Installer/{action}",
                   new { controller = "Installer", action = "Start", id = "" },
                   thisNamespace);
-
 
             RegisterAreaEmbeddedResources();
         }

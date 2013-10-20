@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-
-namespace Ren.CMS.NET_InstallProxy
+﻿namespace Ren.CMS.NET_InstallProxy
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Http;
+
     public static class WebApiConfig
     {
+        #region Methods
+
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
@@ -15,5 +17,7 @@ namespace Ren.CMS.NET_InstallProxy
                 defaults: new { id = RouteParameter.Optional }
             );
         }
+
+        #endregion Methods
     }
 }

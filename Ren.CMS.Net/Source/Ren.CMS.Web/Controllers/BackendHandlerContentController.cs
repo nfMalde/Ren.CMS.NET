@@ -14,9 +14,6 @@
     using Ren.CMS.CORE.FileManagement;
     using Ren.CMS.CORE.Language;
     using Ren.CMS.CORE.Language.LanguageDefaults;
-    using Ren.CMS.Persistence.Base;
-    using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Repositories;
     using Ren.CMS.CORE.Permissions;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.CORE.SqlHelper;
@@ -24,7 +21,10 @@
     using Ren.CMS.Helpers;
     using Ren.CMS.Models.Backend.Content;
     using Ren.CMS.Models.Core;
+    using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Repositories;
     using Ren.Config.Helper;
 
     public class BackendHandlerContentController : Controller

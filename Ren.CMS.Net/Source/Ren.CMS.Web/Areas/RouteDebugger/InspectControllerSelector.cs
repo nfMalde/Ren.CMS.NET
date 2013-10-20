@@ -1,12 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
-using Ren.CMS.Areas.RouteDebugger.Models;
-
 namespace Ren.CMS.Areas.RouteDebugger
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Web.Http.Controllers;
+    using System.Web.Http.Dispatcher;
+
+    using Ren.CMS.Areas.RouteDebugger.Models;
+
     /// <summary>
     /// This class replaces the DefaultHttpControllerSelector (see RouteDebuggerConfig.cs).  
     /// It uses _innerSelector to call into DefaultHttpControllerSelector methods.
@@ -18,12 +19,22 @@ namespace Ren.CMS.Areas.RouteDebugger
     /// </summary>
     public class InspectControllerSelector : IHttpControllerSelector
     {
+        #region Fields
+
         private IHttpControllerSelector _innerSelector;
+
+        #endregion Fields
+
+        #region Constructors
 
         public InspectControllerSelector(IHttpControllerSelector innerSelector)
         {
             _innerSelector = innerSelector;
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         public IDictionary<string, HttpControllerDescriptor> GetControllerMapping()
         {
@@ -52,5 +63,7 @@ namespace Ren.CMS.Areas.RouteDebugger
 
             return controllerDescriptor;
         }
+
+        #endregion Methods
     }
 }

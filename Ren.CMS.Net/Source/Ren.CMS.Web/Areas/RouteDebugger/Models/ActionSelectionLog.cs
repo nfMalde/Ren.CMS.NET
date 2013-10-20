@@ -1,18 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http.Controllers;
-
 namespace Ren.CMS.Areas.RouteDebugger.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Web.Http.Controllers;
+
     /// <summary>
     /// Logs information collected when ActionSelectSimulator.Simulate is called. 
     /// ActionSelectSimulator.Simulate replaces DefaultActionSelector.
     /// </summary>
     public class ActionSelectionLog
     {
+        #region Fields
+
         private Dictionary<HttpActionDescriptor, ActionSelectionInfo> _actionDescriptors;
+
+        #endregion Fields
+
+        #region Constructors
 
         public ActionSelectionLog(IEnumerable<HttpActionDescriptor> actions)
         {
@@ -24,15 +30,54 @@ namespace Ren.CMS.Areas.RouteDebugger.Models
             }
         }
 
-        public string ActionName { get; set; }
+        #endregion Constructors
 
-        public HttpMethod HttpMethod { get; set; }
+        #region Properties
+
+        public string ActionName
+        {
+            get; set;
+        }
 
         public ActionSelectionInfo[] ActionSelections
         {
             get
             {
                 return _actionDescriptors.Values.ToArray();
+            }
+        }
+
+        public HttpMethod HttpMethod
+        {
+            get; set;
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Counterpart of function MarkSelected, instead of marking selected action
+        /// this method mark unselected action.
+        /// </summary>
+        /// <param name="actions">the actions NOT to be marked</param>
+        /// <param name="marking">the functor picking the bool property of an action to be set to true.</param>
+        internal void MarkOthersSelected(IEnumerable<HttpActionDescriptor> actions, Action<ActionSelectionInfo> marking)
+        {
+            HashSet<HttpActionDescriptor> remaining = new HashSet<HttpActionDescriptor>(_actionDescriptors.Keys);
+
+            foreach (var each in actions)
+            {
+                remaining.Remove(each);
+            }
+
+            foreach (var each in remaining)
+            {
+                ActionSelectionInfo found;
+                if (_actionDescriptors.TryGetValue(each, out found))
+                {
+                    marking(found);
+                }
             }
         }
 
@@ -60,29 +105,6 @@ namespace Ren.CMS.Areas.RouteDebugger.Models
             }
         }
 
-        /// <summary>
-        /// Counterpart of function MarkSelected, instead of marking selected action
-        /// this method mark unselected action.
-        /// </summary>
-        /// <param name="actions">the actions NOT to be marked</param>
-        /// <param name="marking">the functor picking the bool property of an action to be set to true.</param>
-        internal void MarkOthersSelected(IEnumerable<HttpActionDescriptor> actions, Action<ActionSelectionInfo> marking)
-        {
-            HashSet<HttpActionDescriptor> remaining = new HashSet<HttpActionDescriptor>(_actionDescriptors.Keys);
-
-            foreach (var each in actions)
-            {
-                remaining.Remove(each);
-            }
-
-            foreach (var each in remaining)
-            {
-                ActionSelectionInfo found;
-                if (_actionDescriptors.TryGetValue(each, out found))
-                {
-                    marking(found);
-                }
-            }
-        }
+        #endregion Methods
     }
 }

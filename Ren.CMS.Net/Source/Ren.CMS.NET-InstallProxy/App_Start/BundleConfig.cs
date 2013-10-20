@@ -1,10 +1,12 @@
-﻿using System.Web;
-using System.Web.Optimization;
-
-namespace Ren.CMS.NET_InstallProxy
+﻿namespace Ren.CMS.NET_InstallProxy
 {
+    using System.Web;
+    using System.Web.Optimization;
+
     public class BundleConfig
     {
+        #region Methods
+
         // Weitere Informationen zu Bundling finden Sie unter "http://go.microsoft.com/fwlink/?LinkId=254725".
         public static void RegisterBundles(BundleCollection bundles)
         {
@@ -39,5 +41,7 @@ namespace Ren.CMS.NET_InstallProxy
                         "~/Content/themes/base/jquery.ui.progressbar.css",
                         "~/Content/themes/base/jquery.ui.theme.css"));
         }
+
+        #endregion Methods
     }
 }

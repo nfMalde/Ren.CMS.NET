@@ -1,12 +1,14 @@
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
-using System.Web.Optimization;
-
 namespace Ren.CMS.Areas.RouteDebugger
 {
+    using System.Web.Http;
+    using System.Web.Http.Controllers;
+    using System.Web.Http.Dispatcher;
+    using System.Web.Optimization;
+
     public static class RouteDebuggerConfig
     {
+        #region Methods
+
         public static void Register(HttpConfiguration config)
         {
             config.MessageHandlers.Add(new InspectHandler());
@@ -30,5 +32,7 @@ namespace Ren.CMS.Areas.RouteDebugger
                 "~/Scripts/knockout-{version}.js",
                 "~/Areas/RouteDebugger/Scripts/detect.js"));
         }
+
+        #endregion Methods
     }
 }

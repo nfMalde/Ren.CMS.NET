@@ -1,12 +1,13 @@
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http.Controllers;
-using Ren.CMS.Areas.RouteDebugger.Models;
-
 namespace Ren.CMS.Areas.RouteDebugger
 {
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web.Http.Controllers;
+
+    using Ren.CMS.Areas.RouteDebugger.Models;
+
     /// <summary>
     /// Hijacks the original invoker. It examines the header before 
     /// executing the action. If the inspect header exists, returns the inspection data in a 200 response.
@@ -17,12 +18,22 @@ namespace Ren.CMS.Areas.RouteDebugger
     /// </summary>
     public class InspectActionInvoker : IHttpActionInvoker
     {
+        #region Fields
+
         private IHttpActionInvoker _innerInvoker;
+
+        #endregion Fields
+
+        #region Constructors
 
         public InspectActionInvoker(IHttpActionInvoker innerInvoker)
         {
             _innerInvoker = innerInvoker;
         }
+
+        #endregion Constructors
+
+        #region Methods
 
         public Task<HttpResponseMessage> InvokeActionAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
         {
@@ -38,5 +49,7 @@ namespace Ren.CMS.Areas.RouteDebugger
                 return _innerInvoker.InvokeActionAsync(actionContext, cancellationToken);
             }
         }
+
+        #endregion Methods
     }
 }

@@ -1,13 +1,15 @@
-using System;
-using System.Web.Http.Controllers;
-
 namespace Ren.CMS.Areas.RouteDebugger.Models
 {
+    using System;
+    using System.Web.Http.Controllers;
+
     /// <summary>
     /// Represents the parameters.
     /// </summary>
     public class HttpParameterDescriptorInfo
     {
+        #region Constructors
+
         public HttpParameterDescriptorInfo(HttpParameterDescriptor descriptor)
         {
             ParameterName = descriptor.ParameterName;
@@ -15,10 +17,25 @@ namespace Ren.CMS.Areas.RouteDebugger.Models
             ParameterTypeName = descriptor.ParameterType.Name;
         }
 
-        public string ParameterName { get; set; }
+        #endregion Constructors
 
-        public Type ParameterType { get; set; }
+        #region Properties
 
-        public string ParameterTypeName { get; set; }
+        public string ParameterName
+        {
+            get; set;
+        }
+
+        public Type ParameterType
+        {
+            get; set;
+        }
+
+        public string ParameterTypeName
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }

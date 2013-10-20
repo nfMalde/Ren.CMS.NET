@@ -1,10 +1,12 @@
-using System.Net;
-using System.Net.Http;
-
 namespace Ren.CMS.Areas.RouteDebugger.Models
 {
+    using System.Net;
+    using System.Net.Http;
+
     public class InspectData
     {
+        #region Constructors
+
         public InspectData(HttpRequestMessage request)
         {
             if (request.Properties.ContainsKey(RequestHelper.ActionCache))
@@ -33,16 +35,40 @@ namespace Ren.CMS.Areas.RouteDebugger.Models
             }
         }
 
-        public ActionSelectionLog Action { get; set; }
+        #endregion Constructors
 
-        public ControllerSelectionInfo[] Controller { get; set; }
+        #region Properties
 
-        public RouteInfo[] Routes { get; set; }
+        public ActionSelectionLog Action
+        {
+            get; set;
+        }
 
-        public RouteDataInfo RouteData { get; set; }
+        public ControllerSelectionInfo[] Controller
+        {
+            get; set;
+        }
 
-        public HttpStatusCode RealHttpStatus { get; set; }
+        public HttpStatusCode RealHttpStatus
+        {
+            get; set;
+        }
 
-        public string SelectedController { get; set; }
+        public RouteDataInfo RouteData
+        {
+            get; set;
+        }
+
+        public RouteInfo[] Routes
+        {
+            get; set;
+        }
+
+        public string SelectedController
+        {
+            get; set;
+        }
+
+        #endregion Properties
     }
 }
