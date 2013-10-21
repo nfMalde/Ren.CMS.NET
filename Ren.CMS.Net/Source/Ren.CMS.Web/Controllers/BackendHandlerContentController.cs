@@ -257,34 +257,40 @@
 
         [HttpPost]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_CREATE_CONTENT")]
-        public JsonResult AddContent(Models.Core.nContentPostModel MDL, nContentTextBinder Binder)
+        public JsonResult Content(nContentPostModel MDL )
         {
-            MDL.Texts = Binder.Bind();
 
-            Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
+            return Json(new
+            {
+                success = false,
+                message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID.ReturnLangLine(),
 
-            if (!Cval.isValidPostModelForInsert(MDL))
+            });
 
-                return Json(new
-                {
-                    success = false,
-                    message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID,
-                    modelStateKeys = ModelState.ToDictionary(e => e.Key),
-                    modelStateValues = ModelState.ToDictionary(e => e.Value)
-                });
+            //Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
-            MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.UrlDecode(e.LongText));
-            var Props = MDL.GetType().GetProperties().Where(e => e.PropertyType == typeof(string));
-            foreach (var prop in Props)
-                prop.SetValue(MDL, HttpUtility.UrlDecode((prop.GetValue(MDL) ?? String.Empty).ToString()));
+            //if (!Cval.isValidPostModelForInsert(MDL))
 
-            Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
-            Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
-            CtM.InsertContent(ContentModel);
-            if (MDL.Tags != null)
-                CtM.bindTagsToContent(MDL.ID, MDL.Tags);
+            //    return Json(new
+            //    {
+            //        success = false,
+            //        message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID,
+            //        modelStateKeys = ModelState.ToDictionary(e => e.Key),
+            //        modelStateValues = ModelState.ToDictionary(e => e.Value)
+            //    });
 
-            return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
+            //MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.UrlDecode(e.LongText));
+            //var Props = MDL.GetType().GetProperties().Where(e => e.PropertyType == typeof(string));
+            //foreach (var prop in Props)
+            //    prop.SetValue(MDL, HttpUtility.UrlDecode((prop.GetValue(MDL) ?? String.Empty).ToString()));
+
+            //Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
+            //Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
+            //CtM.InsertContent(ContentModel);
+            //if (MDL.Tags != null)
+            //    CtM.bindTagsToContent(MDL.ID, MDL.Tags);
+
+            //return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
         }
 
         //

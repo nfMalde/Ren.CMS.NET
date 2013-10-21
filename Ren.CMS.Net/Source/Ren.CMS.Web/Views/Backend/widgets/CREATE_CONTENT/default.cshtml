@@ -218,7 +218,7 @@
 
             {
                 backendHandler : "Content",
-                backendAction : "AddContent",
+                backendAction : "Content",
                 language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
                 beforeSubmit: function (formdata) {
 
@@ -248,7 +248,7 @@
 
 
  
- @using(Html.BeginForm(actionName: "AddContent" ,controllerName: "/"+ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content", method: FormMethod.Post , htmlAttributes: new { id = Html.ProtectID("edit_content_form") })){
+ @using(Html.BeginForm(actionName: "Content" ,controllerName: "/"+ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content", method: FormMethod.Post , htmlAttributes: new { id = Html.ProtectID("edit_content_form") })){
      
          @Html.HiddenFor(m => m.ID)
     @Html.HiddenFor(m => m.CreatorPKID)

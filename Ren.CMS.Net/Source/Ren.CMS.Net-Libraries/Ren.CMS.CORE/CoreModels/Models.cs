@@ -254,6 +254,7 @@
             get; set;
         }
 
+        [Required]
         public IEnumerable<nContentPostModelText> Texts
         {
             get; set;
