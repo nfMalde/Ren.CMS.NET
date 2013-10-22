@@ -14,8 +14,8 @@
 
     using Ren.CMS.Persistence;
     using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Mapping;
     using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Mapping;
 
     public class ContentRepository : Base.BaseRepository<TContent>
     {

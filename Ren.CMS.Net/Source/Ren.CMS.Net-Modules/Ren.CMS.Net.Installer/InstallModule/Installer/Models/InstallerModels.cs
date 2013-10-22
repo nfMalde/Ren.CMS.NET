@@ -1,46 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using System.Xml;
-using Ren.CMS.Persistence;
-using NHibernate.Tool.hbm2ddl;
-
-
-
-namespace InstallModule.Installer.Models
+﻿namespace InstallModule.Installer.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Web;
+    using System.Xml;
+
+    using NHibernate.Tool.hbm2ddl;
+
+    using Ren.CMS.Persistence;
+
+    #region Enumerations
+
     public enum ReleaseStages
-    { 
-        
+    {
         alpha1,
         alpha2,
         beta,
         rc1
         , rc2
         , stable
-    
-    
-    
+    }
+
+    #endregion Enumerations
+
+    public class DatabaseMSIPackage
+    {
+        #region Properties
+
+        public Version DBVersion
+        {
+            get {
+                return
+                    new Version("0.0.1.0");
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        public void SetupTables()
+        {
+            var config = NHibernateHelper.GetConfiguration();
+
+            new SchemaExport(config).Execute(true, true, false);
+        }
+
+        public void UpdateTables()
+        {
+            throw new NotImplementedException("Update at the moment not possible! Please select fresh install!");
+        }
+
+        #endregion Methods
     }
 
     public class InstallerConfig
     {
-        private decimal _version = new Decimal(0.00);
-
-        private decimal _dbversion = new Decimal(0.00);
-
-        private decimal _dbversionInstalled = new Decimal(0.00);
-
-        private Dictionary<string, Dictionary<string, Dictionary<string, string>>> _languageContents = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+        #region Fields
 
         private LanguageMSIPackage MSILanguage = new LanguageMSIPackage();
+        private decimal _dbversion = new Decimal(0.00);
+        private decimal _dbversionInstalled = new Decimal(0.00);
+        private Dictionary<string, Dictionary<string, Dictionary<string, string>>> _languageContents = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+        private decimal _version = new Decimal(0.00);
+
+        #endregion Fields
+
+        #region Constructors
 
         public InstallerConfig()
-        { 
-            
+        {
             //Get CMS Version
             Assembly CMSDLL = Assembly.LoadFile(HttpContext.Current.Server.MapPath("~/Bin/Ren.CMS.dll"));
 
@@ -53,13 +85,11 @@ namespace InstallModule.Installer.Models
              this._dbversion =
 
                  Decimal.Parse(dbx.Major + "." + dbx.Minor + "" + dbx.Revision + "" + dbx.Build);
-            
-
-
-        
-        
         }
 
+        #endregion Constructors
+
+        #region Methods
 
         public void SetLanguageMSIPackage(string name)
         {
@@ -69,25 +99,24 @@ namespace InstallModule.Installer.Models
             if (_languageContents.Count > 0)
                 _languageContents = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
 
-
             //TODO Build Array
-
-
-
-
-        
-        
         }
+
+        #endregion Methods
     }
 
     public class LanguageMSIPackage
     {
+        #region Fields
 
         private Dictionary<string, XmlDocument> _xmlFiles = new Dictionary<string, XmlDocument>();
 
+        #endregion Fields
+
+        #region Constructors
+
         public LanguageMSIPackage()
         {
-
             string DIR = "~/LanguagePackagesInstall";
             DIR = HttpContext.Current.Server.MapPath(DIR);
 
@@ -104,55 +133,20 @@ namespace InstallModule.Installer.Models
 
                  _xmlFiles.Add(Path.GetFileNameWithoutExtension(f), X);
             }
-        
         }
 
+        #endregion Constructors
 
-        public Dictionary<string, XmlDocument> Files {
+        #region Properties
 
+        public Dictionary<string, XmlDocument> Files
+        {
             get
             {
                 return _xmlFiles;
             }
-        
-        }
-    
-    
-    }
-
-    public class DatabaseMSIPackage
-    {
-
-        public Version DBVersion { 
-            get {
-                return 
-                    new Version("0.0.1.0"); 
-            }
         }
 
-
-        public void SetupTables()
-        {
-            var config = NHibernateHelper.GetConfiguration();
-
-
-            new SchemaExport(config).Execute(true, true, false);
-          
-        
-        }
-
-
-       
-
-
-        public void UpdateTables()
-        {
-
-            throw new NotImplementedException("Update at the moment not possible! Please select fresh install!");
-        
-        }
-
-    
-    
+        #endregion Properties
     }
 }

@@ -14,6 +14,8 @@ namespace Ren.CMS
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
     using Ren.CMS.ViewEngine;
+    using Ren.CMS.Models.Core;
+    using Ren.CMS.CORE.ModelBinders;
 
     // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7
     // finden Sie unter "http://go.microsoft.com/?LinkId=9394801".
@@ -108,8 +110,8 @@ namespace Ren.CMS
             new { controller = "BackendHandlerContent", action = "ValidateSEOTitle" });
 
             routes.MapRenCMSRoute("Backend_Content_AddContent",
-              "BackendHandler/Content/AddContent/{id}",
-              new { controller = "BackendHandlerContent", action = "AddContent", id = "" });
+              "BackendHandler/Content/Content/{id}",
+              new { controller = "BackendHandlerContent", action = "Content", id = "" });
 
             routes.MapRenCMSRoute("Backend_Content_RemoveCat",
                 "BackendHandler/Content/RemoveCat",
@@ -223,7 +225,7 @@ namespace Ren.CMS
 
         protected void Application_BeginRequest(object sender, EventArgs ex)
         {
-            string type = Request.RequestType;
+            /*string type = Request.RequestType;
             string[] ignore = { "post", "httppost" };
 
             if (!ignore.Any(e => e == type.ToLower()) && !PathIsIgnored())
@@ -257,6 +259,7 @@ namespace Ren.CMS
                     }
 
             }
+             */
         }
 
         protected void Application_Start()
@@ -268,6 +271,8 @@ namespace Ren.CMS
             RegisterGlobalFilters(GlobalFilters.Filters);
             MvcContrib.UI.InputBuilder.InputBuilder.BootStrap();
             RegisterRoutes(RouteTable.Routes);
+
+            ModelBinders.Binders.Add(typeof(nContentPostModel), new nContentPostMdlBinder());
         }
 
         private string GetFullUrl(string ISO)
@@ -312,7 +317,7 @@ namespace Ren.CMS
 
             BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
             string code = (Request.UserLanguages ?? Enumerable.Empty<string>()).FirstOrDefault();
-            if (code == "de")
+            if (code.ToLower().StartsWith("de-") || code.ToLower() == "de")
                 code = "de-DE";
             var c = Repo.GetOne(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == code));
             if (c != null)

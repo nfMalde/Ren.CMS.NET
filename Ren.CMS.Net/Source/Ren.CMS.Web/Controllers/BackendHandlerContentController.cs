@@ -14,9 +14,6 @@
     using Ren.CMS.CORE.FileManagement;
     using Ren.CMS.CORE.Language;
     using Ren.CMS.CORE.Language.LanguageDefaults;
-    using Ren.CMS.Persistence.Base;
-    using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Repositories;
     using Ren.CMS.CORE.Permissions;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.CORE.SqlHelper;
@@ -24,7 +21,10 @@
     using Ren.CMS.Helpers;
     using Ren.CMS.Models.Backend.Content;
     using Ren.CMS.Models.Core;
+    using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Repositories;
     using Ren.Config.Helper;
 
     public class BackendHandlerContentController : Controller
@@ -257,37 +257,40 @@
 
         [HttpPost]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_CREATE_CONTENT")]
-        public ActionResult AddContent(string id, Models.Core.nContentPostModel MDL)
+        public JsonResult Content(nContentPostModel MDL )
         {
-            MDL.ContentType = id;
-            Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
-            if (!Cval.isValidPostModelForInsert(MDL)) return this.Content("Not Valid");
-
-            if (!nPermissions.hasPermission("USR_CAN_ENTER_BACKEND")) return this.Content("NO PERMISSION");
-
-            MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.HtmlDecode(e.LongText));
-
-            Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
-            Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
-
-            bool ins = CtM.InsertContent(ContentModel);
-
-            if (MDL.Tags != null)
+            return Json(new
             {
+                success = false,
+                message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID.ReturnLangLine(),
 
-                SqlHelper SQL = new SqlHelper();
+            });
 
-                SQL.SysConnect();
+            //Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
-                int lastID = SQL.getLastId(new ThisApplication().getSqlPrefix + "Content");
+            //if (!Cval.isValidPostModelForInsert(MDL))
 
-                CtM.bindTagsToContent(lastID, MDL.Tags);
+            //    return Json(new
+            //    {
+            //        success = false,
+            //        message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID,
+            //        modelStateKeys = ModelState.ToDictionary(e => e.Key),
+            //        modelStateValues = ModelState.ToDictionary(e => e.Value)
+            //    });
 
-            }
+            //MDL.Texts.ToList().ForEach(e => e.LongText = HttpUtility.UrlDecode(e.LongText));
+            //var Props = MDL.GetType().GetProperties().Where(e => e.PropertyType == typeof(string));
+            //foreach (var prop in Props)
+            //    prop.SetValue(MDL, HttpUtility.UrlDecode((prop.GetValue(MDL) ?? String.Empty).ToString()));
 
-            if (ins) return this.Content("<b>Inhalt erfolgreich erstellt</b>");
-            else return this.Content("<b>Unbekannter Fehler beim Erstellen des Inhaltes</b>");
+            //Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
+            //Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
+            //CtM.InsertContent(ContentModel);
+            //if (MDL.Tags != null)
+            //    CtM.bindTagsToContent(MDL.ID, MDL.Tags);
+
+            //return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
         }
 
         //

@@ -117,8 +117,6 @@
             //Diese Base Funktion ist zum aktualisieren von Einträgen.
         }
 
- 
-
         #endregion Methods
     }
 }

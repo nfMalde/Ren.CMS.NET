@@ -18,11 +18,11 @@
 
     using Ren.CMS.Content;
     using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.CORE.Settings;
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
     using Ren.CMS.Persistence.Mapping;
     using Ren.CMS.Persistence.Repositories;
-    using Ren.CMS.CORE.Settings;
     using Ren.Config.Helper;
 
     using ThumpnailModule.Thumpnail.Domain;

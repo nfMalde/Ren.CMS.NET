@@ -24,7 +24,7 @@
         private static List<Type> mappingHolder = new List<Type>();
         private static ISession _currentSession = null;
         private static ISessionFactory _sessionFactory;
-   
+
         #endregion Fields
 
         #region Properties
@@ -80,21 +80,17 @@
 
         #region Methods
 
+        public static Configuration GetConfiguration()
+        {
+            return configuration;
+        }
+
         public static ISession OpenSession()
         {
             if(_currentSession == null || (!_currentSession.IsConnected || !_currentSession.IsOpen))
             _currentSession = SessionFactory.OpenSession();
 
             return SessionFactory.OpenSession();
-        }
-
-        public static Configuration GetConfiguration()
-        {
-
-
-            return configuration;
-        
-        
         }
 
         private static void ConfigureAssemblies()

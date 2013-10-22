@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Web.Http.WebHost</name>
+  </assembly>
+  <members>
+    <member name="T:System.Web.Http.GlobalConfiguration">
+      <summary> Stellt eine globale <see cref="T:System.Web.Http.HttpConfiguration" /> für ASP.NET-Anwendungen zur Verfügung. </summary>
+    </member>
+    <member name="P:System.Web.Http.GlobalConfiguration.Configuration"></member>
+    <member name="P:System.Web.Http.GlobalConfiguration.DefaultHandler">
+      <summary> Ruft den Standardnachrichtenhandler ab, der für alle Anforderungen aufgerufen wird. </summary>
+    </member>
+    <member name="T:System.Web.Http.RouteCollectionExtensions">
+      <summary> Erweiterungsmethoden für <see cref="T:System.Web.Routing.RouteCollection" />.</summary>
+    </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String)">
+      <summary>Ordnet die angegebene Routenvorlage zu.</summary>
+      <returns>Ein Verweis auf die zugeordnete Route.</returns>
+      <param name="routes">Eine Auflistung der Routen für die Anwendung.</param>
+      <param name="name">Der Name der zuzuordnenden Route.</param>
+      <param name="routeTemplate">Die Routenvorlage für die Route.</param>
+    </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object)">
+      <summary>Ordnet die angegebene Routenvorlage zu und legt die Standardroute fest.</summary>
+      <returns>Ein Verweis auf die zugeordnete Route.</returns>
+      <param name="routes">Eine Auflistung der Routen für die Anwendung.</param>
+      <param name="name">Der Name der zuzuordnenden Route.</param>
+      <param name="routeTemplate">Die Routenvorlage für die Route.</param>
+      <param name="defaults">Ein Objekt, das Standardroutenwerte enthält.</param>
+    </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object,System.Object)">
+      <summary>Ordnet die angegebene Routenvorlage zu und legt Standardroutenwerte und -einschränkungen fest.</summary>
+      <returns>Ein Verweis auf die zugeordnete Route.</returns>
+      <param name="routes">Eine Auflistung der Routen für die Anwendung.</param>
+      <param name="name">Der Name der zuzuordnenden Route.</param>
+      <param name="routeTemplate">Die Routenvorlage für die Route.</param>
+      <param name="defaults">Ein Objekt, das Standardroutenwerte enthält.</param>
+      <param name="constraints">Ein Satz von Ausdrücken, die Werte für routeTemplate angeben.</param>
+    </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object,System.Object,System.Net.Http.HttpMessageHandler)">
+      <summary>Ordnet die angegebene Routenvorlage zu und legt Routenstandardwerte, Einschränkungen sowie den Endpunktnachrichtenhandler fest.</summary>
+      <returns>Ein Verweis auf die zugeordnete Route.</returns>
+      <param name="routes">Eine Auflistung der Routen für die Anwendung.</param>
+      <param name="name">Der Name der zuzuordnenden Route.</param>
+      <param name="routeTemplate">Die Routenvorlage für die Route.</param>
+      <param name="defaults">Ein Objekt, das Standardroutenwerte enthält.</param>
+      <param name="constraints">Ein Satz von Ausdrücken, die Werte für routeTemplate angeben.</param>
+      <param name="handler">Der Handler, an den die Anforderung verteilt wird.</param>
+    </member>
+    <member name="T:System.Web.Http.WebHost.HttpControllerHandler">
+      <summary> Ein <see cref="T:System.Web.IHttpAsyncHandler" />, der ASP.NET-Anforderungen in die <see cref="T:System.Web.Http.HttpServer" />-Pipeline übergibt und das Ergebnis zurückschreibt. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.#ctor(System.Web.Routing.RouteData)">
+      <summary> Initialisiert eine neue Instanz der <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" />-Klasse. </summary>
+      <param name="routeData">Die Routendaten.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.BeginProcessRequest(System.Web.HttpContextBase,System.AsyncCallback,System.Object)">
+      <summary> Beginnt die Prozessanforderung. </summary>
+      <returns>Ein <see cref="T:System.IAsyncResult" />, das Informationen zum Status des Prozesses enthält. </returns>
+      <param name="httpContextBase">Dir HTTP-Kontextbasis.</param>
+      <param name="callback">Der Rückruf.</param>
+      <param name="state">Der Zustand.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.EndProcessRequest(System.IAsyncResult)">
+      <summary> Stellt eine asynchrone "End"-Methode bereit, wenn der Prozess endet. </summary>
+      <param name="result">Ein <see cref="T:System.IAsyncResult" />, das Informationen zum Status des Prozesses enthält.</param>
+    </member>
+    <member name="P:System.Web.Http.WebHost.HttpControllerHandler.IsReusable">
+      <summary> Ruft einen Wert ab, der angibt, ob die <see cref="T:System.Web.IHttpHandler" />-Instanz von einer anderen Anforderung verwendet werden kann. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.ProcessRequest(System.Web.HttpContextBase)">
+      <summary> Verarbeitet die Anforderung. </summary>
+      <param name="httpContextBase">Dir HTTP-Kontextbasis.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpAsyncHandler#BeginProcessRequest(System.Web.HttpContext,System.AsyncCallback,System.Object)">
+      <summary> Beginnt die Verarbeitung der Anforderung. </summary>
+      <returns>Ein <see cref="T:System.IAsyncResult" />, das Informationen zum Status des Prozesses enthält. </returns>
+      <param name="httpContext">Der HTTP-Kontext.</param>
+      <param name="callback">Der Rückruf.</param>
+      <param name="state">Der Zustand.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpAsyncHandler#EndProcessRequest(System.IAsyncResult)">
+      <summary> Stellt eine asynchrone "End"-Methode bereit, wenn der Prozess endet. </summary>
+      <param name="result">Ein <see cref="T:System.IAsyncResult" />, das Informationen zum Status des Prozesses enthält.</param>
+    </member>
+    <member name="P:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpHandler#IsReusable">
+      <summary> Ruft einen Wert ab, der angibt, ob die <see cref="T:System.Web.IHttpHandler" />-Instanz von einer anderen Anforderung verwendet werden kann. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpHandler#ProcessRequest(System.Web.HttpContext)">
+      <summary> Verarbeitet die Anforderung. </summary>
+      <param name="httpContext">Dir HTTP-Kontextbasis.</param>
+    </member>
+    <member name="T:System.Web.Http.WebHost.HttpControllerRouteHandler">
+      <summary> Ein <see cref="T:System.Web.Routing.IRouteHandler" />, der Instanzen von <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" /> zurückgibt, die Anforderungen an eine angegebene <see cref="T:System.Web.Http.HttpServer" />-Instanz übergeben können. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerRouteHandler.#ctor">
+      <summary> Initialisiert eine neue Instanz der <see cref="T:System.Web.Http.WebHost.HttpControllerRouteHandler" />-Klasse. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerRouteHandler.GetHttpHandler(System.Web.Routing.RequestContext)">
+      <summary> Stellt das Objekt bereit, das die Anforderung verarbeitet. </summary>
+      <returns> Ein Objekt, das die Anforderung verarbeitet. </returns>
+      <param name="requestContext">Ein Objekt, das Informationen zur Anforderung kapselt.</param>
+    </member>
+    <member name="P:System.Web.Http.WebHost.HttpControllerRouteHandler.Instance">
+      <summary> Ruft die <see cref="T:System.Web.Http.WebHost.HttpControllerRouteHandler" />-Singleton-Instanz ab. </summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.HttpControllerRouteHandler.System#Web#Routing#IRouteHandler#GetHttpHandler(System.Web.Routing.RequestContext)">
+      <summary> Stellt das Objekt bereit, das die Anforderung verarbeitet. </summary>
+      <returns> Ein Objekt, das die Anforderung verarbeitet. </returns>
+      <param name="requestContext">Ein Objekt, das Informationen zur Anforderung kapselt.</param>
+    </member>
+    <member name="T:System.Web.Http.WebHost.PreApplicationStartCode">
+      <summary>Stellt einen Registrierungspunkt für Code vor dem Anwendungsstart für einfache Mitgliedschaft zur Verfügung.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.PreApplicationStartCode.Start">
+      <summary>Registriert den Code vor dem Anwendungsstart für einfache Mitgliedschaft.</summary>
+    </member>
+    <member name="T:System.Web.Http.WebHost.WebHostBufferPolicySelector">
+      <summary>Stellt die Webhostpuffer-Richtlinienauswahl dar.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.#ctor">
+      <summary>Initialisiert eine neue Instanz der <see cref="T:System.Web.Http.WebHost.WebHostBufferPolicySelector" />-Klasse.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.UseBufferedInputStream(System.Object)">
+      <summary>Ruft einen Wert ab, der angibt, ob der Host den Entitätsnachrichtentext der HTTP-Anforderung puffern sollte.</summary>
+      <returns>true, wenn Pufferung verwendet werden soll, andernfalls sollte eine gestreamte Anforderung verwendet werden.</returns>
+      <param name="hostContext">Der Hostkontext.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.UseBufferedOutputStream(System.Net.Http.HttpResponseMessage)">
+      <summary>Verwendet einen gepufferten Ausgabedatenstrom für den Webhost.</summary>
+      <returns>Ein gepufferter Ausgabedatenstrom.</returns>
+      <param name="response">Die Antwort.</param>
+    </member>
+  </members>
+</doc>
