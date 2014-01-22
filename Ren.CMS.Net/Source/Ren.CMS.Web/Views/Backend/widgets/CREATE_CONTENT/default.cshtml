@@ -10,6 +10,7 @@
     var langcodes = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode>().GetMany().ToList();
     ViewData["LangCodes"] = langcodes;
     Model.Texts = new List<Ren.CMS.Models.Core.nContentPostModelText>();
+    Model.CreationDate = DateTime.Now;
     var list = Model.Texts.ToList();
     foreach(var code in langcodes)
     {
@@ -212,24 +213,40 @@
             e.preventDefault();
             $(this).tab('show');
         })
+        var contentForm = "#@Html.ProtectID("edit_content_form")";
 
 
-        new backenForm('#@Html.ProtectID("edit_content_form")',
+
+ 
+    
+     
+
+
+        new backenForm(contentForm,
 
             {
                 backendHandler : "Content",
                 backendAction : "Content",
                 language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
                 beforeSubmit: function (formdata) {
+                    //TinyMCEEditors
+                    $(contentForm).find("textarea.rentinyMCE").each(function () {
+                       var ed =  tinymce.get($(this).attr("id"));
+                       var c = ed.getContent();
+                       $(this).val(c);
+                       alert(c);
+                    });
 
+                   
                     formdata.each(function () {
+
                         //Encode Entitys
                         var newV = decodeEntities($(this).val());
 
-                        
+
                         $(this).val(encodeURI(newV));
 
-                    })
+                    });
 
                 }
             

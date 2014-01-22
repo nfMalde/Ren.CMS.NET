@@ -52,7 +52,7 @@ function decodeEntities(input) {
 
        });
 
-       function systemMessage(title, message, type)
+       function systemMessage(title, message, type, errors)
        {
            var $sys = $('#systemmessage');
            var $systitle = $sys.find(".modal-title");
@@ -112,6 +112,14 @@ function decodeEntities(input) {
 
            $systitle.text(title);
            $syscontainer.html("<p></p>").text(message);
+           var li = $syscontainer.html("<ul></ul>");
+           if (errors) {
+               li.addClass("text-danger");
+               for (var i = 0; i < errors.length; i++)
+                   li.append("<li></li>").text(errors[i].Value);
+
+
+           }
 
 
 
@@ -148,6 +156,7 @@ function decodeEntities(input) {
                    }
                    
                    var eform = $(e);
+
                    var url = "";
                
 
@@ -166,10 +175,49 @@ function decodeEntities(input) {
 
                        url = window.base_url + backendLanguage +"/BackendHandler/" + backendHandler + "/" + backendAction;
                    }
-                   alert(url);
+                
                    eform.attr("action", url);
                    eform.attr("method", "post");
                    eform.attr("data-generated", "backenhandlerAttached");
+                   eform.find(":input").each(function () {
+
+                       if ($(this).attr("type") && $(this).attr("type").toString().toLowerCase() == "checkbox")
+                       {
+
+                           if ($(this).next().attr("type") &&
+                               $(this).next().attr("type").toString().toLowerCase() == "hidden"
+                               && $(this).next().attr("name") && $(this).next().attr("name") == $(this).attr("name")) {
+                               var n = $(this).next();
+
+                               if (!$(this).is(":checked")) {
+                                   $(n).removeAttr("disabled");
+
+                               }
+                               else {
+
+                                   $(n).attr("disabled", "disabled");
+                               }
+
+                               $(this).change(function () {
+
+                                   if (!$(this).is(":checked")) {
+                                       $(n).removeAttr("disabled");
+
+                                   }
+                                   else {
+
+                                       $(n).attr("disabled", "disabled");
+                                   }
+
+                               });
+
+                           }
+
+
+                       }
+
+                   });
+
 
                    eform.submit(function (e) {
                        e.preventDefault();
@@ -184,6 +232,40 @@ function decodeEntities(input) {
                        });
 
                        var pd = $(this).find(":input");
+                       var filteredInputs = new Array();
+                       var form = this;
+                     /*
+                       pd = pd.filter(function (i) {
+
+                           if ($(this).attr("type") && $(this).attr("type").toString().toLowerCase() == "hidden") {
+
+                               var c = $(form).find(":input[type='checkbox'][name='" + $(this).attr("name") + "']");
+                               var check = null;
+                               for (var x = 0; x < c.length; x++)
+                               {
+                                   if ($(c[x]).next() == $(this))
+                                       check = $(c[x]);
+
+
+                               }
+
+                               if (check != null) {
+
+                                   if ($(check).is(":checked") == true) {
+                                       return false;
+                                   }
+
+                               }
+
+                           }
+
+                           return true;
+
+                       });
+
+                       */
+                       //MVC adds hiddenfields to checkboxes we have to remove if checked....
+
 
                        if (options.beforeSubmit && typeof options.beforeSubmit == 'function')
                        {
@@ -222,6 +304,17 @@ function decodeEntities(input) {
 
                                }
                            }
+                           var addErrors = function DisplayErrors(errors) {
+                               for (var i = 0; i < errors.length; i++) {
+                                   $("<label for='" + errors[i].Key + "' class='error'></label>")
+                                   .html(errors[i].Value[0]).appendTo($(eform).find("input#" + errors[i].Key).parent());
+                               }
+                           };
+
+                           if (d.errors && d.success == false)
+                               addErrors(d.errors);
+
+
 
                            var t = (d.success == true ? 'success' : 'error');
                            var title = (d.success == true ? window.jsLang.Root.LANG_SHARED_SUCCESS : window.jsLang.Root.LANG_SHARED_ERROR);

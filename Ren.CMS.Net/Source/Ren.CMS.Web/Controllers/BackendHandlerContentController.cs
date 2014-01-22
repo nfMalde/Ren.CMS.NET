@@ -23,7 +23,7 @@
     using Ren.CMS.Models.Core;
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.CORE.Helper.ModelStateHelper;
     using Ren.CMS.Persistence.Repositories;
     using Ren.Config.Helper;
 
@@ -259,14 +259,37 @@
         [nPermissionVal(NeededPermissionKeys="USR_CAN_CREATE_CONTENT")]
         public JsonResult Content(nContentPostModel MDL )
         {
-
-            return Json(new
+            if (!ModelState.IsValid)
             {
-                success = false,
-                message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID.ReturnLangLine(),
+                return Json(new
+                {
+                    success = false,
+                    message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_NOT_VALID.ReturnLangLine(),
+                    errors = ModelState.Errors()
 
-            });
+                });
 
+            }
+
+           Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
+           Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
+
+           if (ContentModel.ID < 1)
+           {
+               bool test = CtM.InsertContent(ContentModel);
+               if (test)
+               { 
+               
+               }
+           }
+           else
+           {
+               CtM.UpdateContent(ContentModel);
+           }
+
+
+
+            return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
             //Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
             //if (!Cval.isValidPostModelForInsert(MDL))
@@ -290,7 +313,7 @@
             //if (MDL.Tags != null)
             //    CtM.bindTagsToContent(MDL.ID, MDL.Tags);
 
-            //return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
+            //
         }
 
         //
@@ -629,7 +652,7 @@
         [nPermissionVal(NeededPermissionKeys="USR_CAN_EDIT_CONTENT")]
         public JsonResult EditContent(Models.Core.nContentPostModel MDL, nContentTextBinder Binder)
         {
-            MDL.Texts = Binder.Bind();
+           
 
             Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 

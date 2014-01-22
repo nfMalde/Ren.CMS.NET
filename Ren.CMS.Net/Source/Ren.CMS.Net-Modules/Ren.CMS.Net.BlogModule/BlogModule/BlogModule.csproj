@@ -55,6 +55,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="MVC Foolproof Validation">
+      <HintPath>..\..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\bin\MvcContrib.dll</HintPath>
     </Reference>
@@ -134,6 +137,9 @@
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\Profil1.pubxml" />
     <None Include="Properties\PublishProfiles\Release.pubxml" />
+    <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="scripts\MvcFoolproofValidation.min.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>

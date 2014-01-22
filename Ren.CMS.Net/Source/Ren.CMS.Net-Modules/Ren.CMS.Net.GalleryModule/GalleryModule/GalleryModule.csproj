@@ -43,6 +43,9 @@
     <Reference Include="Microsoft.Web.Mvc">
       <HintPath>..\bin\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="MVC Foolproof Validation">
+      <HintPath>..\..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\bin\MvcContrib.dll</HintPath>
     </Reference>
@@ -125,6 +128,9 @@
     <Compile Include="RegisterModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="scripts\MvcFoolproofValidation.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -133,7 +139,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ren.CMS.Net-Libraries\Ren.CMS.ContentHelpers.Blog\Ren.CMS.ContentHelpers.Blog.csproj">
       <Project>{e8f5bb79-ac16-4506-9fe1-7f51dfe0d2eb}</Project>

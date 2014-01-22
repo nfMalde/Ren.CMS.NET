@@ -210,7 +210,7 @@
         /// Returns the Creators PK ID
         /// </summary>
         ///
-        [Required]
+      
         public string CreatorPKID
         {
             get;
@@ -315,7 +315,7 @@
         /// Returns the PreviewText
         /// </summary>
         /// 
-        [Required]
+       
         [MaxLength(400)]
         public string PreviewText
         {
@@ -399,78 +399,7 @@
         #endregion Properties
 
         #region Methods
-
-        public List<nContentPostModelText> Bind()
-        {
-            List<nContentPostModelText> B = new List<nContentPostModelText>();
-            if (IsN()) return B;
-            for (int x = 0; x < Active.Count; x++)
-            {
-                nContentPostModelText Bb = new nContentPostModelText();
-                Bb.Active = Active[x];
-
-                if (Title.Count > x)
-                {
-                    Bb.Title = Title[x];
-
-                }
-                if (PreviewText.Count > x)
-                {
-                    Bb.PreviewText = PreviewText[x];
-
-                }
-                if (LongText.Count > x)
-                {
-                    Bb.LongText = LongText[x];
-
-                }
-                if (SEOName.Count > x)
-                {
-                    Bb.SEOName = SEOName[x];
-
-                }
-                if (MetaDescription.Count > x)
-                {
-                    Bb.MetaDescription = MetaDescription[x];
-
-                }
-                if (MetaKeyWords.Count > x)
-                {
-                    Bb.MetaKeyWords = MetaKeyWords[x];
-
-                }
-                if (TextID.Count > x)
-                {
-                    Bb.TextID = TextID[x];
-
-                }
-                if (LangCode.Count > x)
-                {
-                    Bb.LangCode = LangCode[x];
-
-                }
-
-                B.Add(Bb);
-
-            }
-
-            return B;
-        }
-
-        private bool IsN()
-        {
-            if (Title == null) return true;
-            if (PreviewText == null) return true;
-            if (LongText == null) return true;
-            if (SEOName == null) return true;
-            if (MetaDescription == null) return true;
-            if (MetaKeyWords == null) return true;
-            if (TextID == null) return true;
-            if (Active == null) return true;
-            if (LangCode == null) return true;
-
-            return false;
-        }
+ 
 
         #endregion Methods
     }

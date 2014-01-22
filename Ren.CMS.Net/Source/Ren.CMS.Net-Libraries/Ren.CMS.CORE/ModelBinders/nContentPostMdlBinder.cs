@@ -1,42 +1,36 @@
 ﻿using Ren.CMS.Models.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+ 
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Ren.CMS.CORE.Helper;
+using Foolproof;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ren.CMS.CORE.ModelBinders
 {
     public class nContentPostMdlBinder : IModelBinder
     {
+           
+
+
         public object BindModel(ControllerContext controllerContext,
                           ModelBindingContext bindingContext)
         {
-
+            
 
             HttpRequestBase request = controllerContext.HttpContext.Request;
-
-            //Get Texts 
-
             List<nContentPostModelText> Texts = new List<nContentPostModelText>();
 
-            string[] sActives = request.Form.GetValues("Active");
-            List<bool> Actives = new List<bool>();
-            foreach (string active in sActives)
-            {
-                bool bActive = false;
-                //TODO: Find out why parsing is wrong for bool
-                if (bool.TryParse(active, out bActive))
-                {
-                    Actives.Add(bActive);
-
-                }
-
-
-            }
+           
+            //Get Texts 
+            bool[] Actives = request.FormGatherer().GetValues<bool>("Active");
+            int[] TextIDs = request.FormGatherer().GetValues<int>("TextID");
+           
 
             string[] LangCodes = request.Form.GetValues("LangCode");
             string[] LongTexts = request.Form.GetValues("LongText");
@@ -44,23 +38,38 @@ namespace Ren.CMS.CORE.ModelBinders
             string[] MetaKeyWords = request.Form.GetValues("MetaKeyWords");
             string[] PreviewTexts = request.Form.GetValues("PreviewText");
             string[] SEONames = request.Form.GetValues("SEOName");
-            string[] txIds = request.Form.GetValues("TextID");
+    
             string[] Titles = request.Form.GetValues("Title");
+          
+            
+             
 
-            //TODO: Make check working
-            if (!txIds.Any(e => e.ToCharArray().ToList().Any(c => char.IsNumber(c) == false)))
-            {
-                bindingContext.ModelState.AddModelError("TextID", new Exception("TextID is not a number: " + txIds.First(e => e.ToCharArray().ToList().Any(c => char.IsNumber(c)) == false)));
-            }
-            else
-            {
-                List<int> TextIDs = new List<int>();
-
-                txIds.ToList().ForEach(f => TextIDs.Add(Convert.ToInt32(f)));
+            var refs = request.FormGatherer().GetValues<int>("ReferenceID");
+            int refid = 0;
+            if(refs != null && refs.Count() > 0)
+                refid = refs.FirstOrDefault();
 
                 //Put Texts to PostModel
+                string creatorPKID =  request.Form.Get("CreatorPKID");
 
-                nContentPostModel Model = (nContentPostModel) bindingContext.Model;
+                if(String.IsNullOrEmpty(creatorPKID) || String.IsNullOrWhiteSpace(creatorPKID))
+                {
+                    creatorPKID = new Ren.CMS.MemberShip.nProvider.CurrentUser().nUser.ProviderUserKey.ToString();
+                }
+
+                nContentPostModel Model = new nContentPostModel()
+                {
+                    ID = 0,
+                    CategoryID = request.Form.Get("CategoryID"),
+                    ContentType = request.Form.Get("ContentType"),
+                    CreationDate = request.FormGatherer().GetValues<DateTime>("CreationDate").First(),
+                    CreatorName = request.Form.Get("CreatorName"),
+                    CreatorPKID = creatorPKID,
+                    CreatorSpecialName = request.Form.Get("CreatorSpecialName"),
+                    Locked = request.FormGatherer().GetValues<bool>("Locked").First(),
+                    ReferenceID = refid,
+                    Tags = request.FormGatherer().GetValues<int>("Tags")
+                };
 
                 //Check Arrays
 
@@ -72,14 +81,14 @@ namespace Ren.CMS.CORE.ModelBinders
                 Check.Add(MetaKeyWords);
                 Check.Add(PreviewTexts);
                 Check.Add(SEONames);
-                Check.Add(txIds);
+              
 
                 Check.OrderBy(e => e.Count());
 
                 int highest = Check.First().Count();
                 int lowest = Check.Last().Count();
 
-                if (highest != lowest || (highest != Actives.Count() || lowest != Actives.Count()))
+                if (highest != lowest || (highest != Actives.Count() || lowest != Actives.Count()) ||  (highest != TextIDs.Count() || lowest != TextIDs.Count()))
                 {
 
                     bindingContext.ModelState.AddModelError("_FORM_", new Exception("Invalid TextModel"));
@@ -117,23 +126,31 @@ namespace Ren.CMS.CORE.ModelBinders
                     List<ValidationResult> ValResults = new List<ValidationResult>();
 
                     Model.Texts.ToList().ForEach(t =>
+                    {
+                        if (t.Active == true)
+                        {
+                            Validator.TryValidateObject(t, new ValidationContext(t, serviceProvider: null, items: null), ValResults, true);
 
-                        Validator.TryValidateObject(t, new ValidationContext(t, serviceProvider: null, items: null),ValResults, true)
-                        
+                        }
+                    }
                         );
 
 
-                    if (ValResults.Count > 0)
-                        ValResults.ForEach(v => bindingContext.ModelState.AddModelError("__FORM__", v.ErrorMessage));
+                 
 
-                    bindingContext.Model = Model;
+                    Validator.TryValidateObject(Model, new ValidationContext(Model, serviceProvider: null, items: null), ValResults, true);
+
+                    if (ValResults.Count > 0)
+                        ValResults.ForEach(v => bindingContext.ModelState.AddModelError(v.MemberNames.FirstOrDefault(), v.ErrorMessage));
+
+                    bindingContext.ModelMetadata.Model = Model;
                 }
 
 
 
 
 
-            }
+            
 
 
             return bindingContext.Model;

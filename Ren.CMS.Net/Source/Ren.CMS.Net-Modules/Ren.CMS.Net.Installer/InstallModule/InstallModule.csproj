@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="MVC Foolproof Validation">
+      <HintPath>..\..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\bin\MvcContrib.dll</HintPath>
     </Reference>
@@ -312,6 +315,9 @@
     <Content Include="Installer\Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Installer\Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="nfserverExporter.exe.config" />
+    <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="scripts\MvcFoolproofValidation.min.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

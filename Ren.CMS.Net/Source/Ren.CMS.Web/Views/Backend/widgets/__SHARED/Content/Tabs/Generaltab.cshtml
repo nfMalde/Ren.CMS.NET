@@ -1,5 +1,5 @@
 ﻿@model Ren.CMS.Models.Core.nContentPostModel
-
+@using Ren.CMS.CORE.Helper
 
 @{
  
@@ -12,6 +12,8 @@
     
     }    
     int i = 0;
+    
+   
     
     }
 
@@ -54,7 +56,7 @@
       @Html.HiddenFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().TextID)
       @Html.HiddenFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().LangCode)
 
-
+     
 <table class="tblEditContent">
 
       <tr title="Hier können Sie einstellen, ob der Artikel in dieser Sprache verfügbar ist. Wenn Sie Aktive ankreuzen benötigen Sie alle Felder.">
@@ -63,15 +65,16 @@
             <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
         </td>
         <td id="title-create-content">
-            <div class="btn-group" data-toggle="buttons">
-     <label class="btn btn-success">
-     @Html.RadioButtonFor( m => m.Texts.Where(e => e.LangCode == l.Code).First().Active, true)
+            <div class="">
+     <label class="">
+     @Html.CheckBoxFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().Active, new { id = Html.ProtectID("textActive"+ l.Code) })
          Ja
      </label>
-     <label class="btn btn-danger">
-     @Html.RadioButtonFor( m => m.Texts.Where(e => e.LangCode == l.Code).First().Active, false)
-         Nein
-     </label>
+       <script>
+
+ 
+
+       </script>
      </div>
                </td>
 

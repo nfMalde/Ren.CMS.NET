@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\ExternDLLs\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="MVC Foolproof Validation">
+      <HintPath>..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\ExternDLLs\NHibernate.dll</HintPath>
@@ -77,8 +83,13 @@
     <Compile Include="CustomWebConfig\RedirectIgnore.cs" />
     <Compile Include="DataModeling\SqlDataModeling.cs" />
     <Compile Include="Extras\Extras.cs" />
+    <Compile Include="Extras\FormGatherer.cs" />
     <Compile Include="FileManagement\FileManagement.cs" />
+    <Compile Include="Helper\ArrayHelper.cs" />
     <Compile Include="Helper\CurrentLanguageHelper.cs" />
+    <Compile Include="Helper\FormExtensions.cs" />
+    <Compile Include="Helper\HtmlInputHelper.cs" />
+    <Compile Include="Helper\ModelStateHelper.cs" />
     <Compile Include="Helper\RoutingHelper.cs" />
     <Compile Include="Helper\TitleHelper.cs" />
     <Compile Include="Language\Language.cs" />
@@ -113,6 +124,9 @@
     <Compile Include="ViewEngine\nTheming.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />
+    <Content Include="scripts\MvcFoolproofJQueryValidation.min.js" />
+    <Content Include="scripts\MvcFoolproofValidation.min.js" />
     <None Include="app.config" />
     <Content Include="log4net.config" />
     <None Include="packages.config" />
