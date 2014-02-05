@@ -132,17 +132,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="web.config">
+    <None Include="web.config.exclude">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
+    <None Include="web.config.Debug.exclude">
+      <DependentUpon>web.config.exclude</DependentUpon>
     </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
+    <None Include="web.config.Release.exclude">
+      <DependentUpon>web.config.exclude</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>

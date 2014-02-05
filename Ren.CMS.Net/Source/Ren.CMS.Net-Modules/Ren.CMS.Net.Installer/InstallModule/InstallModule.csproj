@@ -290,13 +290,13 @@
     <Content Include="Installer\Scripts\jquery.validate.js" />
     <Content Include="Installer\Scripts\jquery.validate.min.js" />
     <Content Include="Installer\Scripts\modernizr-2.5.3.js" />
-    <Content Include="Installer\Web.config" />
-    <Content Include="Installer\Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Installer\Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
+    <None Include="Installer\Web.config.exclude" />
+    <None Include="Installer\Web.config.Debug.exclude">
+      <DependentUpon>Web.config.exclude</DependentUpon>
+    </None>
+    <None Include="Installer\Web.config.Release.exclude">
+      <DependentUpon>Web.config.exclude</DependentUpon>
+    </None>
     <Content Include="Installer\Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Installer\Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Installer\Scripts\jquery.validate.unobtrusive.js" />
