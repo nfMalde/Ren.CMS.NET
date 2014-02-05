@@ -497,7 +497,6 @@
     <Content Include="Content\colorpicker\images\select.png" />
     <Content Include="Content\colorpicker\images\select2.png" />
     <Content Include="Content\colorpicker\images\slider.png" />
-    <Content Include="Content\colorpicker\images\Thumbs.db" />
     <Content Include="Content\flexigrid.css" />
     <Content Include="Content\flexigrid.pack.css" />
     <Content Include="Content\images\bg.gif" />
