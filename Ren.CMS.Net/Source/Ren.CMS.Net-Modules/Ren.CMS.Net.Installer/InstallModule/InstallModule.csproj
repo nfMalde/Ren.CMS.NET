@@ -41,9 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DirectShowLib-2005">
-      <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\DirectShowLib-2005.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\Malte\Documents\Visual Studio 2012\Projects\Ren.CMS.Net\ExternDLLs\Iesi.Collections.dll</HintPath>
@@ -56,15 +53,6 @@
     </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
-    </Reference>
-    <Reference Include="MvcContrib.FluentHtml">
-      <HintPath>..\bin\MvcContrib.FluentHtml.dll</HintPath>
-    </Reference>
-    <Reference Include="MvcContrib.TestHelper">
-      <HintPath>..\bin\MvcContrib.TestHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="MvcContrib.WatiN">
-      <HintPath>..\bin\MvcContrib.WatiN.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -219,7 +219,6 @@
     <Compile Include="Controllers\BackendHandlerContentController.cs" />
     <Compile Include="Controllers\BackendHandlerLayoutController.cs" />
     <Compile Include="Controllers\BackendHandlerUsersController.cs" />
-    <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\FileManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SharedElementsController.cs" />
@@ -1138,9 +1137,6 @@
     <Content Include="Views\nftheme\Article\Show.cshtml" />
     <Content Include="Views\nftheme\Article\SubCategory.cshtml" />
     <Content Include="Views\nftheme\Article\Tag.cshtml" />
-    <Content Include="Views\nftheme\Debug\GlobalSettings.cshtml" />
-    <Content Include="Views\nftheme\Debug\Index.cshtml" />
-    <Content Include="Views\nftheme\Debug\UserSettings.cshtml" />
     <Content Include="Views\nftheme\Home\About.cshtml" />
     <Content Include="Views\nftheme\Home\Index.cshtml" />
     <Content Include="Views\nftheme\Link\Forward.cshtml" />
@@ -1177,6 +1173,7 @@
     <Folder Include="Modules\" />
     <Folder Include="Storage\eArticle\" />
     <Folder Include="Storage\Users\" />
+    <Folder Include="Views\nftheme\Debug\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
