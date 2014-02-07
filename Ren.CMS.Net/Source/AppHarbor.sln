@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS", "Ren.CMS.Web\Ren.CMS.csproj", "{A8DE7EDE-F02B-4D54-9CC3-238956886DE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS", "Ren.CMS\Ren.CMS.csproj", "{A8DE7EDE-F02B-4D54-9CC3-238956886DE6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{66B6F2B1-4DC1-40A1-8602-271B1ACD3A0D}"
 EndProject
@@ -50,6 +50,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallProxy", "InstallProxy", "{9DF01E94-9428-42BE-BEA6-187006352723}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.NET-InstallProxy", "Ren.CMS.NET-InstallProxy\Ren.CMS.NET-InstallProxy.csproj", "{CD2A6DF5-9EC1-4E8C-A2F9-E78E734492B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{03CD20F9-B817-4D5A-BA4B-C7BA3DE7A0EA}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
