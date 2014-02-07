@@ -35,13 +35,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.Config.Helper", "Ren.CM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.MemberShip.CurrentUserHelper", "Ren.CMS.Net-Libraries\Ren.CMS.MemberShip.CurrentUserHelper\Ren.CMS.MemberShip.CurrentUserHelper.csproj", "{297AA3D9-A070-4368-A33D-BAB92A1384F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.BlogModule\BlogModule\BlogModule.csproj", "{821784F9-01CA-4483-A5F3-AD5320FFEF36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.BlogModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.BlogModule\BlogModule\Ren.CMS.BlogModule.csproj", "{821784F9-01CA-4483-A5F3-AD5320FFEF36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalleryModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.GalleryModule\GalleryModule\GalleryModule.csproj", "{63457497-594E-4093-83FD-0129E52CA6B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.GalleryModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.GalleryModule\GalleryModule\Ren.CMS.GalleryModule.csproj", "{63457497-594E-4093-83FD-0129E52CA6B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\InstallModule.csproj", "{AEECAF45-AEEF-4D6C-95B7-35C44DC88DE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.InstallModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\Ren.CMS.InstallModule.csproj", "{AEECAF45-AEEF-4D6C-95B7-35C44DC88DE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumpnailModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.ThumbnailModule\ThumpnailModule\ThumpnailModule.csproj", "{1B17DB37-062A-4251-A666-75954C4E225F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.ThumpnailModule", "Ren.CMS.Net-Modules\Ren.CMS.Net.ThumbnailModule\ThumpnailModule\Ren.CMS.ThumpnailModule.csproj", "{1B17DB37-062A-4251-A666-75954C4E225F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallLauncher", "InstallLauncher", "{9CA84413-17BE-4688-BF9E-DB70947CD8CA}"
 EndProject

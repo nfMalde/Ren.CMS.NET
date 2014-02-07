@@ -1234,21 +1234,21 @@
       <Project>{a062fbc9-ef6a-4d7e-99c0-6d04fc0a8d4b}</Project>
       <Name>Ren.Config.Helper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.BlogModule\BlogModule\BlogModule.csproj">
+    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.BlogModule\BlogModule\Ren.CMS.BlogModule.csproj">
       <Project>{821784f9-01ca-4483-a5f3-ad5320ffef36}</Project>
-      <Name>BlogModule</Name>
+      <Name>Ren.CMS.BlogModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.GalleryModule\GalleryModule\GalleryModule.csproj">
+    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.GalleryModule\GalleryModule\Ren.CMS.GalleryModule.csproj">
       <Project>{63457497-594e-4093-83fd-0129e52ca6b7}</Project>
-      <Name>GalleryModule</Name>
+      <Name>Ren.CMS.GalleryModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\InstallModule.csproj">
+    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\Ren.CMS.InstallModule.csproj">
       <Project>{aeecaf45-aeef-4d6c-95b7-35c44dc88de2}</Project>
-      <Name>InstallModule</Name>
+      <Name>Ren.CMS.InstallModule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.ThumbnailModule\ThumpnailModule\ThumpnailModule.csproj">
+    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.ThumbnailModule\ThumpnailModule\Ren.CMS.ThumpnailModule.csproj">
       <Project>{1b17db37-062a-4251-a666-75954c4e225f}</Project>
-      <Name>ThumpnailModule</Name>
+      <Name>Ren.CMS.ThumpnailModule</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
