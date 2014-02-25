@@ -89,6 +89,7 @@
     <Compile Include="FileManagement\FileManagement.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
     <Compile Include="Helper\CurrentLanguageHelper.cs" />
+    <Compile Include="Helper\EncodingHelper.cs" />
     <Compile Include="Helper\FormExtensions.cs" />
     <Compile Include="Helper\HtmlInputHelper.cs" />
     <Compile Include="Helper\ModelStateHelper.cs" />

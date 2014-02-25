@@ -44,6 +44,9 @@ namespace Ren.CMS.Persistence.Mapping
 
                 m.Lazy(LazyRelation.NoLazy);
                 m.Column("ContentId");
+                m.Insert(false);
+                m.Update(false);
+                m.Cascade(Cascade.None);
 
             });
 

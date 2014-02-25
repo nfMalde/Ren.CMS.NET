@@ -23,7 +23,7 @@
         #region Methods
 
         //Fügt einen Eintrag in der Tabelle hinzu
-        public void Add(TEntity newEntity)
+        public virtual void Add(TEntity newEntity)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
@@ -37,7 +37,7 @@
             }
         }
 
-        public object AddAndGetId(TEntity newEntity)
+        public virtual object AddAndGetId(TEntity newEntity)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
@@ -52,7 +52,7 @@
             }
         }
 
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
@@ -103,7 +103,7 @@
             }
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {

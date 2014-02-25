@@ -45,6 +45,68 @@
             return one;
         }
 
+        public override  void Add(TContent tContent)
+        {
+
+
+            this.addTContent(tContent);
+        }
+
+        public override void Update(TContent tContent)
+        {
+            base.Update(tContent);
+            Base.BaseRepository<ContentText> TextRepo = new Base.BaseRepository<Domain.ContentText>();
+
+            foreach (var text in tContent.Texts)
+            {
+                text.ContentId = tContent.Id;
+                TextRepo.Update(text);
+            }
+           
+        }
+
+
+        public override void Delete(Domain.TContent entity)
+        {
+            Base.BaseRepository<ContentText> TextRepo = new Base.BaseRepository<Domain.ContentText>();
+
+            foreach (var text in entity.Texts)
+            {
+                if(text.ContentId == entity.Id)
+                    TextRepo.Delete(text);
+            }
+
+            base.Delete(entity);
+        }
+
+        public override  object AddAndGetId(TContent tContent)
+        {
+
+
+            return this.addTContent(tContent);
+        }
+
+        private object addTContent (TContent tContent)
+        {
+
+            object id = base.AddAndGetId(tContent);
+
+            Base.BaseRepository<ContentText> TextRepo = new Base.BaseRepository<Domain.ContentText>();
+
+            foreach (var text in tContent.Texts)
+            {
+                int ix = 0;
+                if(int.TryParse(id.ToString(), out ix) )
+                {
+                    text.ContentId = ix;
+
+                    TextRepo.Add(text);
+                }
+            }
+
+            return id;
+        }
+
         public List<TContent> Pagination(ref int totalRows, int pageSize,
             int pageIndex,
             string[] contentTypes,

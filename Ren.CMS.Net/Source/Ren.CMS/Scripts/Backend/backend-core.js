@@ -5,6 +5,10 @@ function decodeEntities(input) {
     return y.value;
 }
 
+
+
+
+
        try{
 
            console.log("Ren.CMS (Renate) Backend 0.2 Console launched");
@@ -54,9 +58,11 @@ function decodeEntities(input) {
 
        function systemMessage(title, message, type, errors)
        {
+           
            var $sys = $('#systemmessage');
            var $systitle = $sys.find(".modal-title");
            var $syscontainer = $sys.find(".sys-msg-cont");
+         
            var isError = (type == "error");
            if ($sys.is(":visible"))
            {
@@ -111,8 +117,8 @@ function decodeEntities(input) {
            $syscontainer.addClass(clsB);
 
            $systitle.text(title);
-           $syscontainer.html("<p></p>").text(message);
-           var li = $syscontainer.html("<ul></ul>");
+           $syscontainer.html($("<p></p>").text(message));
+           var li = $syscontainer.append("<ul></ul>");
            if (errors) {
                li.addClass("text-danger");
                for (var i = 0; i < errors.length; i++)
@@ -292,7 +298,14 @@ function decodeEntities(input) {
                        }
                        $.post(url, data , function (d) {
 
+                           $(eform).find("input[type='submit']").each(function () {
 
+                               $(this).removeAttr("disabled");
+
+
+
+
+                           });
 
 
 
@@ -321,6 +334,10 @@ function decodeEntities(input) {
 
                            new systemMessage(title, d.message, t);
 
+                           if (options.afterSubmit && typeof options.afterSubmit == 'function') {
+
+                               options.afterSubmit(form, pd, d);
+                           }
 
 
 

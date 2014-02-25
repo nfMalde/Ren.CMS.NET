@@ -57,6 +57,8 @@ namespace Ren.CMS.Persistence.Mapping
                     k.Column("ContentId");
                 });
                 mapping.Inverse(true);
+                mapping.Cascade(Cascade.None);
+               
             },
                r => r.OneToMany());
 

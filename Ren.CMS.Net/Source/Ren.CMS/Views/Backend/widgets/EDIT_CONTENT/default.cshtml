@@ -217,7 +217,7 @@
 
             {
                 backendHandler : "Content",
-                backendAction : "EditContent",
+                backendAction : "Content",
                 language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
                 beforeSubmit: function (formdata) {
 
@@ -229,6 +229,36 @@
                         $(this).val(encodeURI(newV));
 
                     })
+
+                },
+                afterSubmit: function (f, fd, d) {
+
+                  
+
+
+
+                    $(f).find(":input").each(function () {
+
+                        switch ($(this).attr("type")) {
+
+                            case 'checkbox':
+                            case 'radio':
+                            case 'button':
+                            case 'submit':
+                            case 'image':
+                                return;
+                                break;
+                            default:
+                                var d =  $("<div/>").html($(this).val());
+                               
+
+                                $(this).val(decodeURI($(d).html()));
+                                break;
+
+                        }
+
+
+                    });
 
                 }
             

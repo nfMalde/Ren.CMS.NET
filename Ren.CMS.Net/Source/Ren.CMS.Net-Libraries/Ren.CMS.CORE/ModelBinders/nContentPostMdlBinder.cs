@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Ren.CMS.CORE.Helper;
+using Ren.CMS.CORE.Helper.FormEncoding;
 using Foolproof;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,7 +27,10 @@ namespace Ren.CMS.CORE.ModelBinders
             HttpRequestBase request = controllerContext.HttpContext.Request;
             List<nContentPostModelText> Texts = new List<nContentPostModelText>();
 
-           
+            int ID = 0;
+            var ids = request.FormGatherer().GetValues<int>("ID");
+            if (ids.Length > 0)
+                ID = ids.First();
             //Get Texts 
             bool[] Actives = request.FormGatherer().GetValues<bool>("Active");
             int[] TextIDs = request.FormGatherer().GetValues<int>("TextID");
@@ -59,7 +63,7 @@ namespace Ren.CMS.CORE.ModelBinders
 
                 nContentPostModel Model = new nContentPostModel()
                 {
-                    ID = 0,
+                    ID = ID,
                     CategoryID = request.Form.Get("CategoryID"),
                     ContentType = request.Form.Get("ContentType"),
                     CreationDate = request.FormGatherer().GetValues<DateTime>("CreationDate").First(),
@@ -101,23 +105,29 @@ namespace Ren.CMS.CORE.ModelBinders
 
                     for (int i = 0; i < highest; i++)
                     {
-                        Texts.Add(new nContentPostModelText()
+                        if (Actives[i])
                         {
-                            Active = Actives[i],
-                            LangCode = LangCodes[i],
-                            LongText = LongTexts[i],
-                            MetaDescription = MetaDescriptions[i],
-                            MetaKeyWords = MetaKeyWords[i],
-                            PreviewText = PreviewTexts[i],
-                            SEOName = PreviewTexts[i],
-                            TextID = TextIDs[i],
-                            Title = Titles[i]
-                        });
+                            var __t = new nContentPostModelText()
+                            {
+                                Active = Actives[i],
+                                LangCode = LangCodes[i],
+                                LongText = LongTexts[i],
+                                MetaDescription = MetaDescriptions[i],
+                                MetaKeyWords = MetaKeyWords[i],
+                                PreviewText = PreviewTexts[i],
+                                SEOName = PreviewTexts[i],
+                                TextID = TextIDs[i],
+                                Title = Titles[i]
+                            };
 
+                           
+
+                            Texts.Add(__t.DecodeStringsURLandHTML(false));
+                        }
                     }
 
                     Model.Texts = Texts;
-
+                    Model = Model.DecodeStringsURLandHTML(false);
 
                     if(Texts.Count() == 0 || !Texts.Any(e => e.Active))
                         bindingContext.ModelState.AddModelError("_FORM_", new Exception("At least one Text Model should be active"));
@@ -133,7 +143,7 @@ namespace Ren.CMS.CORE.ModelBinders
 
                         }
                     }
-                        );
+                   );
 
 
                  

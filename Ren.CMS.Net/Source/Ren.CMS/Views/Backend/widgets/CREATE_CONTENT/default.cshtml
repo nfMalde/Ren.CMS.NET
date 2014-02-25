@@ -234,7 +234,7 @@
                        var ed =  tinymce.get($(this).attr("id"));
                        var c = ed.getContent();
                        $(this).val(c);
-                       alert(c);
+
                     });
 
                    
@@ -248,7 +248,38 @@
 
                     });
 
+                },
+                afterSubmit: function (f, fd, d) {
+
+                  
+
+
+
+                    $(f).find(":input").each(function () {
+
+                        switch ($(this).attr("type")) {
+
+                            case 'checkbox':
+                            case 'radio':
+                            case 'button':
+                            case 'submit':
+                            case 'image':
+                                return;
+                                break;
+                            default:
+                               var d =  $("<div/>").html($(this).val());
+                               
+
+                                $(this).val(decodeURI($(d).html()));
+                                break;
+
+                        }
+
+
+                    });
+
                 }
+
             
     });
 
