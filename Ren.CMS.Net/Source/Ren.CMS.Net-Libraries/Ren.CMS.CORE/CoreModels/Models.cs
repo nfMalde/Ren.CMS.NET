@@ -19,7 +19,7 @@
             get; set;
         }
 
-        public string IconUrl
+        public string IconCls
         {
             get; set;
         }

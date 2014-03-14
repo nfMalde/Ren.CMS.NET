@@ -124,10 +124,10 @@
                 IEnumerable<ContentText> AliasText = new List<ContentText>();
 
                IEnumerable<ContentText> AliasText2 = new List<ContentText>();
-
-                var res = session.QueryOver<TContent>(() => AliasContent)
-
-                  .Where( NHibernate.Criterion.Expression.In("ContentType",contentTypes));
+                
+                var res = session.QueryOver<TContent>(() => AliasContent);
+                if(!contentTypes.Any(e => e == "*"))
+                  res = res.Where( NHibernate.Criterion.Expression.In("ContentType",contentTypes));
 
                  //By Category
                if (category != null)

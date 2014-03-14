@@ -15,6 +15,12 @@
     using Ren.CMS.MemberShip;
     using Ren.CMS.Models;
 
+    public class TestView
+    {
+        public string Test { get; set; }
+        public string Test2 { get; set; }
+    }
+
     public class AccountController : Controller
     {
         #region Methods

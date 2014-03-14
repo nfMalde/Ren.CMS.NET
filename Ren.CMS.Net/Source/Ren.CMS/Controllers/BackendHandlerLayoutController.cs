@@ -57,7 +57,7 @@
                         {
                             id = (int)Icons["id"],
                             text = Lang.getLine((string)Icons["langLine"]),
-                            iconUrl = "/BackendFileHandler/Icons/" + (string)Icons["Icon"],
+                            iconCls =  (string)Icons["Icon"],
                             action = (string)Icons["Action"],
                             xPos = (double)Icons["xPos"],
                             yPos = (double)Icons["yPos"]
@@ -180,11 +180,11 @@
                     if (widget["Icon"] != DBNull.Value)
                     {
 
-                        WR.Icon = "/BackendFileHandler/Icons/" + (string)widget["Icon"];
+                        WR.Icon =  (string)widget["Icon"];
                     }
                     else
                     {
-                        WR.Icon = "/BackendFileHandler/Icons/Defaulticon.png";
+                        WR.Icon = "fa fa-square";
                     }
                     if (widget["definedWidth"] != DBNull.Value)
                     {
@@ -265,12 +265,16 @@
                     string langLine = Lang.getLine((string)Rows["menuTextLang"]);
 
                     string text = (langLine != "" ? langLine : (string)Rows["menuTextLang"]);
-                    LIST += "<li>";
-                    LIST +="<a href=\"javascript: new widgetAction('" + (string)Rows["action"] + "')\">" + text + "</a>";
+                    bool hasSub = this.hasSubmenu((int)Rows["id"]);
 
-                    if (this.hasSubmenu((int)Rows["id"]))
+
+                    LIST += "<li" + (hasSub ? " class=\"dropdown-submenu\"" : String.Empty) +" id=\"li_"+ ((int)Rows["id"]) +"\"" + ">";
+
+                    LIST += "<a  " +"id=\"a_" + ((int)Rows["id"]) + "\" " +(hasSub ? "class=\"dropdown-toggle\" " : String.Empty) + " href=\"" + (((string)Rows["action"]).StartsWith("widget") ? " javascript: new widgetAction('" + (string)Rows["action"] + "')" : (string)Rows["action"]) + "\">" + (hasSub ? "" : String.Empty) + text + "</a>";
+
+                    if (hasSub)
                     {
-                        LIST += "<ul>";
+                        LIST += "<ul "+ "id=\"subfrom_" + ((int)Rows["id"]) + "\" " +" class=\"dropdown-menu\">";
                         LIST += this.getLI((int)Rows["id"]);
                         LIST += "</ul>";
 

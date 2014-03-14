@@ -1,4 +1,4 @@
-﻿ 
+﻿ @using Mvc.JQuery.Datatables
 
 <!DOCTYPE html>
 
@@ -16,6 +16,7 @@
     
     <link href="@Url.Content("~/Content/colorpicker/css/colorpicker.css")" rel="stylesheet" media="screen" type="text/css"/>
     <link href="@Url.Content("~/Scripts/shared/shadowbox/shadowbox.css")" rel="stylesheet" type="text/css" />
+     
 
     @{
         string langcode = Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage;
@@ -136,6 +137,12 @@
     <link href="~/Scripts/Majorplugins/Fileupload/css/jquery.fileupload-ui.css" rel="stylesheet" />
     <script src="~/Scripts/Majorplugins/Fileupload/js/jquery.iframe-transport.js"></script>
     <script src="~/Scripts/Majorplugins/Fileupload/js/jquery.fileupload.js"></script>
+
+    @Html.DataTableIncludes()
+    @Styles.Render("~/Content/DataTables/dataTables.bootstrap.css")
+        @Styles.Render("~/Content/font-awesome.css")
+    @Scripts.Render("~/Scripts/dataTables.bootstrap.js")
+  
  
 </head>
 <body>

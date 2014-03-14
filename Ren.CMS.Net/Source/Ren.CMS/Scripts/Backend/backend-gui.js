@@ -1,5 +1,15 @@
 ﻿function BackendGui()
 {
+
+    this.reinitBootstrap = function () {
+
+        $.get("/Scripts/Backend/bootstrap/bootstrap.js"
+                    , function ($script) {
+
+                        eval($script);
+                    });
+    }
+
     //Login
     this.login = function (username, password)
     {
@@ -274,7 +284,7 @@
          
             $(window).resize(function () {
                 console.log("Window Listener called!");
-                new BackendGui().fixShortCutPositions();
+               // new BackendGui().fixShortCutPositions();
            
 
             });
@@ -314,8 +324,8 @@
                 distance: 30,
                 //grid: [64, 64],
                 snap: true,
-                snapMode: 'outer'
-                //  appendTo: '#frame-desktop-menubar'
+                snapMode: 'outer',
+                appendTo: '#frame-desktop-menubar'
             });
             new BackendGui().bindContextDetail(this);
             $(this).dblclick(function () {
@@ -759,7 +769,7 @@
     //Setups Intervalll for Refreshing the menu if needed 
     this.refreshMenu = function () {
       
-        if (!document.getElementById('frame-desktop-menubar')) return false;
+        //if (!document.getElementById('frame-desktop-menubar')) return false;
         var countStore = this.dataStore;
 
         countStore.setFormat('json');
@@ -787,7 +797,7 @@
             dialogMenuUpdate.create();
             dialogMenuUpdate.show();
 
-            $('#startmenucontainer').fadeOut();
+            $('#startmenu').fadeOut();
 
             var menuStore = this.dataStore;
 
@@ -802,18 +812,14 @@
             menuStore.doRequest();
 
             //Clearing
-            $('#startmenucontainer').find('ul').each(function () {
+            $('#startmenu').find("li").each(function () { $(this).remove() });
 
-                $(this).remove();
- 
-            });
 
             //Set new content 
-            $('#startmenucontainer').html('<ul id="startmenu">'+ menuStore.getContent() +'</ul>');
+            $('#startmenu').html('' + menuStore.getContent() + '');
          
-            $('#startmenu').menu();
-         
-            $('#startmenucontainer').fadeIn();
+          
+            $('#startmenu').fadeIn();
   
             dialogMenuUpdate.hide();
             dialogMenuUpdate.remove();
@@ -828,6 +834,19 @@
 
             this.MenuCount.set(countContent.count);
             this.initLogoutButton();
+
+            $('.dropdown-toggle').each(function () {
+                //Creates Dropdown Function
+                $(this).dropdown();
+                //Even Trigger
+
+              
+
+
+
+            });
+
+            // this.reinitBootstrap(); //Executes bootstrap wrapper again und get in touch with the ajax loaded content
         }
 
         
@@ -933,7 +952,6 @@
 
                 });
 
-                $('#startmenu').menu();
                 try{
                     $('#time').tooltip();
                 }
@@ -947,6 +965,7 @@
 
                     // new BackendGui().MenuCount.set(11);
                     new BackendGui().refreshMenu();
+                
                
                 });
             
@@ -976,7 +995,7 @@
                     var newICON = new BackendGui().dataStore;
                     newICON.setFormat('html');
                     newICON.setParameters({
-                        IconUrl: icos[x].iconUrl,
+                        IconCls: icos[x].iconCls,
                         id: icos[x].id,
                         PosX: icos[x].xPos,
                         PosY: icos[x].yPos,

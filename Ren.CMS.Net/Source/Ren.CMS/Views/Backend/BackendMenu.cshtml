@@ -5,21 +5,21 @@
 
 
 
-  <li>
-             <a href="#"><span class="ui-icon ui-icon-newwin"></span>Start</a>
-             <ul id="menumenu">
-                 <li class="ui-state-active">
+  <li class="dropdown">
+              <a href="#"  class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-new-window"></span>&nbsp;Start</a> 
+             <ul id="menumenu" class="dropdown-menu">
+                 <li class="active">
 
                      
-                         <a href="#"><span class="ui-icon ui-icon-home"></span>Willkommen <b>@Model.UserName</b>!</a>
-                     
+                           
                  </li>
               
                  @Html.Raw(Model.LiElements)
 
                  <li class="aMenuLogoutButtonStartMenuTray">
 
-                     <a href="#"  style="font-weight:bold"><span class="ui-icon ui-icon-cancel ui-state-alert"></span>Abmelden</a>
+                   
+                     <a  id="logout" href="#"><span class="glyphicon glyphicon-off"></span>Abmelden</a>
 
                  </li>
 

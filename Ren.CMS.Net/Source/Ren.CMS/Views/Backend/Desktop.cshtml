@@ -156,64 +156,38 @@
         <li><a href="javascript: new widgetAction('widget:SETTINGS:open')">Einstellungen</a></li>
 
     </ul>
+    <!-- Start Nav --->
 
-         
- <div id="startmenucontainer">
-         <ul id="startmenu" style="color:#444 !important">
+        <nav id="frame-desktop-menubar" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <input type="hidden" id="backen_menu_count" value="0" />
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+ 
 
-         <li>
-             <a href="#"><span class="ui-icon ui-icon-newwin"></span>Start</a>
-             <ul id="menumenu">
-                 <li class="ui-state-active">
-
-                     
-                         <a href="#"><span class="ui-icon ui-icon-home"></span>Willkommen <b>@(new Ren.CMS.MemberShip.nProvider.CurrentUser().nUser.UserName)</b>!</a>
-                     
-                 </li>
-              
-
-
-                 <li>
-
-                     <a  id="logout" href="#" style="font-weight:bold"><span class="ui-icon ui-icon-cancel ui-state-alert"></span>Abmelden</a>
-
-                 </li>
-
-
-
-             </ul>
-
-         </l>
-
-     </ul>
-             </div>
-
-    
-        <div style="float:left; left:150px; bottom:2px; width:auto; height:25px; position:absolute; z-index:99;">
-            <ul id="taskbar" style="list-style:none; list-style-image:none; margin:0px;">
-
-
-
-
-            </ul>
-
-
-        </div>
-<div id="frame-desktop-menubar" class="ui-accordion-header ui-helper-reset ui-helper-clearfix ui-state-default ui-corner-all ui-accordion-icons">
-     <div style="float:left; width:150px; height:25px;">
-         <input type="hidden" id="backen_menu_count" value="0"/>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul id="startmenu" class="nav navbar-nav">
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
+          <ul class="dropdown-menu">
      
-         
-        
-        </div>
-        <div id="date" title="@Model.MenuBarTimeTitle" style="float:right; text-align:right; font-size:10px; padding-right:10px; padding-top:4px;  display:inline-block;" class="ui-widget">
-<div style="float:left">     <span class="ui-icon ui-icon-clock" style=""></span>
-    </div>
-<div id="time" style="float:right; padding-top:3px">
-   
-     @Model.MenuBarTime
-    </div>
-        </div>
-    </div>
+          </ul>
+        </li>
+      </ul>
+      <ul id="taskbar" class="nav navbar-nav navbar-left">
 
-    </>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         
+          </ul>
+     
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+    <!-- END NAV -->
+ 
+
+    </div>

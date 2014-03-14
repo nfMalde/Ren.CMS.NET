@@ -87,7 +87,7 @@
 
                     SC.Read();
 
-                    S.IconUrl = "/BackendFileHandler/Icons/" + (string)SC["Icon"];
+                    S.IconCls = (string)SC["Icon"];
                     S.ShortCutText = Lang.getLine((string)SC["langLine"]);
                     S.action = ((string)SC["Action"]);
                     SC.Close();

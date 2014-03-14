@@ -41,6 +41,12 @@
     <Reference Include="MVC Foolproof Validation">
       <HintPath>..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
     </Reference>
+    <Reference Include="Mvc.JQuery.Datatables">
+      <HintPath>..\..\packages\Mvc.JQuery.Datatables.1.2.93\lib\net40\Mvc.JQuery.Datatables.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
@@ -84,11 +90,14 @@
     <Compile Include="CustomWebConfig\Handler\RedirectIgnoreHandler.cs" />
     <Compile Include="CustomWebConfig\RedirectIgnore.cs" />
     <Compile Include="DataModeling\SqlDataModeling.cs" />
+    <Compile Include="DataTables\Attributes\RenDataTables.cs" />
+    <Compile Include="DataTables\BackendModels\ContentList.cs" />
     <Compile Include="Extras\Extras.cs" />
     <Compile Include="Extras\FormGatherer.cs" />
     <Compile Include="FileManagement\FileManagement.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
     <Compile Include="Helper\CurrentLanguageHelper.cs" />
+    <Compile Include="Helper\DataTables.cs" />
     <Compile Include="Helper\EncodingHelper.cs" />
     <Compile Include="Helper\FormExtensions.cs" />
     <Compile Include="Helper\HtmlInputHelper.cs" />
@@ -125,6 +134,7 @@
     <Compile Include="SqlHelper\Sqlhelper.cs" />
     <Compile Include="ThisApplication\ThisApplication.cs" />
     <Compile Include="ViewEngine\nTheming.cs" />
+    <Compile Include="Viewmodels\Backend\ContentListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />

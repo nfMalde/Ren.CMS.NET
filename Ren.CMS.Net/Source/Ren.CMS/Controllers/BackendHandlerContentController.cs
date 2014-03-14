@@ -26,6 +26,8 @@
     using Ren.CMS.CORE.Helper.ModelStateHelper;
     using Ren.CMS.Persistence.Repositories;
     using Ren.Config.Helper;
+    using Mvc.JQuery.Datatables;
+    using Ren.CMS.CORE.DataTables.BackendModels;
 
     public class BackendHandlerContentController : Controller
     {
@@ -420,22 +422,12 @@
         // GET: /BackendHandlerContent/
         [HttpPost]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_ENTER_BACKEND")]
-        public JsonResult ContentList(string id, Ren.CMS.Models.Core.FlexyGridPostParameters FlexyGridPost)
+        public DataTablesResult<ContentListView> ContentList(DataTablesParam param)
         {
-            List<object> _list = new List<object>();
+            List<ContentListView> _list = new List<ContentListView>();
+            
 
-            if (!ModelState.IsValid)
-            {
-                FlexyGridPost.page = 1;
-                FlexyGridPost.sortname = "{prefix}Content.cDate";
-                FlexyGridPost.sortorder = "DESC";
-                FlexyGridPost.rp = 15;
-
-            }
-            FlexyGridPost.sortname = FlexyGridPost.sortname.Replace('-', '_').Replace("'","");
-            FlexyGridPost.sortorder = FlexyGridPost.sortorder.Replace('-', '_').Replace("'", "");
-
-            Ren.CMS.Content.ContentManagement.GetContent GC = new Content.ContentManagement.GetContent(new string[] { id }, null, FlexyGridPost.sortname, FlexyGridPost.sortorder, true, FlexyGridPost.page, FlexyGridPost.rp, 0);
+            Ren.CMS.Content.ContentManagement.GetContent GC = new Content.ContentManagement.GetContent(new string[] { "*" }, categoryname: null, locked:false, pageIndex:0, pageSize:0, contentRef: 0,countReferences: false, referenceContentTypes: null);
 
             List<Ren.CMS.Content.nContent> Contents = GC.getList();
 
@@ -444,24 +436,23 @@
 
                 _list.Add(
 
-                    new
+                    new ContentListView
                     {
-                        id = Con.ID,
-                        cell = new
-                        {
+                            ID  = Con.ID,
                             Title = (Con.Texts.Any(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage) ? Con.Texts.Where(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage).FirstOrDefault().Title : Con.Texts.First().Title),
                             Creator = Con.CreatorName,
                             Category = Con.CategoryName,
-                            cDate = Con.CreationDate.ToString("dd.MM.yyyy")
+                            cDate = Con.CreationDate,
+                            ContentType = Con.ContentType
 
-                        }
+                        
                     }
 
                     );
 
             }
 
-            return Json(new { total = GC.TotalRows, page = 1, rows = _list });
+            return DataTablesResult.Create<ContentListView>(_list.AsQueryable(), param);
         }
 
         [HttpPost]
