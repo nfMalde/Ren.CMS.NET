@@ -13,11 +13,45 @@
          (BackendHandlerContentController c) => c.ContentList(null));
 
     vm.TableTools = false;
-    
+    vm.JsOptions.Add("fnHeaderCallback", "JSFUNC::cFilter");
+    vm.TableTools = true;
     
 }
+
+@Scripts.Render("~/Scripts/datatable.columnfilter.js")
+
+
+<!-- Buttons -->
+<a href="#" class="btn btn-default" id="@Html.ProtectID("filter")">Filter</a>
+
+<hr />
+<script>
+    $(function () {
+ 
+        fixActionColumn($('#@Html.ProtectID("content-list")'));
+
+        $('#@Html.ProtectID("filter")').click(function (e) {
+
+            e.preventDefault();
+            $('#@Html.ProtectID("content-list")').dtShowColumnFilter();
+           
+
+        });
+
+    });
+    function cFilter(oSettings) {
+
+        fixActionColumn($('#@Html.ProtectID("content-list")'));
+        
+
+        $('#@Html.ProtectID("content-list")').dtAddColumnFilter();
+       
+    }
+</script>
 
 
 <!--- List begins here --->
 
 @(Html.JqueryDataTable<ContentListView>(vm))
+
+

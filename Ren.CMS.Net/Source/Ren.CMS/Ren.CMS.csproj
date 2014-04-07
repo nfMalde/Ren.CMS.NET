@@ -1030,8 +1030,20 @@
     <Content Include="Content\DataTables\Readme.txt" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\back_disabled.png" />
+    <Content Include="Content\images\back_enabled.png" />
+    <Content Include="Content\images\back_enabled_hover.png" />
+    <Content Include="Content\images\favicon.ico" />
+    <Content Include="Content\images\forward_disabled.png" />
+    <Content Include="Content\images\forward_enabled.png" />
+    <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_asc_disabled.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\jquery.dataTables.columnFilter.js" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.min.css" />
@@ -1132,6 +1144,7 @@
     <None Include="Scripts\jquery-1.8.3-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\datatable.columnfilter.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />
@@ -1169,6 +1182,14 @@
     <Content Include="Scripts\nftheme\shared\blog\Archive.js" />
     <Content Include="Scripts\jquery-2.0.0.min.map" />
     <Content Include="Scripts\nftheme\shared\blog\Gallery.js" />
+    <Content Include="Scripts\ShadowBox\css\shadowbox.css" />
+    <Content Include="Scripts\ShadowBox\images\close.png" />
+    <Content Include="Scripts\ShadowBox\images\loading.gif" />
+    <Content Include="Scripts\ShadowBox\images\next.png" />
+    <Content Include="Scripts\ShadowBox\images\pause.png" />
+    <Content Include="Scripts\ShadowBox\images\play.png" />
+    <Content Include="Scripts\ShadowBox\images\previous.png" />
+    <Content Include="Scripts\ShadowBox\js\shadowbox.js" />
     <Content Include="Scripts\shared\jplayer\add-on\jplayer.playlist.min.js" />
     <Content Include="Scripts\shared\jplayer\add-on\jquery.jplayer.inspector.js" />
     <Content Include="Scripts\shared\jplayer\Jplayer.swf" />
@@ -1218,6 +1239,7 @@
     <Content Include="Views\Backend\widgets\CREATE_CONTENT\default.cshtml" />
     <Content Include="Views\Backend\Shared\DataTable.cshtml" />
     <Content Include="Views\Backend\widgets\CONTENT_LIST\list.cshtml" />
+    <Content Include="Scripts\Ren.Modalbox.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\chosen-sprite%402x.png" />

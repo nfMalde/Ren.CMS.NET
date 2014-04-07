@@ -137,11 +137,11 @@ font-size: 11px;
 }
 
 .backend-widget-header {
-font-size: 13px !important;
+ 
   margin: 0 auto !important;
 }
 .backend-widget-content {
-font-size: 11px;
+ 
   margin: 0 auto;
 }
 #time {

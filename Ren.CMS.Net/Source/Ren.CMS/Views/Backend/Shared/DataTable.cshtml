@@ -59,7 +59,29 @@
                 });
             },
             "aoColumnDefs" : @Html.Raw(Model.ColumnDefsString)
-                @Html.Raw(!string.IsNullOrWhiteSpace(Model.JsOptionsString) ? ", " + Model.JsOptionsString : "")
+            @{
+                var Opts = Model.JsOptions;
+                System.Text.StringBuilder s = new System.Text.StringBuilder();
+                    
+                    
+                    
+                     
+                foreach(var o in Opts)
+                {
+                    s.AppendLine();
+
+                    string opname = o.Key.ToString();
+
+                    string value = (o.Value.ToString().StartsWith("JSFUNC::") ? o.Value.ToString().Substring(("JSFUNC::").Length) : String.Format("'{0}'", o.Value.ToString()));
+
+                    s.AppendFormat(",{0} : {1}", opname, value).AppendLine();
+                    
+                    
+                }
+                
+            }
+
+            @Html.Raw(s.ToString())
             @if (!string.IsNullOrEmpty(Model.Language))
             {
                 <text>
