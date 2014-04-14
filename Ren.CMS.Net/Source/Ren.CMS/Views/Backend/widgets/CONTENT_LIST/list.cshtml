@@ -14,20 +14,61 @@
 
     vm.TableTools = false;
     vm.JsOptions.Add("fnHeaderCallback", "JSFUNC::cFilter");
-    vm.TableTools = true;
-    
+    vm.TableTools = false;
+    vm.ShowSearch = false;
+
+    string lis = "";
+
+    foreach (var ct in ContentListViewModel.ContentTypeList())
+    {
+        Ren.CMS.CORE.Language.Language Lang = new Ren.CMS.CORE.Language.Language("__USER__", "CONTENT_TYPES");
+
+        string ctLangLine = Lang.getLine("LANG_CTYPE_" + ct.Name.ToUpper());
+        if (String.IsNullOrEmpty(ctLangLine) || String.IsNullOrWhiteSpace(ctLangLine))
+        {
+            ctLangLine = ct.Name;
+        }
+
+
+        lis += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" data-ct=\""+ ct.Name +"\" href=\"#\">" + ctLangLine + "</a></li>";
+    }
 }
 
 @Scripts.Render("~/Scripts/datatable.columnfilter.js")
 
 
 <!-- Buttons -->
-<a href="#" class="btn btn-default" id="@Html.ProtectID("filter")">Filter</a>
+ 
+ <div class="span-12 clearfix">
+<div class="dropdown pull-left">
+  <a href="#" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="@Html.ProtectID("create")"><span class="caret"></span>Inhalt anlegen</a>
+  <ul  id="@Html.ProtectID("create")dropdown"class="dropdown-menu" role="menu" aria-labelledby="@Html.ProtectID("create")">
+      @Html.Raw(lis);
+ 
+  </ul>
+ </div>
 
-<hr />
+
+<a href="#" class="btn btn-default pull-right" id="@Html.ProtectID("filter")">Filter</a>
+</div>
 <script>
     $(function () {
- 
+        $('#@Html.ProtectID("create")dropdown').find("li").each(function (i) {
+
+            $(this).find("a").click(function () {
+
+                var ct = $(this).attr("data-ct");
+
+                new widgetAction("widget:CREATE_CONTENT:open", { contentType: ct });
+
+
+            });
+
+        });
+
+
+        $('#@Html.ProtectID("create")').dropdown();
+
         fixActionColumn($('#@Html.ProtectID("content-list")'));
 
         $('#@Html.ProtectID("filter")').click(function (e) {

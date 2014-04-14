@@ -275,12 +275,27 @@
 
            Ren.CMS.Content.ContentManagement CtM = new Content.ContentManagement();
            Ren.CMS.Content.nContent ContentModel = new Content.nContent(MDL);
+           object newID = null;
 
            if (ContentModel.ID < 1)
            {
-               bool test = CtM.InsertContent(ContentModel);
-               if (test)
-               { 
+               bool ok = CtM.InsertContent(ref ContentModel);
+
+               if (ok)
+               {
+                   newID = ContentModel.ID;
+
+               }
+               else
+               {
+
+                   return Json(new
+                   {
+                       success = false,
+                       message = LanguageDefaultsMessages.LANG_SHARED_UNKNOWN_SUBMITERROR.ReturnLangLine(),
+                       errors = ModelState.Errors()
+
+                   });
                
                }
            }
@@ -291,7 +306,7 @@
 
 
 
-            return Json(new { success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
+            return Json(new { newID = newID,  success = true, message = LanguageDefaultsMessages.LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED.ReturnLangLine() });
             //Ren.CMS.Content.ContentValidator Cval = new Content.ContentValidator();
 
             //if (!Cval.isValidPostModelForInsert(MDL))

@@ -145,8 +145,11 @@
 
       
         //Add Active Class (Z-INDEX: 1000);
-        setActive('#widget-' + widgetName);
-        $('#widget-' + widgetName).fadeIn();
+      //  setActive('#widget-' + widgetName);
+        $('#widget-' + widgetName).fadeIn(function () {
+
+            setActive('#widget-' + widgetName);
+        });
        
 
 
@@ -194,6 +197,9 @@
 
 
     };
+
+    if (!a)
+        a = "open";//Default Action is OPEN
 
     if (a == "open") open(widgetName);
 

@@ -224,7 +224,7 @@ function decodeEntities(input) {
 
                    });
 
-
+                    
                    eform.submit(function (e) {
                        e.preventDefault();
                         
@@ -275,7 +275,10 @@ function decodeEntities(input) {
 
                        if (options.beforeSubmit && typeof options.beforeSubmit == 'function')
                        {
-
+                           $('textarea.ckeditor').each(function () {
+                               var $textarea = $(this);
+                               $textarea.val(CKEDITOR.instances[$textarea.attr('id')].getData());
+                           });
                            options.beforeSubmit(pd);
                           
 

@@ -9,6 +9,7 @@ using Mvc.JQuery.Datatables.Models;
 using Ren.CMS.CORE.DataTables.Attributes;
 using Ren.CMS.CORE.Permissions;
 using System.Web.Script.Serialization;
+using Ren.CMS.CORE.Helper;
 namespace Ren.CMS.CORE.DataTables.BackendModels
 {
     public class ContentListView
@@ -62,10 +63,26 @@ namespace Ren.CMS.CORE.DataTables.BackendModels
         {
             get
             {
+
+                object deleteActionConfig = new {
+
+                    controller = CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content",
+                    action = "DeleteContent",
+                    identFieldName = "id",
+                    identFieldValue = this.ID,
+                    message = "Wollen Sie den Inhalt \""+ this.Title +"\" wirklich löschen?",
+                    yesText = "Ja",
+                    noText = "Nein"
+                
+                };
+
+                var config = new JavaScriptSerializer().Serialize(deleteActionConfig);
+
+
                 object buttons = new
                 {
-                    delete = new { enabled = nPermissions.hasPermission("USR_CAN_DELETE_CONTENTS"), action = "alert(\"delete\");" },
-                    edit = new { enabled = nPermissions.hasPermission("USR_CAN_EDIT_CONTENT"), action = "alert(\"edit\");" }
+                    delete = new { enabled = nPermissions.hasPermission("USR_CAN_DELETE_CONTENTS"), action = " $($btn).closest('table.dataTable').dataTable().fnDeleteWithModal(" + config + ")" },
+                    edit = new { enabled = nPermissions.hasPermission("USR_CAN_EDIT_CONTENT"), action = "new widgetAction('widget:EDIT_CONTENT:open', { contentType: '" + this.ContentType  + "', id: "+ this.ID +" });" }
 
                 };
 

@@ -97,6 +97,7 @@
     <Compile Include="Extras\FormGatherer.cs" />
     <Compile Include="FileManagement\FileManagement.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
+    <Compile Include="Helper\BootStrapTabs.cs" />
     <Compile Include="Helper\CurrentLanguageHelper.cs" />
     <Compile Include="Helper\DataTables.cs" />
     <Compile Include="Helper\EncodingHelper.cs" />

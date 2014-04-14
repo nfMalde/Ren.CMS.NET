@@ -19,27 +19,9 @@
  
 </style>
 <script>
-    $(document).ready(function () {
-        var el = "#widget-@Model.widgetName";
-        $(el).removeClass("backend-widget-inactive");
+  
 
-        $('.backend-widget-active').each(function () {
-
-            $(this).removeClass("backend-widget-active");
-
-            $(this).addClass("backend-widget-inactive");
-
-
-            console.log("Window @Model.widgetName is now active");
-
-        });
-
-        $(el).addClass('backend-widget-active');
-
-
-
-    });
-
+   
     $(function () {
         
         $("#widget-@Model.widgetName").click(function () {

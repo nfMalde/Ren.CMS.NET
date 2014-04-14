@@ -1,5 +1,172 @@
 ﻿
+
 ((function ($) {
+
+    $.fn.dataTableExt.oApi.fnDeleteWithModal = function (oSettings, deleteConfig) {
+
+        var controller, action, identFieldName, identFieldValue, message, yesText, noText, deleteTitle;
+
+
+
+
+    
+        if (deleteConfig)
+        {
+            var c = deleteConfig;
+
+            if (c.controller)
+                controller = c.controller;
+            if (c.action)
+                action = c.action;
+            if (c.identFieldName)
+                identFieldName = c.identFieldName;
+            if (c.identFieldValue)
+                identFieldValue = c.identFieldValue;
+            if (c.message)
+                message = c.message;
+            if (c.yesText)
+                yesText = c.yesText;
+            if (c.noText)
+                noText = c.noText;
+            if (c.deleteTitle)
+                deleteTitle = c.deleteTitle;
+
+        }
+
+
+
+        var url = "/" + controller + "/" + action;
+        var gridID = oSettings.sTableId;
+       
+
+        var id = '' + gridID + '_delete';
+        var idSelect = '#' + id;
+        var check = $(idSelect);
+        if (!check || !check.length || check.length == 0) {
+            //Creating Modal
+            var $modal = $(new $.parseHTML("<div/>"));
+            $modal.addClass("modal");
+            $modal.addClass("fade");
+
+            var $mDialog = $(new $.parseHTML("<div/>"));
+            $mDialog.addClass("modal-dialog");
+
+            var $mContent = $(new $.parseHTML("<div/>"));
+            $mContent.addClass("modal-content");
+
+            var $mHeader = $(new $.parseHTML("<div/>"));
+            $mHeader.addClass("modal-header");
+
+            var $mHeaderCloser = $(new $.parseHTML("<button/>"));
+            $mHeaderCloser.attr("type", "button");
+            $mHeaderCloser.attr("data-dismiss", "modal");
+            $mHeaderCloser.attr("aria-hidden", "true");
+            $mHeaderCloser.html("&times;");
+            $mHeaderCloser.addClass("close");
+            var $mTitle = $(new $.parseHTML("<h4/>"));
+            $mTitle.addClass("modal-title");
+            $mTitle.text((deleteTitle ? deleteTitle : ''));
+
+            var $mBody = $(new $.parseHTML("<div/>"));
+            $mBody.addClass("modal-body");
+
+            var $deleteForm = $(new $.parseHTML("<form/>"));
+
+            $deleteForm.attr("role", "form");
+            
+
+            $mBody.append($deleteForm);
+
+            var $mFooter = $(new $.parseHTML("<div/>"));
+            var $mFYes = $(new $.parseHTML("<button/>"));
+            $mFYes.addClass("btn btn-success yes");
+            $mFYes.attr("data-dismiss", "modal");
+            $mFYes.attr("type", "button");
+            $mFYes.text(yesText ? yesText : 'Yes');
+
+            var $mFNo = $(new $.parseHTML("<button/>"));
+            $mFNo.addClass("btn btn-danger no");
+            $mFNo.attr("data-dismiss", "modal");
+            $mFNo.attr("type", "button");
+            $mFNo.text(noText ? noText : 'No');
+
+
+            $mFooter.append($mFYes);
+            $mFooter.append($mFNo);
+
+            $mFooter.addClass("modal-footer");
+
+            //Bulder Modal
+            $mHeader.append($mHeaderCloser);
+            $mHeader.append($mTitle);
+            $mContent.append($mHeader);
+            $mBody.append($deleteForm);
+            $mContent.append($mBody);
+            $mContent.append($mFooter);
+            $mDialog.append($mContent);
+            $modal.append($mDialog);
+            $modal.attr("id", id);
+            $('body').append($modal);
+            $($modal).modal({ show: false });
+
+            $(idSelect).find("form").submit(function (e) {
+                e.preventDefault();
+                $.post($(this).attr("action"), $(this).serialize(), function (data) {
+
+                    if (data.success) {
+
+                        //Refresh Grid
+                        $(id).dataTable().fnDraw(true);
+                        $(id).modal("hide");
+
+                    }
+                    else
+                    {
+                        $(id).modal("hide");
+                    }
+
+                }, 'json');
+
+            });
+
+
+            $(idSelect).find("button.yes").click(function (e) { e.preventDefault(); $(idSelect).find("form").submit(); });
+            $(idSelect).find("button.no").click(function (e) { e.preventDefault(); $(idSelect).modal("hide"); });
+
+        }
+        console.log("ID");
+        console.log(id);
+        $(id).find("form").empty();
+        //Parse new hidden input
+        var input = $(new $.parseHTML("<input/>"));
+        input.attr("type", "hidden");
+        input.attr("name", identFieldName);
+        input.val(identFieldValue);
+        $(idSelect).find("form").append(input);
+        if (message) {
+            var $message = $(new $.parseHTML("<div/>"));
+            $message.addClass("alert alert-warning");
+            $message.text(message);
+            $(idSelect).find("form").append($message);
+
+        }
+        $(idSelect).find("form").attr("action", url);
+   
+
+        if (yesText) {
+            $(idSelect).find("button.yes").text(yesText);
+        }
+
+        if (noText) {
+            $(idSelect).find("button.no").text(noText);
+        }
+
+       
+
+        $(idSelect).modal("show");
+
+
+    }
 
     $.fn.dataTableExt.oApi.fnGetVisibleColumns = function (oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty) {
 
@@ -149,12 +316,16 @@
             for (var i = 0; i < visibles.length; i++)
             {
                 var headerText = visibles[i].sTitle;
+                if (headerText == 'ActionColumn')
+                    continue;
+
                 var dataIndex = visibles[i].mData;
 
                 var elementID = $(oTable).attr("id") + "-filter-" + i;
 
                 var $div = $(new $.parseHTML("<div/>"));
                 var $label = $(new $.parseHTML("<label/>"));
+                
                 $label.text(headerText);
                 $label.attr("for", elementID);
 
@@ -276,11 +447,14 @@ function fixActionColumn($tb){
 
     });
 }
-function renderActionColumn(a,b,c,d) {
-   
-    console.log(b);
-    console.log(c);
-    console.log(d);
+function renderActionColumn(a, b, c, d)
+{
+    var data, type, full;
+    data = a;
+    type = b;
+    full = c;
+
+
 
     var obj = jQuery.parseJSON(a);
     $html = $($.parseHTML("<div/>"));
@@ -289,12 +463,47 @@ function renderActionColumn(a,b,c,d) {
     if (obj.edit) {
         if (obj.edit.enabled && obj.edit.enabled == true) {
             var $a = $($.parseHTML("<a/>"));
-            $a.addClass("edit");
+            $a.addClass("edit ActionColumnBtn");
             $a.addClass("btn btn-sm btn-default");
-            $a.attr("onclick", (obj.edit.action) + "; return false;");
+            //$a.attr("onclick", (obj.edit.action) + "; return false;");
+            var newID = 0;
+            $(".edit.ActionColumnBtn").each(function () {
+                var f_id = $(this).attr("id");
+                if (f_id == 'acol_editer_' + newID)
+                    newID++;
+
+            });
+            var editerID = "acol_editer_" + newID;
+            $($a).attr("id", editerID);
+
+            
+
+ 
            
+            var AddClickListenerEdit = function () {
+                console.log("Editer Clicker triggered");
+
+                if (!$('#' + editerID) || !$('#' + editerID).length || $('#' + editerID).length == 0) {
+                    window.setTimeout(AddClickListenerEdit, '100');
+                }
+                else {
+                    var et =  $('#'+ editerID);
+
+                    if (!et.hasClass("click-added")) {
+                        et.click(function () { eval("var $btn = $('#" + deleterID + "');" + (obj.edit.action)); });
+                        et.addClass("click-added")
+                    }
+                }
+
+
+
+            };
+
+            
 
             $html.append($a);
+            AddClickListenerEdit();
+          
         }
     }
 
@@ -303,8 +512,40 @@ function renderActionColumn(a,b,c,d) {
             var $a = $($.parseHTML("<a/>"));
             $a.addClass("delete");
             $a.addClass("btn btn-sm btn-danger");
-            $a.attr("onclick", (obj.delete.action) +"; return false;");
+            var newID = 0;
+            $(".delete.ActionColumnBtn").each(function () {
+                var f_id = $(this).attr("id");
+                if (f_id == 'acol_deleter_' + newID)
+                    newID++;
+
+            });
+            var deleterID = "acol_deleter_" + newID;
+            $($a).attr("id", deleterID);
+
+
+
+
+
+            var AddClickListenerDelete = function () {
+                
+
+                if (!$('#' + deleterID) || !$('#' + deleterID).length || $('#' + deleterID).length == 0) {
+                    window.setTimeout(AddClickListenerDelete, '100');
+                }
+                else {
+                    var et = $('#' + deleterID);
+
+                    if (!et.hasClass("click-added")) {
+                        et.click(function () { eval("var $btn = $('#"+ deleterID +"');" +(obj.delete.action)); });
+                        et.addClass("click-added")
+                    }
+                }
+
+
+
+            };
             $html.append($a);
+            AddClickListenerDelete()
         }
     }
 
@@ -328,5 +569,7 @@ function renderActionColumn(a,b,c,d) {
 
     return $html.html();
 }
+
+
 
 

@@ -1,8 +1,8 @@
 ﻿@model Ren.CMS.Models.Core.nContentPostModel
 @using Ren.CMS.Helpers
 @using Ren.CMS.CORE.Language.LanguageDefaults
-
-@using  Ren.CMS.Models.jsTreeModels
+@using Ren.CMS.CORE.Helper
+@using Ren.CMS.Models.jsTreeModels
  
 @{
     //Prerender Texts
@@ -87,13 +87,7 @@
         
         
         }
-        table.tblEditContent tr:hover {
         
-        background-color:#e6dede;
-
-        
-        
-        }
    table.tblEditContent td:last-child {
             width:50%;
             padding:1px;
@@ -103,11 +97,7 @@
             text-align:right;
         }
 
-        table.tblEditContent td input[type="text"] {
-        
-        height:20px;
-        
-        }
+       
         table.tblEditContent td input, table.tblEditContent td select, table.tblEditContent td textarea{
             width:100%;
         }
@@ -118,14 +108,14 @@
         }
     a.create-content-help {
     
-   cursor:help;
-    text-decoration:dotted;
+        cursor:help;
+        text-decoration:dotted;
     
     }
 
 </style> 
 
-
+ 
 <script>
 
  
@@ -146,20 +136,42 @@
     });
     $(function () {
 
-        $('#title-create-content').find('input').keyup(function () {
-            if( $('#enableAutomaticSEOForCreate').attr('checked')){
 
-                var val =  $(this).val();
-                $.post("/BackendHandler/Content/ValidateSEOTitle", { title: val }, function (data) {
-               
-                     $('#seotitle-create-content').find("input").val(data.seoname);
-                  
+        $('#@Html.ProtectID("edit_content_form")').find(".ct-title").each(function () {
+            var self = this;
+            $(this).keyup(function () {
+                var title = this;
+                var langcode = $(this).attr("data-lang");
+                var findTarget = $('#@Html.ProtectID("edit_content_form")').find(".ct-seoname").filter(function () {
+
+                    return $(this).attr("data-lang") == langcode;
+                });
+                console.log("Target for SEO Gen:");
+                console.log(findTarget);
+
+                var isEnabled = $('#@Html.ProtectID("edit_content_form")').find(".ct-enable-seogen").filter(function () {
+
+                    return $(this).attr("data-lang") == langcode;
+                }).is(":checked");
+                console.log("Is Enabled?");
+                console.log(isEnabled);
+                if (isEnabled) {
+                    var val = $(title).val();
+                    $.post("/BackendHandler/Content/ValidateSEOTitle", { title: val }, function (data) {
+                        console.log("2- Target for SEO Gen:");
+                        console.log(findTarget);
+                        $(findTarget).val(data.seoname);
+
+
+
+                    }, 'json');
+
+                }
                 
+            });
 
-           },'json');
-            }
 
-        });
+        }); 
 
     });
     $(function () {
@@ -169,23 +181,8 @@
             try {
                 $(this).click(function () {
 
-
-
-                    var x = $(this).closest("tr");
-                    var t = (x[0].title);
-                    $('#help-dialog-create-content').html(t);
-
-                    $('#help-dialog-create-content').dialog({
-
-                        width: 600,
-                        height: 'auto',
-                        resizable: false,
-                        title: "Inhalte erstellen - Hilfe",
-                        modal: true
-
-                    });
-
-                    $('#help-dialog-create-content').dialog('open');
+                    $(this).tooltip();
+                    $(this).tooltip('show');
 
                 });
             }
@@ -209,44 +206,24 @@
 
         });
        
-        $('#myTab a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        })
-        var contentForm = "#@Html.ProtectID("edit_content_form")";
 
 
-
- 
-    
-     
-
-
-        new backenForm(contentForm,
+        new backenForm('#@Html.ProtectID("edit_content_form")',
 
             {
                 backendHandler : "Content",
                 backendAction : "Content",
                 language: '@Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage',
                 beforeSubmit: function (formdata) {
-                    //TinyMCEEditors
-                    $(contentForm).find("textarea.rentinyMCE").each(function () {
-                       var ed =  tinymce.get($(this).attr("id"));
-                       var c = ed.getContent();
-                       $(this).val(c);
 
-                    });
-
-                   
                     formdata.each(function () {
-
                         //Encode Entitys
                         var newV = decodeEntities($(this).val());
 
-
+                        
                         $(this).val(encodeURI(newV));
 
-                    });
+                    })
 
                 },
                 afterSubmit: function (f, fd, d) {
@@ -267,7 +244,7 @@
                                 return;
                                 break;
                             default:
-                               var d =  $("<div/>").html($(this).val());
+                                var d =  $("<div/>").html($(this).val());
                                
 
                                 $(this).val(decodeURI($(d).html()));
@@ -279,7 +256,6 @@
                     });
 
                 }
-
             
     });
 
@@ -290,71 +266,22 @@
  <input type="hidden" id="create-content-seo-cache" value="" />
 <div id="help-dialog-create-content" style="font-size:10px !important;"></div>
 
-
-<div id="create_content_tabs">
-
-
-
- 
- @using(Html.BeginForm(actionName: "Content" ,controllerName: "/"+ Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage +"/BackendHandler/Content", method: FormMethod.Post , htmlAttributes: new { id = Html.ProtectID("edit_content_form") })){
-     
-         @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.CreatorPKID)
-      @Html.HiddenFor(m => m.ContentType)
-    
-@Html.ValidationMessageFor(m => m.CreatorPKID)
-
-@Html.ValidationMessageFor(m => m.CategoryID)
-@Html.ValidationMessageFor(m => m.Locked)
-
- 
+ @using (Html.BeginForm(actionName: "Content", controllerName: "/" + Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage + "/BackendHandler/Content", method: FormMethod.Post, htmlAttributes: new { id = Html.ProtectID("edit_content_form") }))
+ {
 
 
-<ul class="nav nav-tabs" id="myTab">
+             
+            Html.bootStrapTabs()
+            .AddTab("GeneralInfo",
+            "Hauptdaten",
+            ("~/Views/Backend/widgets/__SHARED/Content/Tabs/Generaltab.cshtml"),
+            Model,
+            true)
+            .AddTab("SEO", "Suchmaschienenoptimierung", ("~/Views/Backend/widgets/__SHARED/Content/Tabs/SEOTab.cshtml"), Model, viewData: ViewData)
+            .AddTab("CAT", "Kategorie und Tags", "~/Views/Backend/widgets/__SHARED/Content/Tabs/TagsTab.cshtml", model: Model, viewData: ViewData)
+            .AddTab("FINISH", "Fertigstellen", ("~/Views/Backend/widgets/__SHARED/Content/Tabs/FinishTab.cshtml"), model: Model, viewData: ViewData)
+            .Render();
+           
+     <input type="hidden" name="ContentType" value="@Model.ContentType"/>
 
-    <li class="active"><a href="#tab-1" data-toggle="tab">Hauptdaten</a></li>
-    <li><a href="#tab-2">Suchmaschienenoptimierung</a></li>
-    <li><a href="#tab-3">Kategorie und Tags</a></li>
-    <li><a href="#tab-4">Dateien</a></li>
-    <li><a href="#tab-5">Fertigstellen</a></li>
-
-</ul>
-    <div id="myTabContent" class="tab-content">
-    <div id="tab-1" class="tab-pane fade in active">
-      
-          @{
-                              Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/Generaltab.cshtml"), Model);        
-            
-            }
-        </div>
-    
-    <div id="tab-2" class="tab-pane fade in">
-
-          @{
-    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/SEOTab.cshtml"), Model,ViewData);        
-            
-            }
-
-    
-        
-        </div>
- <div class="tagsContent tab-pane fade in" id="tab-3">
-          @{
-    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/TagsTab.cshtml"), Model, ViewData);        
-            
-            }
-
- </div>   
-    <div id="tab-4" class="ui-helper-clearfix tab-pane fade in">
-
-      
-       
-        </div>
-    <div id="tab-5" class="tab-pane fade in">
-                    @{
-    Html.RenderPartial(("~/Views/Backend/widgets/__SHARED/Content/Tabs/FinishTab.cshtml"), Model, ViewData);        
-            
-            }
-        </div></div>
  }
- </div>   

@@ -12,8 +12,12 @@
     
     }    
     int i = 0;
+
+    if(Model.Texts.Any(e => e.LangCode == active))
+    {
+        Model.Texts.Where(e => e.LangCode == active).FirstOrDefault().Active = true; 
     
-   
+    }
     
     }
 
@@ -88,7 +92,7 @@
         </td>
         <td id="title-create-content">
          
-            @Html.TextBoxFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().Title)
+            @Html.TextBoxFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().Title, new { @class = "ct-title", data_lang = l.Code})
         </td>
 
     </tr>
@@ -110,13 +114,9 @@
 
     </tr>
     <tr title="Geben Sie hier den Inhalt ein. Dieser wird bei der Detailansicht angezeigt.">
+ 
 
-        <td>
-            <b>Text:</b><br />
-            <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
-        </td>
-
-        <td>
+        <td colspan="2" style="min-height:180px; text-align: left;" class="clearfix">
  
      
             @Html.EditorFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().LongText)

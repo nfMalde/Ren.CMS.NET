@@ -23,7 +23,7 @@
 <ul class="nav nav-tabs" id="@Html.ProtectID("SEO_Language")">
     @foreach(var l in langcodes)
     {
-    <li class="@(l.Code == active ? active : "")"><a href="#@Html.ProtectID(l.Code)" data-toggle="tab">@l.Name</a></li>
+    <li class="@(l.Code == active ? "active" : "")"><a href="#seo-@Html.ProtectID(l.Code)" data-toggle="tab">@l.Name</a></li>
  
     }
 
@@ -36,7 +36,7 @@
  
     
         
-      <div id="@Html.ProtectID(l.Code)" class="tab-pane fade in @(l.Code == active ? "active" : "")">
+      <div id="seo-@Html.ProtectID(l.Code)" class="tab-pane fade in @(l.Code == active ? "active" : "")">
 
        
 <table class="tblEditContent">
@@ -44,7 +44,7 @@
         <td>
             <b>Suchmaschienen URL Titel(SEO):</b><br />
             <br />
-            <input type="checkbox" id="enableAutomaticSEOForCreate" style="width:auto" checked="checked" /> Automatisch generieren
+            <input type="checkbox" id="@Html.ProtectID("enableAutomaticSEOForCreate")" class="ct-enable-seogen" data-lang="@l.Code" style="width:auto" checked="checked" /> Automatisch generieren
             
             <br />
             <a href="javascript:void(0)" class="create-content-help">Hilfe?</a>
@@ -55,7 +55,7 @@
 
      
 
-            @Html.TextBoxFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().SEOName)
+            @Html.TextBoxFor(m => m.Texts.Where(e => e.LangCode == l.Code).First().SEOName,new { @class = "ct-seoname", data_lang = l.Code})
             
         </td>
 

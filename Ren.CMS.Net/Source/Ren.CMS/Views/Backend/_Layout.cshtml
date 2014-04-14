@@ -9,14 +9,15 @@
     
     <link href="@Url.Content("~/Content/Backend/css/ui/ui.css")" type="text/css" rel="stylesheet" />
     <link href="@Url.Content("~/Content/Backend/css/quickstyles/ren.cms.jquifix.css")" type="text/css" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/Backend/css/general/backend.css")" type="text/css" rel="stylesheet" />
+ 
     <link href="@Url.Content("~/Content/flexigrid.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Scripts/jquery.treeview.css")" rel="stylesheet"/>
     <link href="@Url.Content("~/Content/chosen.css")" rel="stylesheet" type="text/css" />
     
     <link href="@Url.Content("~/Content/colorpicker/css/colorpicker.css")" rel="stylesheet" media="screen" type="text/css"/>
     <link href="@Url.Content("~/Scripts/shared/shadowbox/shadowbox.css")" rel="stylesheet" type="text/css" />
-     
+    @Styles.Render("~/Content/DataTables/dataTables.bootstrap.css", "~/Content/Backend/css/bootstrap/bootstrap.css")
+    @Styles.Render("~/Content/font-awesome.css", "~/Scripts/ckeditor/contents.css")
 
     @{
         string langcode = Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage;
@@ -104,45 +105,40 @@
                 };
 
     </script>
-    <script src="@Url.Content("~/Scripts/tinymce/tiny_mce.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Backend/gui/js/jquery-1.9.1.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Backend/gui/js/jquery-ui-1.10.1.custom.min.js")"></script>
-    <script src="~/Content/nftheme/bootstrap/js/bootstrap.js"></script>
-    <script src="@Url.Content("/Scripts/jquery.msgWidgetHelper.js")" type="text/javascript"></script>
-    <script src="@Url.Content("/Scripts/shared/jquerymigration/jquery.migrate.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.hotkeys.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.cookie.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/knockout-2.2.0.js")" type="text/javascript"></script> 
-    <script src="@Url.Content("~/Scripts/Backend/backend-gui.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Backend/backend-widgets.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/Backend/backend-core.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/colorpicker/colorpicker.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.jstree.js")" type="text/javascript"></script>  
-    <script src="@Url.Content("~/Scripts/jquery.formDialog.js")" type="text/javascript"></script>  
-    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/shared/shadowbox/shadowbox.js")" type="text/javascript"></script>
+    @Scripts.Render("~/Scripts/Backend/gui/js/jquery-1.9.1.js",
+                    "~/Scripts/Backend/gui/js/jquery-ui-1.10.1.custom.min.js",
+                    "~/Scripts/Backend/boostrap/bootstrap.js",
+                    "~/Scripts/jquery.msgWidgetHelper.js",
+                    "~/Scripts/shared/jquerymigration/jquery.migrate.js",
+                    "~/Scripts/jquery.hotkeys.js",
+                    "~/Scripts/jquery.cookie.js",
+                    "~/Scripts/knockout-2.2.0.js",
+                    "~/Scripts/Backend/backend-gui.js",
+                    "~/Scripts/Backend/backend-widgets.js",
+                    "~/Scripts/Backend/backend-core.js",
+                    "~/Scripts/colorpicker/colorpicker.js",
+                    "~/Scripts/jquery.jstree.js",
+                    "~/Scripts/jquery.formDialog.js",
+                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                    "~/Scripts/jquery.validate.js",
+                    "~/Scripts/jquery.validate.unobtrusive.js",
+                    "~/Scripts/shared/shadowbox/shadowbox.js",
+                    "~/Scripts/chosen.jquery.js",
+                    "~/Scripts/Majorplugins/Fileupload/js/jquery.iframe-transport.js",
+                            "~/Scripts/Majorplugins/Fileupload/js/jquery.fileupload.js")
+                    
+    
  
-    <script src="@Url.Content("~/Scripts/flexigrid.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/shared/flexigrid/jquery.flexigrid.returnSelected.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/chosen.jquery.js")" type="text/javascript"></script>
  
-    <script src="~/Scripts/Backend/boostrap/bootstrap.js"></script>
-
-
-
-    <link href="~/Content/Backend/css/bootstrap/bootstrap.css" rel="stylesheet" />
-
-    <link href="~/Scripts/Majorplugins/Fileupload/css/jquery.fileupload-ui.css" rel="stylesheet" />
-    <script src="~/Scripts/Majorplugins/Fileupload/js/jquery.iframe-transport.js"></script>
-    <script src="~/Scripts/Majorplugins/Fileupload/js/jquery.fileupload.js"></script>
+ 
+ 
+ 
 
     @Html.DataTableIncludes()
-    @Styles.Render("~/Content/DataTables/dataTables.bootstrap.css")
-        @Styles.Render("~/Content/font-awesome.css")
+
     @Scripts.Render("~/Scripts/dataTables.bootstrap.js")
-  
+    @Scripts.Render("~/Scripts/ckeditor/ckeditor.js","~/Scripts/ckeditor/config.js")
+       <link href="@Url.Content("~/Content/Backend/css/general/backend.css")" type="text/css" rel="stylesheet" />
  
 </head>
 <body>

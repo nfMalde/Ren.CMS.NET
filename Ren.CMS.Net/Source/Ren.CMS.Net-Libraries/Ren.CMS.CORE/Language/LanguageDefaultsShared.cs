@@ -18,7 +18,9 @@
         public static LanguageDefaultValues LANG_SHARED_MESSAGE_NO_PERMISSION = new LanguageDefaultValues("LANG_SHARED_MESSAGE_NO_PERMISSION") { 
                                                                             { "de-DE", "Sie haben hierfür leider keine Berechtigung." },
                                                                             { "en-US", "You don´t have the permission for this action." } };
-
+        public static LanguageDefaultValues LANG_SHARED_UNKNOWN_SUBMITERROR = new LanguageDefaultValues("LANG_SHARED_UNKNOWN_SUBMITERROR") { 
+                                                                            { "de-DE", "Es ist ein unbekannter Fehler beim Senden der Daten aufgetreten. Bitte versuchen Sie es erneut." },
+                                                                            { "en-US", "Unknown error: There was an error submitting your data. Please try again." } };
         #endregion Fields
     }
 

@@ -53,8 +53,16 @@
          
          }
      
-    @Html.ListBoxFor(m => m.Tags, new MultiSelectList(OptionsTags, "ID", "Name", Model.Tags), new { Multiple = "multiple" })
-        
+    @Html.ListBoxFor(m => m.Tags, new MultiSelectList(OptionsTags, "ID", "Name", Model.Tags), new { id = Html.ProtectID("tags"), Multiple = "multiple" })
+    
+       <script>
+           $(function () {
+
+               $('#@Html.ProtectID("tags")').chosen();
+
+           });
+
+       </script>  
     </td>
 
 </tr>

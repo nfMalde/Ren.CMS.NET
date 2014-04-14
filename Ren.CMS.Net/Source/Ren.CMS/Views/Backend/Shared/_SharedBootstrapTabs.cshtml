@@ -1,0 +1,37 @@
+﻿@model Ren.CMS.CORE.Helper.BottStrapTabsModel
+
+
+     
+<div id="@Html.ProtectID(Model.ID)">
+    <ul class="nav nav-tabs" id="@Html.ProtectID(Model.ID)-nav">
+        @foreach(var tab in Model.Tabs){
+            <li class="@(tab.Active ? "active" : "")"><a href="#@Html.ProtectID(tab.ID)" data-toggle="tab">@tab.Caption</a></li>
+        }
+    </ul>
+                
+    <div id="@Html.ProtectID(Model.ID)-content" class="tab-content">
+
+       @foreach(var tab in Model.Tabs){
+       
+         <div id="@Html.ProtectID(tab.ID)" class="tab-pane fade in @(tab.Active ? "active" : "")">
+          @{
+              Html.RenderPartial(tab.PartialView, tab.Model,ViewData);        
+            
+            }
+        </div>
+       }
+   </div>
+</div>     
+<script>
+
+    
+    $(function () {
+        $('#@Html.ProtectID(Model.ID)-nav a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+
+    });
+
+</script>
+        
