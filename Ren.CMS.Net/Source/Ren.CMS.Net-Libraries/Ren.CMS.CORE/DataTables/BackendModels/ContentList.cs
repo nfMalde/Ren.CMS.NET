@@ -95,4 +95,70 @@ namespace Ren.CMS.CORE.DataTables.BackendModels
 
 
     }
+    public class ContentAttachmentListView
+    {
+
+        [DataTables(Visible = false)]
+        public string ID { get; set; }
+        //[RenDataTables(LanguageLine = "LANG_CONTENT_TITLE", LanguagePackage = "CONTENT_MANAGEMENT")]
+        [DataTables(DisplayName= "Titel")]
+        public string Title { get; set; }
+
+        //  [DataTables(DisplayName = Language.LanguageDefaults.LanguageDefaultsContent.LANG_CONTENT_CREATOR.ReturnLangLine())]
+        //[RenDataTables(LanguageLine = "LANG_CONTENT_CREATOR", LanguagePackage = "CONTENT_MANAGEMENT")]
+        [DataTables(DisplayName = "Dateiname")]
+        public string FileName { get; set; }
+
+        // [DataTables(DisplayName = Language.LanguageDefaults.LanguageDefaultsContent.LANG_CONTENT_CREATOR.ReturnLangLine())]
+        //[RenDataTables(LanguageLine = "LANG_CONTENT_CATEGORY", LanguagePackage = "CONTENT_MANAGEMENT")]
+        [DataTables(DisplayName = "Rolle")]
+        public string Role { get; set; }
+
+        // [DataTables(DisplayName = Language.LanguageDefaults.LanguageDefaultsContent.LANG_CONTENT_CREATION_DATE.ReturnLangLine())]
+        [DataTables(DisplayName = "Dateityp")]
+        public string FileType { get; set; }
+
+        [DataTables(Visible = false)]
+        public string ContentType { get; set; }
+         
+
+        [DataTables(MRenderFunction = "renderActionColumn", Sortable = false, DisplayName = "<span class=\"ActionColumn\"></span>")]
+
+        public string ActionColumn
+        {
+            get
+            {
+
+                object deleteActionConfig = new
+                {
+
+                    controller = CurrentLanguageHelper.CurrentLanguage + "/BackendHandler/Content",
+                    action = "DeleteAttachment",
+                    identFieldName = "ID",
+                    identFieldValue = this.ID,
+                    message = "Wollen Sie die Datei \"" + this.FileName + "\" wirklich löschen?",
+                    yesText = "Ja",
+                    noText = "Nein"
+
+                };
+
+                var config = new JavaScriptSerializer().Serialize(deleteActionConfig);
+
+
+                object buttons = new
+                {
+                    delete = new { enabled = nPermissions.hasPermission("USR_CAN_DELETE_CONTENTS") || nPermissions.hasPermission("USR_CAN_DELETE_CONTENT_ATTACHMENTS"), action = " $($btn).closest('table.dataTable').dataTable().fnDeleteWithModal(" + config + ")" },
+                    edit = new { enabled = nPermissions.hasPermission("USR_CAN_EDIT_CONTENT"), action = "editAttachment('"+ this.ID +"');" }
+
+                };
+
+                var json = new JavaScriptSerializer().Serialize(buttons);
+
+                return json;
+
+            }
+        }
+
+
+    }
 }

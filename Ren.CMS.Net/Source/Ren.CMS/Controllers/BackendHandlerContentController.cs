@@ -782,15 +782,15 @@
 
         [HttpPost]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_ENTER_BACKEND")]
-        public JsonResult GetAttachments(int id)
+        public DataTablesResult<ContentAttachmentListView> GetAttachments(int id, DataTablesParam param) 
         {
-            List<object> _list = new List<object>();
+            List<ContentAttachmentListView> _list = new List<ContentAttachmentListView>();
 
             Ren.CMS.Content.ContentManagement.GetContent GC = new Content.ContentManagement.GetContent(id, true, 0);
 
             List<Ren.CMS.Content.nContent> C = GC.getList();
 
-            if (C.Count == 0) return Json(new { rows = new List<object>() });
+           
 
             Ren.CMS.Content.nContent Con = C[0];
 
@@ -808,25 +808,14 @@
 
                 _list.Add(
 
-                        new
-                        {
-                            id = Att.PKID,
-                            cell = new
-                            {
-                                Filename = fname,
-                                title = Att.Title,
-                                Role = Att.AttachmentArgument,
-                                Type = Att.AttachmentType,
-                                Options = op
+                    new ContentAttachmentListView() { ID = Att.PKID , FileName = fname, Role = Att.AttachmentArgument, FileType = Att.AttachmentType }
 
-                            }
-                        }
-
+                        
                         );
 
             }
 
-            return Json(new { total = _list.Count, rows = _list });
+            return DataTablesResult.Create(_list.AsQueryable(), param);
         }
 
         [HttpPost]

@@ -1,5 +1,10 @@
 ﻿ 
 @model Ren.CMS.Models.Core.nContentPostModel
+@using Ren.CMS.CORE.Helper.DataTables
+@using Ren.CMS.CORE.Viewmodels.Backend
+@using Ren.CMS.CORE.DataTables.BackendModels
+@using Mvc.JQuery.Datatables
+
 <fieldset>
     <legend>Dateien</legend>
 
@@ -209,9 +214,10 @@
 
             });
 
-            $('#upload-attachments').button();
-            $('#upload-attachments').click(function(){
-            
+        
+            $('#upload-attachments').click(function(e){
+                e.preventDefault();
+
                 $('#file-upload-form').dialog("open");
             
             });
@@ -269,53 +275,16 @@
 
     </div>
                 
-       <button id="upload-attachments">Dateien hochladen</button>
+       <button class="btn btn-primary" id="upload-attachments">Dateien hochladen</button>
+
+       @{
+           var vm = Html.DataTableVm<Ren.CMS.Controllers.BackendHandlerContentController, ContentAttachmentListView>(Html.ProtectID("files-list"),
+      (Ren.CMS.Controllers.BackendHandlerContentController c) => c.GetAttachments(0,null));
+           vm.TableTools = false;
+
+           vm.JsOptions.Add("PARAM_id", Model.ID);
+           }
+
+        @(Html.JqueryDataTable<ContentAttachmentListView>(vm))
     
-    <table style="display:none" id="edit-content-default-attachments">
-                
-                
-            </table>
-
-  
-
-                </div>
-            <script>
-
-                $(function () {
-
-                    $('#edit-content-default-attachments').flexigrid({
-
-                        url: "/BackendHandler/Content/GetAttachments/"+ @Model.ID,
-                        dataType: "json",
-                        width:'auto',
-                        colModel: [
-                                    { display: 'Dateiname', name: 'Filename', width: 150, sortable: true, align: 'left' },
-                                    { display: 'Titel', name: 'title', width: 150, sortable: true, align: 'left' },
-                                    { display: 'Rolle', name: 'Role', width: 100, sortable: true, align: 'left' },
-                                    { display: 'Dateityp', name: 'Type', width: 100, sortable: true, align: 'left' },
-
-                                    { display: 'Optionen', name: 'Options', width: 250, sortable: true, align: 'left' }
-                        ],
-                        useRP: false,
-                        onSuccess: function(){    
-                            Shadowbox.init({ skipSetup: true }); Shadowbox.setup(); 
-                          
-                        
-                        }
-
-                          
-                              
-                               
-                           
-                           
-                    
-
- 
-
-                    });
-
-
-                });
-
-
-            </script>   </fieldset>
+    </div>  </fieldset>

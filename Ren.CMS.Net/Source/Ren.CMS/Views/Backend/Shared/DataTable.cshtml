@@ -2,6 +2,29 @@
 @using System.Linq
 @using Mvc.JQuery.Datatables
 @model DataTableConfigVm
+
+@{
+   Dictionary<string, object> PostParams = new Dictionary<string, object>();
+       
+   if(Model.JsOptions.Any(e => e.Key.StartsWith("PARAM_"))){
+       var postParams = Model.JsOptions.Where(e => e.Key.StartsWith("PARAM_"));
+       List<string> _mkeys = new List<string>();
+       foreach(var post in postParams){
+           string pKey = post.Key.Substring(("PARAM_").Length);
+           PostParams.Add(pKey, post.Value);
+           _mkeys.Add(post.Key);
+       }
+
+       foreach (string a in _mkeys){
+           Model.JsOptions.Remove(a);
+       }
+   
+   }
+   var json_post_params = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(PostParams);
+    
+    
+    }
+
 <table id="@Model.Id" class="display dataTable @(Model.TableClass ?? DataTableConfigVm.DefaultTableClass ?? "")" >
     <thead>
         @if (Model.ColumnFilter)
@@ -53,7 +76,7 @@
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
-                    "url": sSource,
+                    "url": sSource+'?'+$.param(@Html.Raw(json_post_params)),
                     "data": aoData,
                     "success": fnCallback
                 });
