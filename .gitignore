@@ -217,3 +217,7 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#Ren.CMS.Storage
+Ren.CMS.Net/Source/Ren.CMS/Storage/
+Ren.CMS.Net/Source/Ren.CMS/Binaries/Converter/Videothumpnails/
