@@ -15,6 +15,8 @@ namespace Ren.CMS.CORE.Taskmanagement
         
         }
 
+        public int ID { get; set; }
+
         public int TaskID  { get;set;}
 
         public virtual bool Running { get;set; }
@@ -68,6 +70,13 @@ namespace Ren.CMS.CORE.Taskmanagement
 
         public static int RegisterTask<T>(T task) where T : RTask, new()
         {
+             
+            Task tsk = new Task(task.TaskAction, cancellationToken: System.Threading.CancellationToken.None);
+            
+            tsk.RunSynchronously();
+            task.TaskID = tsk.Id;
+
+            /* Save in DB */
 
             return 0;
         }

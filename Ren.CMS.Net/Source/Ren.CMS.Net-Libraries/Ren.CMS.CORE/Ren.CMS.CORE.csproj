@@ -50,6 +50,9 @@
     <Reference Include="NHibernate">
       <HintPath>..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.VideoConverter">
+      <HintPath>..\..\packages\NReco.VideoConverter.1.0.0.27665\lib\net20\NReco.VideoConverter.dll</HintPath>
+    </Reference>
     <Reference Include="Recaptcha">
       <HintPath>..\bin\Recaptcha.dll</HintPath>
     </Reference>
@@ -134,6 +137,7 @@
     <Compile Include="Settings\UserSettings.cs" />
     <Compile Include="SqlHelper\nSqlParameterCollection.cs" />
     <Compile Include="SqlHelper\Sqlhelper.cs" />
+    <Compile Include="Taskmanagement\Taskmanagement.cs" />
     <Compile Include="ThisApplication\ThisApplication.cs" />
     <Compile Include="ViewEngine\nTheming.cs" />
     <Compile Include="Viewmodels\Backend\ContentListViewModel.cs" />
