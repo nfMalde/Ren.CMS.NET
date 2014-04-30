@@ -219,7 +219,8 @@ pip-log.txt
 .mr.developer.cfg
 
 #Ren.CMS.Storage
-Ren.CMS.Net/Source/Ren.CMS/Storage/
-Ren.CMS.Net/Source/Ren.CMS/Binaries/Converter/Videothumpnails/
+Ren.CMS.Net/Source/Ren.CMS/Storage/*
+Ren.CMS.Net/Source/Ren.CMS/Binaries/Converter/Videothumpnails/*
 #Ren.CMS.NugetPackages
-Ren.CMS.Net/Source/packages/
+Ren.CMS.Net/Source/packages/*
+Ren.CMS.Net/Source/packages/*/*
