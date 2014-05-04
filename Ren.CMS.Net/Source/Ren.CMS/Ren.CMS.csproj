@@ -204,25 +204,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\RouteDebugger\Components\ActionSelectSimulator.cs" />
-    <Compile Include="Areas\RouteDebugger\Components\DictionaryExtensions.cs" />
-    <Compile Include="Areas\RouteDebugger\Components\HttpParameterBindingExtensions.cs" />
-    <Compile Include="Areas\RouteDebugger\Components\TypeHelper.cs" />
-    <Compile Include="Areas\RouteDebugger\Controllers\RouteDebuggerController.cs" />
-    <Compile Include="Areas\RouteDebugger\InspectActionInvoker.cs" />
-    <Compile Include="Areas\RouteDebugger\InspectActionSelector.cs" />
-    <Compile Include="Areas\RouteDebugger\InspectControllerSelector.cs" />
-    <Compile Include="Areas\RouteDebugger\InspectHandler.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\ActionSelectionInfo.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\ActionSelectionLog.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\ControllerSelectionInfo.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\HttpParameterDescriptionInfo.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\InspectData.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\RouteDataInfo.cs" />
-    <Compile Include="Areas\RouteDebugger\Models\RouteInfo.cs" />
-    <Compile Include="Areas\RouteDebugger\RequestHelper.cs" />
-    <Compile Include="Areas\RouteDebugger\RouteDebuggerAreaRegistration.cs" />
-    <Compile Include="Areas\RouteDebugger\RouteDebuggerConfig.cs" />
     <Compile Include="Controllers\BackendHandlerAccountController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BackendController.cs" />
@@ -260,8 +241,6 @@
     <Compile Include="Models\jsTreeModels.cs" />
     <Compile Include="Models\LinkModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Areas\RouteDebugger\Content\rdstyle.css" />
-    <Content Include="Areas\RouteDebugger\Scripts\detect.js" />
     <Content Include="Binaries\Converter\ffmpeg.exe" />
     <Content Include="Content\Backend\css\bootstrap\bootstrap-theme.css" />
     <Content Include="Content\Backend\css\bootstrap\bootstrap-theme.min.css" />
@@ -1071,8 +1050,6 @@
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\Backend\css\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Areas\RouteDebugger\Views\Web.config" />
-    <Content Include="Areas\RouteDebugger\Views\RouteDebugger\Index.cshtml" />
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
