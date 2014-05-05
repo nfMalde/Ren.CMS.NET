@@ -4,22 +4,33 @@ Ren.CMS.NET
 Ren.CMS.Net Open Source .NET 4 (MVC4) CMS
 ===============
 How to Install Pre-Releases:
-1. Go to Releases
+1. Go to Releases 
+
 2. Download the latest Pre-Release
+
 3. Choose one of the Packages _fullpackage or _webdeploypackage
+
 3.1 Installing via fullpackage
+
 3.1.1 Extract the ZIP and Copy the Contents to your Website / FTP
+
 3.1.2 Open Web.Config and Change the Connectionstring.
+
 3.2 Installing via Webdeploy
+
 3.2.1 Download the Package and then open Commandline
+
 3.2.2 Change Directory (cd "PATH" ) to the Webdeploy Folder (http://www.iis.net/downloads/microsoft/web-deploy) Execute the following Command:
 
 ```text
 msdeploy -verb:sync -source:package=c:\<your-download-path>\XXXX_webdeploypackage.zip -dest:iisApp="domain.com/subfolder01",wmsvc=domain.com,username=IIS_username,password=IIS_password,skipAppCreation=false -allowUntrusted=true
 ```
 4. Download the SQL_DEPLOY_XXX.zip
+
 4.1 Change Directory to the Extract Folder (cd "Path") and type in (Alternative Look at 4.2):
+
 4.1.1
+
 ```text
 start deploy.bat SQL_SERVER SQL_DB
 ```
