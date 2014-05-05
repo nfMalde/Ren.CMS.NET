@@ -35,6 +35,7 @@ msdeploy -verb:sync -source:package=c:\<your-download-path>\XXXX_webdeploypackag
 start deploy.bat SQL_SERVER SQL_DB
 ```
 4.1.2 Check the DB if Structure is created.
+
 4.2 ALTERNATIVE: Import into you Webinterfache for your SQL Server every SQL File beginning from the numbers on the End -000.sql
 
 Admin Login (Default)
