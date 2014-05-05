@@ -5082,6 +5082,7 @@
     <Content Include="Content\themes\nftheme\thickbox.css" />
     <Content Include="Areas\Web.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="Models\FileManagementModel.cs" />
     <Content Include="Global.asax" />
