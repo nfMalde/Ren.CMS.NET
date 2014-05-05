@@ -47,18 +47,29 @@ How to Develope and Help:
 First at all Fork and Clone the Repository.
 Then follow this Steps:
 1. Connect to you local SQL Server (MSSQL 2008+)
+
 2. Create your DB for testing the CMS.
+
 3. Install Structure + Sample Data
+
 3.1 Open Command Line
+
 3.2 Change Directory to the Deploy Folder (cd "Path") and type in:
+
 3.2.1
+
 ```text
 start deploy.bat SQL_SERVER SQL_DB
 ```
+
 4. Check the DB if Structure is created.
+
 5. If Successfull: Opel Solution "Ren.CMS.Net\Source\Ren.CMS.sln" in Visual Studio
+
 6. Look into Project Folder (In Project Explorer!) /WEB/ and go into Ren.CMS  Project
+
 7. Open Web.Config and go to Line 12 (<connectionString> ... </connectionString>)
+
 8. Setup your connectionstring
 
 
