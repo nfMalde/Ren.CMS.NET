@@ -11,6 +11,9 @@
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
     using Ren.CMS.Persistence.Domain;
+    using Ren.CMS.Persistence.Base;
+    using Ren.CMS.Persistence.Repositories;
+    using Ren.CMS.CORE.Helper;
 
     public class nContent
     {
@@ -473,35 +476,42 @@
             if (this.ID == 0) throw new Exception("Content not found. ID is null");
             try
             {
-                SqlHelper Sql = new SqlHelper();
-
-                Sql.SysConnect();
-                col = col.Replace("'", "").Replace("-", "");
-                string query = "SELECT " + col + " FROM  " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "Content WHERE id=@id";
-                SqlParameter[] P = new SqlParameter[] { new SqlParameter("@id", this.ID) };
-
-                SqlDataReader Value = Sql.SysReader(query, P);
-                if (Value.HasRows)
+                BaseRepository<ContentText> _Repo = new BaseRepository<ContentText>();
+                var Texts = _Repo.GetMany(where: NHibernate.Criterion.Expression.Where<ContentText>(x => x.ContentId == this.ID));
+                ContentText myText = null;
+                if (Texts.Any(e => e.LangCode == CurrentLanguageHelper.CurrentLanguage))
                 {
-
-                    Value.Read();
-
-                    v = Value[col].ToString();
+                    myText = Texts.Where(t => t.LangCode == CurrentLanguageHelper.CurrentLanguage).First();
+                }
+                else if (Texts.Any(e => e.LangCode == CurrentLanguageHelper.DefaultLanguage))
+                {
+                    myText = Texts.Where(t => t.LangCode == CurrentLanguageHelper.DefaultLanguage).First();
+                }
+                else if (Texts.Count() > 0)
+                {
+                    myText = Texts.FirstOrDefault();
                 }
                 else
+                    throw new Exception("Unable to load holy shit Text. Dude you should really look at  your f*ucking DB!!!!!!!");
+ 
+                col = col.Replace("'", "").Replace("-", "");
+                var Properties = myText.GetType().GetProperties();
+                if(Properties.Any(e => e.Name.ToLower() == col.ToLower()))
+                {
+                    var property = Properties.Where(e => e.Name.ToLower() == col.ToLower()).First();
+                    v = property.GetValue(myText).ToString();
+                }
+                else 
                 {
 
-                    v = "NOT FOUND";
-
+                    v = "Unknown Column Dude";
                 }
 
-                Value.Close();
-                Sql.SysDisconnect();
             }
-            catch
+            catch (Exception E) 
             {
                 v = "Problems with: " + col;
-
+                throw E;
             }
 
             return v;
