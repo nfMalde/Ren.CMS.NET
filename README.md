@@ -1,82 +1,81 @@
 Ren.CMS.NET
 ===========
+## Installation Guide
+### Installation: Full Package
+* Extract the Archive
+* Go to {your extracted folder}\Deploy
+* Deploy with Root Access or on local machines (Windows Auth. Only!):
+  * Create a Database for Ren.CMS.NET (e.g. "rencms")
+  * Open CMD.exe (Commandline)
+  * Go to the Deploy Directory (cd ./....)
+  * exec the following command: 
+  ```  
+  start deploy.bat  {Your Server} {Your DB}
+  ```
+  * Great! Now you have DB Structure + Sample Data set.
+* Deploy without Root Access / on non local machines.
+  * NOTE: Ren.CMS is currently not ready for productive usage! Be sure it is a test system. We recommend a local test server.
+  * Go to your Webinterface / Controlpanel for your SQL Server
+  * Locate the File ren-db-000.sql and import it to your SQL Server.
+  * If existing execute all other versions also (for example ren-db-001.sql, ren-db-002.sql...)
+  * Great! Now you have DB Structure + Sample Data set.
+* Go back to your extracted Folder. Copy the Contents of the Folder "Application" to your Webfolder  / Local Website.
+* Open Web.config and locate this line:
+``` XML
+  <connectionStrings>
+ 
+    <add name="nfCMS" connectionString="..." providerName="System.Data.SqlClient" />
+  </connectionStrings>
+```
+* Change the connection string matching your server data.
+* Open Ren.CMS in the Browser. 
+* Thats it. Important links and login can be found at the end of the Readme.
+*
 
-Ren.CMS.Net Open Source .NET 4 (MVC4) CMS
-===============
-How to Install Pre-Releases:
-1. Go to Releases 
-
-2. Download the latest Pre-Release
-
-3. Choose one of the Packages _fullpackage or _webdeploypackage
-
-3.1 Installing via fullpackage
-
-3.1.1 Extract the ZIP and Copy the Contents to your Website / FTP
-
-3.1.2 Open Web.Config and Change the Connectionstring.
-
-3.2 Installing via Webdeploy
-
-3.2.1 Download the Package and then open Commandline
-
-3.2.2 Change Directory (cd "PATH" ) to the Webdeploy Folder (http://www.iis.net/downloads/microsoft/web-deploy) Execute the following Command:
-
-```text
+### Installation: Webdeploy Package
+Note: For the Webdeploy Package you need MS Webdeploy (http://www.iis.net/downloads/microsoft/web-deploy)
+* Extract the Archive
+* Go to {your extracted folder}\Deploy
+* Deploy with Root Access or on local machines (Windows Auth. Only!):
+  * Create a Database for Ren.CMS.NET (e.g. "rencms")
+  * Open CMD.exe (Commandline)
+  * Go to the Deploy Directory (cd ./....)
+  * exec the following command: 
+  ```  
+  start deploy.bat  {Your Server} {Your DB}
+  ```
+  * Great! Now you have DB Structure + Sample Data set.
+* Deploy without Root Access / on non local machines.
+  * NOTE: Ren.CMS is currently not ready for productive usage! Be sure it is a test system. We recommend a local test server.
+  * Go to your Webinterface / Controlpanel for your SQL Server
+  * Locate the File ren-db-000.sql and import it to your SQL Server.
+  * If existing execute all other versions also (for example ren-db-001.sql, ren-db-002.sql...)
+  * Great! Now you have DB Structure + Sample Data set.
+* Go back to your extracted Folder.
+* Execute the following command:
+```
 msdeploy -verb:sync -source:package=c:\<your-download-path>\XXXX_webdeploypackage.zip -dest:iisApp="domain.com/subfolder01",wmsvc=domain.com,username=IIS_username,password=IIS_password,skipAppCreation=false -allowUntrusted=true
 ```
-4. Download the SQL_DEPLOY_XXX.zip
-
-4.1 Change Directory to the Extract Folder (cd "Path") and type in (Alternative Look at 4.2):
-
-4.1.1
-
-```text
-start deploy.bat SQL_SERVER SQL_DB
+* Go to the target folder
+* Open Web.config and locate this line:
+``` XML
+  <connectionStrings>
+ 
+    <add name="nfCMS" connectionString="..." providerName="System.Data.SqlClient" />
+  </connectionStrings>
 ```
-4.1.2 Check the DB if Structure is created.
+* Change the connection string matching your server data.
+* Open Ren.CMS in the Browser. 
+* Thats it. Important links and login can be found at the end of the Readme.
+*
 
-4.2 ALTERNATIVE: Import into you Webinterfache for your SQL Server every SQL File beginning from the numbers on the End -000.sql
-
-Admin Login (Default)
-
-Username: admin
-Password: admin
-
-How to Develope and Help:
-First at all Fork and Clone the Repository.
-Then follow this Steps:
-1. Connect to you local SQL Server (MSSQL 2008+)
-
-2. Create your DB for testing the CMS.
-
-3. Install Structure + Sample Data
-
-3.1 Open Command Line
-
-3.2 Change Directory to the Deploy Folder (cd "Path") and type in:
-
-3.2.1
-
-```text
-start deploy.bat SQL_SERVER SQL_DB
-```
-
-4. Check the DB if Structure is created.
-
-5. If Successfull: Opel Solution "Ren.CMS.Net\Source\Ren.CMS.sln" in Visual Studio
-
-6. Look into Project Folder (In Project Explorer!) /WEB/ and go into Ren.CMS  Project
-
-7. Open Web.Config and go to Line 12 (<connectionString> ... </connectionString>)
-
-8. Setup your connectionstring
-
-
+  
+ 
+ 
 Important URLs:
 ===============
 
-Url Syntax
+### Url Syntax
 * {localhost}/{ISO LangCode}/
  
  Example
@@ -89,9 +88,9 @@ Url Syntax
  Backend
  * {url} /Backend/OS
 
-Admin Login (Default)
-
+### Admin Login (Default)
+```
 Username: admin
 Password: admin
-
+```
   
