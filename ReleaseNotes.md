@@ -5,6 +5,7 @@
 * New Content List Widget
 * Switched Backend OS from JqueryUI to Bootstrap
 * Multi Language Content Texts
+* Implemented SQL Deploy Script
 
 #### Full Features:
 * [x] Backend: Content Creation / Edit / Delete
