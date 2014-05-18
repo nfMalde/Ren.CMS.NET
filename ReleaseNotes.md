@@ -13,3 +13,5 @@
 * [x] Backend: User Creation
 * [x] Backend: Layout Config
 * [x] Backend: Application List
+ 
+See Readme for more Information.
