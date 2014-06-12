@@ -128,7 +128,7 @@ namespace Ren.CMS.CORE.Taskmanagement
         public static T GetTask<T>(int id) where T : RTask, new()
         {
             BaseRepository<TbTasks> TaskRepo = new BaseRepository<TbTasks>();
-            var entry = TaskRepo.GetOne(NHibernate.Criterion.Expression.Where<TbTasks>(e => e.Id == task.ID));
+            var entry = TaskRepo.GetOne(NHibernate.Criterion.Expression.Where<TbTasks>(e => e.Id == id));
             if(entry != null)
                 return new T() {
                  ID = entry.Id,

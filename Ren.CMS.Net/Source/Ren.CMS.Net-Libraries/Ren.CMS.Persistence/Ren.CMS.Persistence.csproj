@@ -107,6 +107,7 @@
     <Compile Include="Domain\SettingStores2Locale.cs" />
     <Compile Include="Domain\SettingValue.cs" />
     <Compile Include="Domain\SubCategory.cs" />
+    <Compile Include="Domain\tbTasks.cs" />
     <Compile Include="Domain\ThumpnailsModule.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\User2Settingvalue.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Mapping\SettingStores2LocaleMap.cs" />
     <Compile Include="Mapping\SettingValueMap.cs" />
     <Compile Include="Mapping\SubCategoryMap.cs" />
+    <Compile Include="Mapping\tbTasksMap.cs" />
     <Compile Include="Mapping\ThumpnailsModuleMap.cs" />
     <Compile Include="Mapping\User2SettingvalueMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
