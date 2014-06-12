@@ -213,6 +213,7 @@
     <Compile Include="Controllers\FileManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SharedElementsController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\TreeViewController.cs" />
     <Compile Include="Controllers\UserAvatarController.cs" />
     <Compile Include="Controllers\LinkController.cs" />
