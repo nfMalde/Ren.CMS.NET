@@ -68,6 +68,8 @@
     <Compile Include="Domain\Content.cs" />
     <Compile Include="Domain\ContentAttachment.cs" />
     <Compile Include="Domain\ContentAttachmentRole.cs" />
+    <Compile Include="Domain\ContentAttachmenttypes.cs" />
+    <Compile Include="Domain\ContentAttachmenttypesExtensionsettings.cs" />
     <Compile Include="Domain\ContentClickCounter.cs" />
     <Compile Include="Domain\ContentTag.cs" />
     <Compile Include="Domain\ContentTags2Content.cs" />
@@ -90,6 +92,9 @@
     <Compile Include="Domain\Link.cs" />
     <Compile Include="Domain\LinkIdentifier.cs" />
     <Compile Include="Domain\Links2Identfier.cs" />
+    <Compile Include="Domain\ContentAttachmentRemarks.cs" />
+    <Compile Include="Domain\ContentAttachmentRemarkTypes.cs" />
+    <Compile Include="Domain\ContentAttachmentRolesBindings.cs" />
     <Compile Include="Domain\PermissionGroup.cs" />
     <Compile Include="Domain\Permissionkey.cs" />
     <Compile Include="Domain\Permissions2Group.cs" />
@@ -122,6 +127,8 @@
     <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\ContentAttachmentMap.cs" />
     <Compile Include="Mapping\ContentAttachmentRoleMap.cs" />
+    <Compile Include="Mapping\ContentAttachmenttypesExtensionsettingsMap.cs" />
+    <Compile Include="Mapping\ContentAttachmenttypesMap.cs" />
     <Compile Include="Mapping\ContentClickCounterMap.cs" />
     <Compile Include="Mapping\ContentMap.cs" />
     <Compile Include="Mapping\ContentTagMap.cs" />
@@ -145,6 +152,7 @@
     <Compile Include="Mapping\LinkIdentifierMap.cs" />
     <Compile Include="Mapping\LinkMap.cs" />
     <Compile Include="Mapping\Links2IdentfierMap.cs" />
+    <Compile Include="Mapping\ContentAttachmentRolesBindingsMap.cs" />
     <Compile Include="Mapping\PermissionGroupMap.cs" />
     <Compile Include="Mapping\PermissionkeyMap.cs" />
     <Compile Include="Mapping\Permissions2GroupMap.cs" />
@@ -172,6 +180,8 @@
     <Compile Include="NHSQL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ContentAttachmentRepository.cs" />
+    <Compile Include="Repositories\ContentAttachmentRoleRepository.cs" />
+    <Compile Include="Repositories\ContentAttachmentTypeRepository.cs" />
     <Compile Include="Repositories\ContentRepository.cs" />
     <Compile Include="Repositories\ContentTagRepository.cs" />
     <Compile Include="Repositories\ContentTags2ContentRepository.cs" />

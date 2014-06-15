@@ -79,12 +79,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentAttachmentHandlers\ContentAttachmentHandlerBase.cs" />
     <Compile Include="ContentCoreModels.cs" />
     <Compile Include="ContentManagement.cs" />
     <Compile Include="ContentValidator.cs" />
     <None Include="CoreModels.cs.exclide" />
     <Compile Include="LinkHelper.cs" />
     <Compile Include="nContent.cs" />
+    <Compile Include="nContentAttachment.cs" />
     <Compile Include="nContentClickCounter.cs" />
     <Compile Include="nContentTag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,11 +101,6 @@
       <Project>{f2f2df55-784e-4fff-b71a-f1b779b9e5ed}</Project>
       <Name>Ren.CMS.Persistence</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="scripts\mvcfoolproof.unobtrusive.min.js" />
-    <Content Include="scripts\MvcFoolproofJQueryValidation.min.js" />
-    <Content Include="scripts\MvcFoolproofValidation.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

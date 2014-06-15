@@ -66,7 +66,7 @@
             //Und diese zum löschen.
         }
 
-        public IEnumerable<TEntity> GetMany(NHibernate.Criterion.ICriterion where = null, NHibernate.Criterion.IProjection orderBy = null, bool Asc = true)
+        public virtual IEnumerable<TEntity> GetMany(NHibernate.Criterion.ICriterion where = null, NHibernate.Criterion.IProjection orderBy = null, bool Asc = true)
         {
             //Mit dieser Base funktion holen wir mehrere anhand einer WHERE Clausel und ORDER BY Clausel
             using (ISession session = NHibernateHelper.OpenSession())

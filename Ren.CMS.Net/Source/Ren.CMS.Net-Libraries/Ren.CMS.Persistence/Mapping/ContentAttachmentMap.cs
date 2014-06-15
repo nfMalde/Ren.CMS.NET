@@ -17,7 +17,7 @@ namespace Ren.CMS.Persistence.Mapping
 
         public ContentAttachmentMap()
         {
-            Table("nfcms_Content_Attachment");
+            Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix  +"Content_Attachment");
             Schema("dbo");
             Lazy(false);
             //Property(x => x.Pkid, map => map.NotNullable(true));
@@ -28,19 +28,38 @@ namespace Ren.CMS.Persistence.Mapping
 
                 });
 
-            Property(x => x.Nid,
-                map =>{
-                    map.NotNullable(true);
-                        map.Column("NID");
-                });
-            Property(x => x.AttachmentType, map => { map.Column("attachment_type"); map.NotNullable(true); });
-            Property(x => x.ContentType, map => { map.Column("content_type"); map.NotNullable(true); });
-            Property(x => x.FPath, map => map.Column("fPath"));
-            Property(x => x.FName, map => map.Column("fName"));
-            Property(x => x.ThumpNail, map => map.Column("thumpNail"));
-            Property(x => x.AttachmentArgument);
-            Property(x => x.ATitle, map => map.Column("aTitle"));
-            Property(x => x.AttachmentRemarks, map => map.Column("AttachmentRemarks"));
+ 
+            Property(x => x.Contentid, map => map.NotNullable(true));
+            Property(x => x.AttachmentTypeId, map => { map.Column("attachment_type_id"); map.NotNullable(true); });
+            Property(x => x.Filepath, map => map.NotNullable(true));
+            Property(x => x.Thumnailpath);
+            Property(x => x.Usage);
+            Property(x => x.Title);
+
+
+            ManyToOne(x => x.AttachmentType, m =>
+            {
+
+                m.Column(c => c.Name("attachment_type_id"));
+                m.Fetch(FetchKind.Join);
+                m.Cascade(Cascade.None);
+                m.Insert(false);
+                m.Update(false);
+                m.Lazy(LazyRelation.NoLazy);
+
+            });
+
+            ManyToOne(x => x.Role, m =>
+            {
+
+                m.Column(c => c.Name("usage"));
+                m.Fetch(FetchKind.Join);
+                m.Cascade(Cascade.None);
+                m.Insert(false);
+                m.Update(false);
+                m.Lazy(LazyRelation.NoLazy);
+
+            });
         }
 
         #endregion Constructors

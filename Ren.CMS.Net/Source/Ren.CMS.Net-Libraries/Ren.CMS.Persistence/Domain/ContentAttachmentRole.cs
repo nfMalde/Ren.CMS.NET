@@ -8,26 +8,13 @@ namespace Ren.CMS.Persistence.Domain
     {
         #region Properties
 
-        public virtual string AType
-        {
-            get; set;
-        }
+        public virtual int Id { get; set; }
+        public virtual string Subpath { get; set; }
+        public virtual string Rolename { get; set; }
+        public virtual string Rolelangline { get; set; }
+        public virtual string Rolelangpackage { get; set; }
 
-        public virtual int Id
-        {
-            get; set;
-        }
-
-        public virtual string RoleLangLine
-        {
-            get; set;
-        }
-
-        public virtual string RoleName
-        {
-            get; set;
-        }
-
+        public virtual List<ContentAttachmentRolesBindings> Bindings { get; set; }
         #endregion Properties
     }
 }

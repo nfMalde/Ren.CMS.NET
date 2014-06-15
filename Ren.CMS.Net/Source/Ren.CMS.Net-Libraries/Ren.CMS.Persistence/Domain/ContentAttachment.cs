@@ -6,58 +6,15 @@ namespace Ren.CMS.Persistence.Domain
 
     public class ContentAttachment
     {
-        #region Properties
+        public virtual System.Guid Pkid { get; set; }
+        public virtual int Contentid { get; set; }
+        public virtual int AttachmentTypeId { get; set; }
+        public virtual string Filepath { get; set; }
+        public virtual string Thumnailpath { get; set; }
+        public virtual int Usage { get; set; }
+        public virtual string Title { get; set; }
 
-        public virtual string ATitle
-        {
-            get; set;
-        }
-
-        public virtual string AttachmentArgument
-        {
-            get; set;
-        }
-
-        public virtual string AttachmentRemarks
-        {
-            get; set;
-        }
-
-        public virtual string AttachmentType
-        {
-            get; set;
-        }
-
-        public virtual string ContentType
-        {
-            get; set;
-        }
-
-        public virtual string FName
-        {
-            get; set;
-        }
-
-        public virtual string FPath
-        {
-            get; set;
-        }
-
-        public virtual int Nid
-        {
-            get; set;
-        }
-
-        public virtual System.Guid Pkid
-        {
-            get; set;
-        }
-
-        public virtual string ThumpNail
-        {
-            get; set;
-        }
-
-        #endregion Properties
+        public virtual ContentAttachmenttypes AttachmentType { get; set; }
+        public virtual ContentAttachmentRole Role { get; set; }
     }
 }
