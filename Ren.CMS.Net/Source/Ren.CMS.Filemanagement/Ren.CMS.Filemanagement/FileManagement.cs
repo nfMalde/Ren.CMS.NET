@@ -16,8 +16,9 @@
     using Ren.CMS.Persistence;
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Domain;
+ 
     using Ren.CMS.Persistence.Repositories;
+    using Ren.CMS.Content;
 
     public class FileManagement
     {
@@ -793,7 +794,7 @@
 
             if (fx == null) return false;
 
-            fx.Fpath = f.filepath;
+            fx.FilePath = f.filepath;
             fx.Active = f.isActive == true ? 1 : 0;
             fx.AliasName = f.aliasName;
             fx.FileSize = Convert.ToInt32(new FileInfo(HttpContext.Current.Server.MapPath(f.filepath)).Length);
@@ -827,14 +828,14 @@
             return this.get404File(aliasName);
         }
 
-        public nFile getFile(string name, bool fileIsActive = true)
+        public nFile getFile(nContentAttachment attachment, bool fileIsActive = true)
         {
             int isActive = 1;
             if (!fileIsActive) isActive = 0;
 
             BaseRepository<Persistence.Domain.File> FileRepo = new BaseRepository<Persistence.Domain.File>();
 
-            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.AliasName == name)) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.AliasName == name && e.Active == 1)));
+            var fR = (isActive == 0 ? FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.FileMatchType == "nContentAttachment.PKID" && e.FileMatchValue == attachment.PKID.ToString().Trim() )) : FileRepo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.FileMatchType == "nContentAttachment.PKID" && e.FileMatchValue == attachment.PKID.ToString().Trim() )));
 
             if (fR != null)
             {
@@ -843,19 +844,19 @@
 
                 string browserExt = (fmx.GetByBrowserID(HttpContext.Current.Request.Browser.Browser) ?? fmx.GetDefault() ?? new FilemanagementCrossBrowsers()).FileFormat;
 
-                string pName = Path.GetFileNameWithoutExtension(fR.Fpath) + "." + browserExt;
+                string pName = Path.GetFileNameWithoutExtension(fR.FilePath) + "." + browserExt;
                 string myPath =
-                    (fR.Fpath.Replace(Path.GetFileName(fR.Fpath), ""));
+                    (fR.FilePath.Replace(Path.GetFileName(fR.FilePath), ""));
 
                 var f = new nFile()
                 {
                     aliasName = fR.AliasName,
-                    filepath = fR.Fpath,
+                    filepath = fR.FilePath,
                     id = fR.Id,
                     isActive = (fR.Active == 1),
                     ProfileID = (Convert.ToInt32(fR.ProfileID)),
                     needPermission = fR.NeedPermission,
-                    mimetype = this.getMIMETypeForExtension(Path.GetExtension(fR.Fpath))
+                    mimetype = this.getMIMETypeForExtension(Path.GetExtension(fR.FilePath))
                 };
 
                 if (f.mimetype.ToLower().StartsWith("video"))
@@ -877,7 +878,7 @@
                 else
                 {
 
-                    return this.get404File(name);
+                    return this.get404File(Path.GetFileName(attachment.FilePath));
 
                 }
 
@@ -885,7 +886,7 @@
             else
             {
 
-                return this.get404File(name);
+                return this.get404File(Path.GetFileName(attachment.FilePath));
 
             }
         }
@@ -922,7 +923,7 @@
 
             return mime;
         }
-
+/*
         public string getVideoThumpnailRawImage(Guid attachID, string ffmegPath)
         {
             Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Ren.CMS.Persistence.Repositories.ContentAttachmentRepository();
@@ -930,10 +931,10 @@
             var attachment = Repo.GetByPKid(attachID);
 
             if (attachment == null) throw new Exception("Attachment not found!");
-
+            nContentAttachment Attachment = new nContentAttachment(attachment);
             FileManagement FX = new FileManagement();
 
-            var f = FX.getFile(attachment.FName, false);
+            var f = FX.getFile(attachment, false);
             string video = f.filepath;
             if (f == null || f.id < 1)
             {
@@ -976,7 +977,7 @@
             }
             return FileList.Last();
         }
-
+        */
         public bool isImage(HttpPostedFileBase F)
         {
             string CT = F.ContentType.ToLower();

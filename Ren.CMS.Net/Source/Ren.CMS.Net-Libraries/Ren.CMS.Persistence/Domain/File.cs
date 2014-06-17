@@ -13,9 +13,19 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual string AliasName
+
+        public virtual string AliasName { get; set; }
+
+        public virtual string FileMatchType
         {
             get; set;
+        }
+
+
+        public virtual string FileMatchValue
+        {
+            get;
+            set;
         }
 
         public virtual System.Nullable<int> FileSize
@@ -23,7 +33,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual string Fpath
+        public virtual string FilePath
         {
             get; set;
         }

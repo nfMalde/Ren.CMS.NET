@@ -98,7 +98,6 @@
     <Compile Include="DataTables\BackendModels\ContentList.cs" />
     <Compile Include="Extras\Extras.cs" />
     <Compile Include="Extras\FormGatherer.cs" />
-    <Compile Include="FileManagement\FileManagement.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
     <Compile Include="Helper\BootStrapTabs.cs" />
     <Compile Include="Helper\CurrentLanguageHelper.cs" />

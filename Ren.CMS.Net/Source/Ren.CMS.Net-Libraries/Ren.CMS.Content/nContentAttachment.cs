@@ -13,6 +13,7 @@ namespace Ren.CMS.Content
     public class nContentAttachment
     {
         #region private fields
+       
         private int _ContentID = 0;
         private ContentAttachmentHandlerBase _Handler = null;
         private string _FilePath = null;
@@ -27,6 +28,11 @@ namespace Ren.CMS.Content
         #endregion
 
         #region Construct
+        public nContentAttachment(ContentAttachment attachmentEntity)
+        :this(attachmentEntity.Contentid,attachmentEntity.Pkid, attachmentEntity.AttachmentType.HandlerNamespace, attachmentEntity.Filepath, attachmentEntity.Title, attachmentEntity.Usage, attachmentEntity.Thumnailpath, attachmentEntity.AttachmentType.Typename)
+        {
+
+        }
         public nContentAttachment(int contentID, string handler , string title, int usage, string thumbnail, string attachmentType)
         :this(contentID, Guid.NewGuid(),handler, null, title,usage, thumbnail, attachmentType)
         {
@@ -82,7 +88,10 @@ namespace Ren.CMS.Content
 
         public string RoleNameLocal { get { return this._RoleNameLang; } }
 
-
+        public Guid PKID 
+        { 
+            get {  return this._PKDID; } 
+        }
         public Uri URL { get { return this._Handler.GetUrl();  } }
 
         #endregion
