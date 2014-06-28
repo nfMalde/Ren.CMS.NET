@@ -33,10 +33,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual string FilePath
-        {
-            get; set;
-        }
+       
 
         public virtual int Id
         {

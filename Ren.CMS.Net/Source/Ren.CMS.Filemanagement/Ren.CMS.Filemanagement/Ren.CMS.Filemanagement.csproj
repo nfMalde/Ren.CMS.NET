@@ -52,7 +52,11 @@
   <ItemGroup>
     <Compile Include="Controllers\Base\FileControllerBase.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="FileManagement.cs" />
+    <Compile Include="FileManagement\FileManagement.cs" />
+    <Compile Include="Filemanager.cs" />
+    <Compile Include="nFile.cs" />
+    <Compile Include="nFileType.cs" />
+    <Compile Include="PathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\ImageFileResult.cs" />
   </ItemGroup>
@@ -70,9 +74,7 @@
       <Name>Ren.CMS.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileManagement\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
