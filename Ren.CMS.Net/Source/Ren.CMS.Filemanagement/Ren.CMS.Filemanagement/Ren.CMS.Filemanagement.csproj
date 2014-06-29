@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Controllers\Base\FileControllerBase.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="FileManagement\FileManagement.cs" />
     <Compile Include="Filemanager.cs" />
     <Compile Include="nFile.cs" />
     <Compile Include="nFileType.cs" />

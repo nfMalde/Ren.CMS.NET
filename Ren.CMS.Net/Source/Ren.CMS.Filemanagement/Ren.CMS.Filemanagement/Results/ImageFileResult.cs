@@ -31,7 +31,7 @@ namespace Ren.CMS.Filemanagement.Results
 
 
            if (!File.Exists(this._Path))
-               throw new Exception(this._Path + " does not exists");
+               throw new HttpException(404, "File does not exists.");
 
            //Detect content Type
            
