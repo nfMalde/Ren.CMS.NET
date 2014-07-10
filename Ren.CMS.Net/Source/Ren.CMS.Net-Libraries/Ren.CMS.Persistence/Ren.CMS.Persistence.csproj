@@ -95,6 +95,7 @@
     <Compile Include="Domain\ContentAttachmentRemarks.cs" />
     <Compile Include="Domain\ContentAttachmentRemarkTypes.cs" />
     <Compile Include="Domain\ContentAttachmentRolesBindings.cs" />
+    <Compile Include="Domain\MimeTypes.cs" />
     <Compile Include="Domain\PermissionGroup.cs" />
     <Compile Include="Domain\Permissionkey.cs" />
     <Compile Include="Domain\Permissions2Group.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Repositories\ContentTagRepository.cs" />
     <Compile Include="Repositories\ContentTags2ContentRepository.cs" />
     <Compile Include="Repositories\FilemanagementCrossBrowsersRepository.cs" />
+    <Compile Include="tFileType.cs" />
     <Compile Include="Types\CharBoolType.cs" />
   </ItemGroup>
   <ItemGroup>

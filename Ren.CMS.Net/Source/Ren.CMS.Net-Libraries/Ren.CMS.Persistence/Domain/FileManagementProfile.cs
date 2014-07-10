@@ -18,6 +18,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
+
         #endregion Properties
     }
 }

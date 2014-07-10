@@ -54,6 +54,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Filemanager.cs" />
     <Compile Include="nFile.cs" />
+    <Compile Include="nFileProfile.cs" />
     <Compile Include="nFileType.cs" />
     <Compile Include="PathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
