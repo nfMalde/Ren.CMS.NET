@@ -13,7 +13,24 @@ namespace Ren.CMS.Filemanagement.Controllers
 
     public class FileController: FileControllerBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        protected internal ImageResult ImageFileByNFile(nFile file)
+        {
+            if (!file.FileType.Physical || !file.isActive)
+                throw new Exception("File not found");
 
+            return ImageFile(file.FilePath);
+        }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="filePath"></param>
+      /// <returns></returns>
         protected internal ImageResult ImageFile(string filePath)
         {
             return new ImageResult(filePath);
