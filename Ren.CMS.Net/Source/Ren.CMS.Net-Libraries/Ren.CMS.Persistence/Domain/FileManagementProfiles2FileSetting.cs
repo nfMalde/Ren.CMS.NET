@@ -23,6 +23,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
+        public virtual FileManagementFileSetting Setting { get; set; }
         #endregion Properties
     }
 }

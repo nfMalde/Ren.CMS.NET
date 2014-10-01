@@ -18,6 +18,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
+        public virtual List<FileSettingValue> Value { get; set; }
         #endregion Properties
     }
 }

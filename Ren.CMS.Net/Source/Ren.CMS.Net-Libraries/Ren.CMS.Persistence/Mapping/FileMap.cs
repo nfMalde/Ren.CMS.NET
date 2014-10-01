@@ -21,12 +21,19 @@ namespace Ren.CMS.Persistence.Mapping
             Schema("dbo");
             Lazy(true);
             Id<int>(x => x.Id, map => map.Generator(Generators.Identity));
-            Property(x => x.Fpath, map => map.NotNullable(true));
+            Property(x => x.FilePath, map => map.NotNullable(true));
             Property(x => x.AliasName, map => map.NotNullable(true));
-            Property(x => x.NeedPermission, map => map.NotNullable(true));
-            Property(x => x.Active, map => map.NotNullable(true));
-            Property(x => x.FileSize);
-            Property(x => x.ProfileID);
+            Property(x => x.isActive, map => map.NotNullable(true));
+            Property(x => x.TypeID, map => map.NotNullable(true));
+            Property(x => x.VirtualPath);
+            ManyToOne(x => x.FileType, m => {
+                m.Column(c => c.Name("TypeID"));
+                m.Fetch(FetchKind.Join);
+                m.Cascade(Cascade.None);
+                m.Insert(false);
+                m.Update(false);            
+            });
+                  
         }
 
         #endregion Constructors

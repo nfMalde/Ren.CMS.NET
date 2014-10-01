@@ -22,6 +22,11 @@ namespace Ren.CMS.Persistence.Mapping
             Lazy(true);
             Id<int>(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.ProfileName, map => map.NotNullable(true));
+            Bag(x => x.Settings, c => { 
+                c.Inverse(true); 
+                
+                c.Key(e => e.Column("ProfileID")); }, 
+                r => { r.OneToMany(); });
         }
 
         #endregion Constructors

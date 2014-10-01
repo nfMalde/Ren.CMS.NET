@@ -95,6 +95,7 @@
     <Compile Include="Domain\ContentAttachmentRemarks.cs" />
     <Compile Include="Domain\ContentAttachmentRemarkTypes.cs" />
     <Compile Include="Domain\ContentAttachmentRolesBindings.cs" />
+    <Compile Include="Domain\MimeType2FileType.cs" />
     <Compile Include="Domain\MimeTypes.cs" />
     <Compile Include="Domain\PermissionGroup.cs" />
     <Compile Include="Domain\Permissionkey.cs" />
@@ -113,6 +114,8 @@
     <Compile Include="Domain\SettingStores2Locale.cs" />
     <Compile Include="Domain\SettingValue.cs" />
     <Compile Include="Domain\SubCategory.cs" />
+    <Compile Include="Domain\TbFileType.cs" />
+    <Compile Include="Domain\TbFiletype2MIME.cs" />
     <Compile Include="Domain\tbTasks.cs" />
     <Compile Include="Domain\ThumpnailsModule.cs" />
     <Compile Include="Domain\User.cs" />
@@ -131,6 +134,8 @@
     <Compile Include="Mapping\ContentAttachmenttypesExtensionsettingsMap.cs" />
     <Compile Include="Mapping\ContentAttachmenttypesMap.cs" />
     <Compile Include="Mapping\ContentClickCounterMap.cs" />
+    <Compile Include="Mapping\FileTypeMap.cs" />
+    <Compile Include="Mapping\tFileTypeMap.cs" />
     <Compile Include="Mapping\ContentMap.cs" />
     <Compile Include="Mapping\ContentTagMap.cs" />
     <Compile Include="Mapping\ContentTags2ContentMap.cs" />
@@ -187,6 +192,10 @@
     <Compile Include="Repositories\ContentTagRepository.cs" />
     <Compile Include="Repositories\ContentTags2ContentRepository.cs" />
     <Compile Include="Repositories\FilemanagementCrossBrowsersRepository.cs" />
+    <Compile Include="Repositories\FileManagementProfileRepository.cs" />
+    <Compile Include="Repositories\FileManagementProfiles2FileSettingRepository.cs" />
+    <Compile Include="Repositories\FileSerttingRepository.cs" />
+    <Compile Include="Repositories\FileSettingValueRepository.cs" />
     <Compile Include="tFileType.cs" />
     <Compile Include="Types\CharBoolType.cs" />
   </ItemGroup>

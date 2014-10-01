@@ -18,6 +18,7 @@ namespace Ren.CMS.Persistence.Domain
 
         public virtual string VirtualPath { get; set; }
 
+        public virtual TbFileType FileType { get; set; }
         #endregion Properties
     }
 }

@@ -18,6 +18,8 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
+        public virtual List<FileManagementProfiles2FileSetting> Settings { get; set;}
+
 
         #endregion Properties
     }
