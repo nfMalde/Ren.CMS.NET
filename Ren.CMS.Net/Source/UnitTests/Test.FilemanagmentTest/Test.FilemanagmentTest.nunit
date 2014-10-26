@@ -1,0 +1,6 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Default" processModel="Default" domainUsage="Default" appbase="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest" />
+  <Config name="Default" binpathtype="Auto" configfile="bin\Debug\Test.FilemanagmentTest.dll.config">
+    <assembly path="bin\Debug\Test.FilemanagmentTest.dll" />
+  </Config>
+</NUnitProject>

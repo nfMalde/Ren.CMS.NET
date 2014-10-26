@@ -10,13 +10,12 @@
 
     using NHibernate.Criterion;
 
-    using Ren.CMS.CORE.FileManagement;
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
     using Ren.CMS.Persistence;
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
-    using Ren.CMS.Persistence.Domain;
+
     using Ren.CMS.Persistence.Mapping;
     using Ren.CMS.Persistence.Repositories;
 
@@ -56,63 +55,8 @@
 
         public bool DeleteAttachment(string ID)
         {
-            ContentAttachmentRepository Arepo = new ContentAttachmentRepository();
-
-            var A = Arepo.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachment>(c => c.Pkid == Guid.Parse(ID)));
-
-            //Is Filemanagement Used?
-            try
-            {
-                FileManagement FM = new FileManagement();
-
-                if (FM.getFile(A.FName, false).id > 0)
-                {
-                    FM.DeleteFile(A.FName);
-                }
-                else
-                {
-                    //Maybe no fileManagement was used
-
-                    string pathC = System.IO.Path.Combine(A.FPath, A.FName);
-
-                    while (pathC.Contains("//") || pathC.Contains("\\\\"))
-                    {
-                        pathC = pathC.Replace("//", "/");
-                        pathC = pathC.Replace("\\\\", "\\");
-                    };
-
-                    Uri PathCheck = new Uri(pathC);
-
-                    if (PathCheck.IsFile)
-                    {
-                        string mappath = pathC;
-                        //Try to get Mappath
-                        try
-                        {
-
-                            mappath = HttpContext.Current.Server.MapPath(pathC);
-
-                        }
-                        catch (Exception)
-                        {
-                            //We got an error
-                            //
-
-                        }
-
-                        if (System.IO.File.Exists(mappath))
-                            System.IO.File.Delete(mappath);
-
-                    }
-
-                }
-                //Otherwhise its a URL
-            }
-            catch (Exception) { }
-
-                    Arepo.Delete(A);
-
-                    return true;
+            return false;
+            //TODO: Rewrite
         }
 
         public bool DeleteContent(int id)
@@ -126,7 +70,7 @@
 
             ContentAttachmentRepository ARepo = new ContentAttachmentRepository();
 
-            var attachs = ARepo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.Nid == entity.Id));
+            var attachs = ARepo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.Contentid == entity.Id));
             attachs.ToList().ForEach(e => this.DeleteAttachment(e.Pkid.ToString()));
 
             var refconts = Repo.GetMany(NHibernate.Criterion.Expression.Where<TContent>(e => e.ContentRef == entity.Id));

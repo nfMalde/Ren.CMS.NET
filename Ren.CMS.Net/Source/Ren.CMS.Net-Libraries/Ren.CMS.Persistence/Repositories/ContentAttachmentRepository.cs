@@ -38,7 +38,7 @@
                 ContentAttachmentTypeRepository TypeRepo = new ContentAttachmentTypeRepository();
                 ContentAttachmentRoleRepository RoleRepo = new ContentAttachmentRoleRepository(); 
                 entry.AttachmentType = TypeRepo.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachmenttypes>(e => e.Id == entry.AttachmentTypeId));
-                entry.Role = RoleRepo.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachmentRole>(e => e.Id == entry.Usage));
+                //entry.Role = RoleRepo.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachmentRole>(e => e.Id == entry.Usage));
 
                 return entry;
              }

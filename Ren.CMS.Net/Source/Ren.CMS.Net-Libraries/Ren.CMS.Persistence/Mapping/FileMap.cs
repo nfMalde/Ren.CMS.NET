@@ -24,16 +24,22 @@ namespace Ren.CMS.Persistence.Mapping
             Property(x => x.FilePath, map => map.NotNullable(true));
             Property(x => x.AliasName, map => map.NotNullable(true));
             Property(x => x.isActive, map => map.NotNullable(true));
-            Property(x => x.TypeID, map => map.NotNullable(true));
-            Property(x => x.VirtualPath);
-            ManyToOne(x => x.FileType, m => {
-                m.Column(c => c.Name("TypeID"));
-                m.Fetch(FetchKind.Join);
-                m.Cascade(Cascade.None);
-                m.Insert(false);
-                m.Update(false);            
-            });
-                  
+            Property(x => x.Physical);
+            Property(x => x.FileReference, map => map.NotNullable(false));
+
+            Set(x => x.ReferencedFiles, mapping =>
+            {
+                mapping.Lazy(CollectionLazy.NoLazy);
+                mapping.Key(k =>
+                {
+                    k.Column("FileReference");
+                });
+                mapping.Inverse(true);
+                mapping.Cascade(Cascade.All);
+
+            },
+                r => r.OneToMany());
+
         }
 
         #endregion Constructors

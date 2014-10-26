@@ -36,7 +36,7 @@
 
                 if (_sessionFactory == null)
                 {
-                    var configuration = new Configuration();
+                   // var configuration = new Configuration();
                     configuration.Configure();
                     foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
@@ -82,6 +82,7 @@
 
         public static Configuration GetConfiguration()
         {
+            var fac = SessionFactory;
             return configuration;
         }
 

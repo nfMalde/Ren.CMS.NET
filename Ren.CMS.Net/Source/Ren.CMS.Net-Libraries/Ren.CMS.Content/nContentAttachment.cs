@@ -29,7 +29,7 @@ namespace Ren.CMS.Content
 
         #region Construct
         public nContentAttachment(ContentAttachment attachmentEntity)
-        :this(attachmentEntity.Contentid,attachmentEntity.Pkid, attachmentEntity.AttachmentType.HandlerNamespace, attachmentEntity.Filepath, attachmentEntity.Title, attachmentEntity.Usage, attachmentEntity.Thumnailpath, attachmentEntity.AttachmentType.Typename)
+        :this(attachmentEntity.Contentid,attachmentEntity.Pkid, attachmentEntity.AttachmentType.HandlerNamespace, attachmentEntity.Title, attachmentEntity.Usage, attachmentEntity.Thumnailpath, attachmentEntity.AttachmentType.Typename)
         {
 
         }

@@ -364,22 +364,9 @@
 
         public List<nAttachment> Attachments(string attachmentType = "ALL", string attachmentArgument = "ALL")
         {
-            Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Persistence.Repositories.ContentAttachmentRepository();
-            var list = (attachmentType != "ALL" && attachmentArgument != "ALL" ?
-                Repo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.AttachmentType == attachmentType && e.AttachmentArgument == attachmentArgument && e.Nid == this.ID)) :
-                (attachmentType == "ALL" && attachmentArgument != "ALL" ?
-                Repo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.AttachmentArgument == attachmentArgument && e.Nid == this.ID)) :
-                (attachmentType != "ALL" && attachmentArgument == "ALL" ?
-                Repo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.AttachmentType == attachmentType && e.Nid == this.ID)) :
-                Repo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.Nid == this.ID)))));
-
-            List<nAttachment> TMP = new List<nAttachment>();
-
-            list.ToList<ContentAttachment>().ForEach(e =>
-
-               TMP.Add(new nAttachment(e.Pkid.ToString(), e.ContentType, e.FName, e.FPath, e.ThumpNail, e.AttachmentType, e.AttachmentArgument, e.ATitle, e.AttachmentRemarks)));
-
-            return TMP;
+            //TODO: Rewrite
+            
+            return new List<nAttachment>();
         }
 
         /// <summary>
@@ -457,16 +444,15 @@
             Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Persistence.Repositories.ContentAttachmentRepository();
 
             Ren.CMS.Persistence.Domain.ContentAttachment Model = new Persistence.Domain.ContentAttachment();
-            Model.Nid = this.ID;
-            Model.ATitle = AttachmentTitle;
-            Model.AttachmentArgument = AttachmentArgument;
-            Model.AttachmentRemarks = String.Empty;
-            Model.AttachmentType = attachmentType;
-            Model.ContentType = this.ContentType;
-            Model.FName = fileName;
-            Model.FPath = filePath;
+            Model.Contentid = this.ID;
+            Model.Title = AttachmentTitle;
+           // Model. = AttachmentArgument;
+           // Model.AttachmentRemarks = String.Empty;
+           // Model.AttachmentType = attachmentType;
+           // Model.ContentType = this.ContentType;
+            Model.Filepath = filePath;
             Model.Pkid = Guid.NewGuid();
-            Model.ThumpNail = thumpNail ?? fileName ?? filePath;
+            Model.Thumnailpath = thumpNail ?? fileName ?? filePath;
             Repo.Add(Model);
         }
 

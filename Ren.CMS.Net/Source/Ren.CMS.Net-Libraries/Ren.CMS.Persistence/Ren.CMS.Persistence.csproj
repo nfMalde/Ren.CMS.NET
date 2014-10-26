@@ -35,11 +35,32 @@
     <Reference Include="DirectShowLib-2005">
       <HintPath>..\..\ExternDLLs\DirectShowLib-2005.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.core.interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -67,6 +88,7 @@
     <Compile Include="Domain\Category.cs" />
     <Compile Include="Domain\Content.cs" />
     <Compile Include="Domain\ContentAttachment.cs" />
+    <Compile Include="Domain\ContentAttachmentArgument.cs" />
     <Compile Include="Domain\ContentAttachmentRole.cs" />
     <Compile Include="Domain\ContentAttachmenttypes.cs" />
     <Compile Include="Domain\ContentAttachmenttypesExtensionsettings.cs" />
@@ -80,10 +102,6 @@
     <Compile Include="Domain\FilemanagementControllersAcceptMimeType.cs" />
     <Compile Include="Domain\FilemanagementControllersAcceptProfile.cs" />
     <Compile Include="Domain\FilemanagementCrossBrowsers.cs" />
-    <Compile Include="Domain\FileManagementFileSetting.cs" />
-    <Compile Include="Domain\FileManagementProfile.cs" />
-    <Compile Include="Domain\FileManagementProfiles2FileSetting.cs" />
-    <Compile Include="Domain\FileSettingValue.cs" />
     <Compile Include="Domain\GlobalSetting.cs" />
     <Compile Include="Domain\InternalProContra.cs" />
     <Compile Include="Domain\InternalRating.cs" />
@@ -94,9 +112,6 @@
     <Compile Include="Domain\Links2Identfier.cs" />
     <Compile Include="Domain\ContentAttachmentRemarks.cs" />
     <Compile Include="Domain\ContentAttachmentRemarkTypes.cs" />
-    <Compile Include="Domain\ContentAttachmentRolesBindings.cs" />
-    <Compile Include="Domain\MimeType2FileType.cs" />
-    <Compile Include="Domain\MimeTypes.cs" />
     <Compile Include="Domain\PermissionGroup.cs" />
     <Compile Include="Domain\Permissionkey.cs" />
     <Compile Include="Domain\Permissions2Group.cs" />
@@ -105,7 +120,6 @@
     <Compile Include="Domain\ProfileVar.cs" />
     <Compile Include="Domain\Rating.cs" />
     <Compile Include="Domain\RatingGroup.cs" />
-    <Compile Include="Domain\RegisteredMIMEType.cs" />
     <Compile Include="Domain\RoutingSynonym.cs" />
     <Compile Include="Domain\SettingCategory.cs" />
     <Compile Include="Domain\SettingModel.cs" />
@@ -114,8 +128,6 @@
     <Compile Include="Domain\SettingStores2Locale.cs" />
     <Compile Include="Domain\SettingValue.cs" />
     <Compile Include="Domain\SubCategory.cs" />
-    <Compile Include="Domain\TbFileType.cs" />
-    <Compile Include="Domain\TbFiletype2MIME.cs" />
     <Compile Include="Domain\tbTasks.cs" />
     <Compile Include="Domain\ThumpnailsModule.cs" />
     <Compile Include="Domain\User.cs" />
@@ -129,13 +141,14 @@
     <Compile Include="Mapping\BackendUserDesktopMap.cs" />
     <Compile Include="Mapping\BackendWidgetMap.cs" />
     <Compile Include="Mapping\CategoryMap.cs" />
+    <Compile Include="Mapping\ContentAttachmentArgumentMap.cs" />
     <Compile Include="Mapping\ContentAttachmentMap.cs" />
+    <Compile Include="Mapping\ContentAttachmentRemarkTypesMap.cs" />
+    <Compile Include="Mapping\ContentAttachmentRemarksMap.cs" />
     <Compile Include="Mapping\ContentAttachmentRoleMap.cs" />
     <Compile Include="Mapping\ContentAttachmenttypesExtensionsettingsMap.cs" />
     <Compile Include="Mapping\ContentAttachmenttypesMap.cs" />
     <Compile Include="Mapping\ContentClickCounterMap.cs" />
-    <Compile Include="Mapping\FileTypeMap.cs" />
-    <Compile Include="Mapping\tFileTypeMap.cs" />
     <Compile Include="Mapping\ContentMap.cs" />
     <Compile Include="Mapping\ContentTagMap.cs" />
     <Compile Include="Mapping\ContentTags2ContentMap.cs" />
@@ -144,11 +157,7 @@
     <Compile Include="Mapping\FilemanagementControllersAcceptMimeTypeMap.cs" />
     <Compile Include="Mapping\FilemanagementControllersAcceptProfileMap.cs" />
     <Compile Include="Mapping\FilemanagementCrossBrowsersMap.cs" />
-    <Compile Include="Mapping\FileManagementFileSettingMap.cs" />
-    <Compile Include="Mapping\FileManagementProfileMap.cs" />
-    <Compile Include="Mapping\FileManagementProfiles2FileSettingMap.cs" />
     <Compile Include="Mapping\FileMap.cs" />
-    <Compile Include="Mapping\FileSettingValueMap.cs" />
     <Compile Include="Mapping\GlobalSettingMap.cs" />
     <Compile Include="Mapping\InternalProContraMap.cs" />
     <Compile Include="Mapping\InternalRatingMap.cs" />
@@ -158,7 +167,6 @@
     <Compile Include="Mapping\LinkIdentifierMap.cs" />
     <Compile Include="Mapping\LinkMap.cs" />
     <Compile Include="Mapping\Links2IdentfierMap.cs" />
-    <Compile Include="Mapping\ContentAttachmentRolesBindingsMap.cs" />
     <Compile Include="Mapping\PermissionGroupMap.cs" />
     <Compile Include="Mapping\PermissionkeyMap.cs" />
     <Compile Include="Mapping\Permissions2GroupMap.cs" />
@@ -167,7 +175,6 @@
     <Compile Include="Mapping\ProfileVarMap.cs" />
     <Compile Include="Mapping\RatingGroupMap.cs" />
     <Compile Include="Mapping\RatingMap.cs" />
-    <Compile Include="Mapping\RegisteredMIMETypeMap.cs" />
     <Compile Include="Mapping\RoutingSynonymMap.cs" />
     <Compile Include="Mapping\SettingCategoryMap.cs" />
     <Compile Include="Mapping\SettingModelMap.cs" />
@@ -192,11 +199,7 @@
     <Compile Include="Repositories\ContentTagRepository.cs" />
     <Compile Include="Repositories\ContentTags2ContentRepository.cs" />
     <Compile Include="Repositories\FilemanagementCrossBrowsersRepository.cs" />
-    <Compile Include="Repositories\FileManagementProfileRepository.cs" />
-    <Compile Include="Repositories\FileManagementProfiles2FileSettingRepository.cs" />
-    <Compile Include="Repositories\FileSerttingRepository.cs" />
-    <Compile Include="Repositories\FileSettingValueRepository.cs" />
-    <Compile Include="tFileType.cs" />
+    <Compile Include="Repositories\FileRepository.cs" />
     <Compile Include="Types\CharBoolType.cs" />
   </ItemGroup>
   <ItemGroup>

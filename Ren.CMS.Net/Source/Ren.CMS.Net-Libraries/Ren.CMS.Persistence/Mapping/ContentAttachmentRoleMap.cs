@@ -21,10 +21,23 @@ namespace Ren.CMS.Persistence.Mapping
             Schema("dbo");
             Lazy(true);
             Id(e => e.Id, map => map.Generator(Generators.Identity));
-            Property(x => x.Subpath, map => map.NotNullable(true));
+ 
             Property(x => x.Rolename, map => map.NotNullable(true));
             Property(x => x.Rolelangline);
             Property(x => x.Rolelangpackage);
+
+            Set(x => x.Arguments, mapping =>
+            {
+                mapping.Lazy(CollectionLazy.NoLazy);
+                mapping.Key(k =>
+                {
+                    k.Column("RoleId");
+                });
+                mapping.Inverse(true);
+                mapping.Cascade(Cascade.All);
+
+            },
+             r => r.OneToMany());
         }
 
         #endregion Constructors

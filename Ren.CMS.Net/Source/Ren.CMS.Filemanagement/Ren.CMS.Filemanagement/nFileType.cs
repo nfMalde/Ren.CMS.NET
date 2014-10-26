@@ -8,11 +8,12 @@ namespace Ren.CMS.Filemanagement
 {
     public class nFileType
     {
+        private List<nMimeType> allowed = new List<nMimeType>();
         public int Id { get; set; }
 
         public string TypeName { get; set; }
 
-        public List<nMimeType> AllowedMIMETypes { get; set; }
+        public List<nMimeType> AllowedMIMETypes { get { return this.allowed; } set { this.allowed = value; } }
 
         public bool Physical { get; set; }
 

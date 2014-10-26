@@ -9,12 +9,12 @@ namespace Ren.CMS.Persistence.Domain
         #region Properties
 
         public virtual int Id { get; set; }
-        public virtual string Subpath { get; set; }
+     
         public virtual string Rolename { get; set; }
         public virtual string Rolelangline { get; set; }
         public virtual string Rolelangpackage { get; set; }
 
-        public virtual List<ContentAttachmentRolesBindings> Bindings { get; set; }
+        public virtual ICollection<ContentAttachmentArgument> Arguments { get; set; }
         #endregion Properties
     }
 }

@@ -9,7 +9,7 @@ using System.Web.Mvc.Async;
 namespace Ren.CMS.Filemanagement.Controllers.Base
 {
 
-    public class FileControllerBase : ControllerBase, IActionFilter, IAuthorizationFilter, IDisposable, IExceptionFilter, IResultFilter, IAsyncController, IController, IAsyncManagerContainer
+    public class FileControllerBase : System.Web.Mvc.Controller
     {
 
 

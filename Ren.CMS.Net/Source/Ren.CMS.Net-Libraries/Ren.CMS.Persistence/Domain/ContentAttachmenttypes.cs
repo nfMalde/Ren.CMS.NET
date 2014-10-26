@@ -11,6 +11,6 @@ namespace Ren.CMS.Persistence.Domain {
         public virtual string Storagepath { get; set; }
 
         public virtual string HandlerNamespace { get; set; }
-        public virtual List<ContentAttachmenttypesExtensionsettings> AttachmentExtensions { get; set; }
+        public virtual ICollection<ContentAttachmenttypesExtensionsettings> AttachmentExtensions { get; set; }
     }
 }

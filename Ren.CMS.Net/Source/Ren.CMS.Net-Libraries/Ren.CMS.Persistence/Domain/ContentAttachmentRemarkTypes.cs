@@ -11,6 +11,6 @@ namespace Ren.CMS.Persistence.Domain {
         public virtual string Remarklocalline { get; set; }
         public virtual string Remarklocalpackage { get; set; }
 
-        public List<ContentAttachmentRemarks> Remarks { get; set; }
+         
     }
 }

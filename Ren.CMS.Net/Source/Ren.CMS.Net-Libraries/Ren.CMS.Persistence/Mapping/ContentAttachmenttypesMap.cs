@@ -30,7 +30,7 @@ namespace Ren.CMS.Persistence.Mapping {
                     k.Column("attachmentTypeId");
                 });
                 mapping.Inverse(true);
-                mapping.Cascade(Cascade.None);
+                mapping.Cascade(Cascade.All);
 
             },
              r => r.OneToMany());

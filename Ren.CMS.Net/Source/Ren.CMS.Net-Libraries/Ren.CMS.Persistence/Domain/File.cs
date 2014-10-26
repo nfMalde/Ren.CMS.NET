@@ -4,21 +4,27 @@ namespace Ren.CMS.Persistence.Domain
     using System.Collections.Generic;
     using System.Text;
 
-    public virtual class File
+    public class File
     {
         #region Properties
+        //identity
         public virtual int Id { get; set; }
-        public virtual int TypeID { get; set; }
 
+        public virtual int? FileReference { get; set; }
+
+        //Columns
         public virtual string AliasName { get; set; }
 
         public virtual string FilePath { get; set; }
 
         public virtual bool isActive { get; set; }
 
-        public virtual string VirtualPath { get; set; }
+        public virtual bool Physical { get; set; }
+        
+        //Referenced Files
+        public virtual ICollection<File> ReferencedFiles { get; set; }
 
-        public virtual TbFileType FileType { get; set; }
+ 
         #endregion Properties
     }
 }

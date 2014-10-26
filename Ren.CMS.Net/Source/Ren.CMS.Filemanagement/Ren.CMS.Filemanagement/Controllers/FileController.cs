@@ -20,7 +20,7 @@ namespace Ren.CMS.Filemanagement.Controllers
         /// <returns></returns>
         protected internal ImageResult ImageFileByNFile(nFile file)
         {
-            if (!file.FileType.Physical || !file.isActive)
+            if (!file.Physical || !file.isActive)
                 throw new Exception("File not found");
 
             return ImageFile(file.FilePath);
