@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DirectShowLib-2005">
-      <HintPath>..\..\ExternDLLs\DirectShowLib-2005.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
@@ -103,14 +100,26 @@
     <Compile Include="ContentValidator.cs" />
     <None Include="CoreModels.cs.exclide" />
     <Compile Include="LinkHelper.cs" />
+    <Compile Include="nAttachmentArgument.cs" />
+    <Compile Include="nAttachmentRoleManager.cs" />
+    <Compile Include="nContentAttachmenTypeManager.cs" />
+    <Compile Include="nAttachmentManager.cs" />
+    <Compile Include="nAttachmentRole.cs" />
     <Compile Include="nContent.cs" />
     <Compile Include="nContentAttachment.cs" />
+    <Compile Include="nContentAttachmentTexts.cs" />
+    <Compile Include="nContentAttachmenType.cs" />
+    <Compile Include="nContentAttachmenTypeExtensions.cs" />
     <Compile Include="nContentClickCounter.cs" />
     <Compile Include="nContentTag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement.csproj">
+      <Project>{ab3ac34c-9d43-4c9d-ab1c-a1dc018c2df1}</Project>
+      <Name>Ren.CMS.Filemanagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ren.CMS.CORE\Ren.CMS.CORE.csproj">
       <Project>{63304abc-25b8-404c-85d3-724173dfdfe1}</Project>
       <Name>Ren.CMS.CORE</Name>

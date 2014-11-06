@@ -12,15 +12,10 @@
     {
         #region Properties
 
-        public virtual TContent Content
-        {
-            get; set;
-        }
 
-        public virtual int ContentId
-        {
-            get; set;
-        }
+
+        public virtual TContent Content { get; set; }
+        public virtual int ContentId { get; set; }
 
         public virtual int Id
         {
@@ -61,6 +56,7 @@
         {
             get; set;
         }
+
 
         #endregion Properties
     }

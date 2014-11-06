@@ -19,7 +19,13 @@ namespace Ren.CMS.Persistence.Mapping {
 			Lazy(true);
 			//Property(x => x.Id, map => map.NotNullable(true));
             Id(e => e.Id, map => map.Generator(Generators.Identity));
-			Property(x => x.Typename, map => map.NotNullable(true));
+            Property(x => x.Typename, map => { 
+                
+                map.NotNullable(true);
+                map.Unique(true);
+       
+            
+            });
 			Property(x => x.Storagepath, map => map.NotNullable(true));
             Property(e => e.HandlerNamespace);
             Set(x => x.AttachmentExtensions, mapping =>
@@ -34,6 +40,9 @@ namespace Ren.CMS.Persistence.Mapping {
 
             },
              r => r.OneToMany());
+
+           
+           
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Ren.CMS.Persistence.Domain
         public virtual string Rolelangline { get; set; }
         public virtual string Rolelangpackage { get; set; }
 
-        public virtual ICollection<ContentAttachmentArgument> Arguments { get; set; }
+        public virtual IList<ContentAttachmentArgument> Arguments { get; set; }
         #endregion Properties
     }
 }

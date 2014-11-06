@@ -8,15 +8,15 @@ using NHibernate.Cfg;
 using System.Collections.Generic;
 using NHibernate.Mapping.ByCode;
 using System.Linq;
-namespace Test.FilemanagmentTest
+namespace Test
 {
-     [TestFixture]
-    public class IntegrationTest
+     
+    public class Integration
     {
          
         
-        [Test]
-        public void ExportSchemaTest()
+        
+        public void SetupDB()
         {
 
 

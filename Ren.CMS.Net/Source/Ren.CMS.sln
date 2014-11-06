@@ -64,7 +64,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ren.CMS.Filemanagement", "R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CF19AEC6-85B8-44A9-BD94-5A2CC18D4761}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.FilemanagmentTest", "UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.csproj", "{8118F527-D09F-496F-9BD6-E26C59E2E3D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.UnitTests", "UnitTests\Test.FilemanagmentTest\Test.UnitTests.csproj", "{8118F527-D09F-496F-9BD6-E26C59E2E3D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

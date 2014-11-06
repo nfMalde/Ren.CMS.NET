@@ -30,10 +30,10 @@ namespace Ren.CMS.Persistence.Mapping
 
             Property(x => x.Cid, map =>
             {
-                map.NotNullable(true);
+                map.NotNullable(false);
 
             });
-            Property(x => x.CreatorPKID, map => map.NotNullable(true));
+            Property(x => x.CreatorPKID, map => map.NotNullable(false));
             Property(x => x.Locked, map => {
 
                 map.NotNullable(true);
@@ -49,24 +49,44 @@ namespace Ren.CMS.Persistence.Mapping
             Property(x => x.ContentRef);
             Property(x => x.CreatorSpecialName);
 
-            Set(x => x.Texts, mapping =>
+            Bag(x => x.Texts, mapping =>
             {
                 mapping.Lazy(CollectionLazy.NoLazy);
                 mapping.Key(k =>
                 {
                     k.Column("ContentId");
+                    
                 });
                 mapping.Inverse(true);
-                mapping.Cascade(Cascade.None);
+                mapping.Cascade(Cascade.All);
+               
+                mapping.Fetch(CollectionFetchMode.Select);
                
             },
                r => r.OneToMany());
+
+            Bag(x => x.Attachments, mapping =>
+            {
+                mapping.Lazy(CollectionLazy.NoLazy);
+                mapping.Key(k =>
+                {
+                    k.Column("ContentId");
+
+                });
+                mapping.Inverse(true);
+                mapping.Cascade(Cascade.All);
+
+                mapping.Fetch(CollectionFetchMode.Select);
+
+            },
+        r => r.OneToMany());
+
 
             ManyToOne(x => x.User, m =>
             {
 
                 m.Column(c => c.Name("CreatorPKID"));
-                m.Fetch(FetchKind.Join);
+                m.Fetch(FetchKind.Select);
                 m.Cascade(Cascade.None);
                 m.Insert(false);
                 m.Update(false);
@@ -78,7 +98,7 @@ namespace Ren.CMS.Persistence.Mapping
             {
 
                 m.Column(c => c.Name("CID"));
-                m.Fetch(FetchKind.Join);
+                m.Fetch(FetchKind.Select);
                 m.Cascade(Cascade.None);
                 m.Insert(false);
                 m.Update(false);

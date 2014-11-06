@@ -9,6 +9,12 @@ namespace Test.FilemanagmentTest
      [TestFixture]
     public class FilemanagmentTest
     {
+         [TestFixtureSetUp]
+         public void init()
+         {
+             new Integration().SetupDB();
+         }
+
         [Test]
         public void AddExternalFileTest()
         {

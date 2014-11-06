@@ -24,17 +24,7 @@ namespace Ren.CMS.Persistence.Mapping {
 			Property(x => x.Maxfilesize);
 			Property(x => x.Convertfile, map => map.NotNullable(true));
 
-
-            ManyToOne(x => x.AttType, m =>
-            {
-
-                m.Lazy(LazyRelation.NoLazy);
-                m.Column("attachmentTypeId");
-                m.Insert(false);
-                m.Update(false);
-                m.Cascade(Cascade.None);
-
-            });
+ 
         }
     }
 }

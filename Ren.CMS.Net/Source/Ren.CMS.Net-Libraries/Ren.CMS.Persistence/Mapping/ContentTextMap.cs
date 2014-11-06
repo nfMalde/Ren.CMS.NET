@@ -26,7 +26,18 @@ namespace Ren.CMS.Persistence.Mapping
                 map.Generator(Generators.Identity);
 
             });
-            Property(x => x.ContentId, map => map.NotNullable(true));
+
+        
+      
+            ManyToOne(x => x.Content, m =>
+            {
+                m.Column("ContentId");
+                m.Cascade(Cascade.None);
+                m.Fetch(FetchKind.Select);
+                m.Update(true);
+                m.Insert(true);
+
+            });
             Property(x => x.LangCode, map => map.NotNullable(true));
 
             //Property(x => x.Id, map => map.NotNullable(true));
@@ -39,16 +50,7 @@ namespace Ren.CMS.Persistence.Mapping
             Property(x => x.PreviewText);
 
             Property(x => x.LongText, x => x.Type(NHibernateUtil.StringClob));
-
-            ManyToOne(x => x.Content, m => {
-
-                m.Lazy(LazyRelation.NoLazy);
-                m.Column("ContentId");
-                m.Insert(false);
-                m.Update(false);
-                m.Cascade(Cascade.None);
-
-            });
+            
 
             //OneToOne(x => x.Category, map =>
             //{

@@ -90,6 +90,7 @@
     <Compile Include="Domain\ContentAttachment.cs" />
     <Compile Include="Domain\ContentAttachmentArgument.cs" />
     <Compile Include="Domain\ContentAttachmentRole.cs" />
+    <Compile Include="Domain\ContentAttachmentTexts.cs" />
     <Compile Include="Domain\ContentAttachmenttypes.cs" />
     <Compile Include="Domain\ContentAttachmenttypesExtensionsettings.cs" />
     <Compile Include="Domain\ContentClickCounter.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Mapping\BackendWidgetMap.cs" />
     <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\ContentAttachmentArgumentMap.cs" />
+    <Compile Include="Mapping\ContentAttachmentTextsMap.cs" />
     <Compile Include="Mapping\ContentAttachmentMap.cs" />
     <Compile Include="Mapping\ContentAttachmentRemarkTypesMap.cs" />
     <Compile Include="Mapping\ContentAttachmentRemarksMap.cs" />

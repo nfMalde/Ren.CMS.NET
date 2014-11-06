@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="true">
   <TopNode>[0-1000]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit</TopNode>
-  <SelectedNode>[0-1005]Test.FilemanagmentTest.FilemanagmentTest.AddFileTypeTest</SelectedNode>
+  <SelectedNode>[0-1006]Test.ContentTests.ContentTest.AddContentAttachmentTest</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" Expanded="true" />
-    <Node UniqueName="[0-1007]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\bin\Debug\Test.FilemanagmentTest.dll" Expanded="true" />
-    <Node UniqueName="[0-1008]Test" Expanded="true" />
-    <Node UniqueName="[0-1009]Test.FilemanagmentTest" Expanded="true" />
-    <Node UniqueName="[0-1003]Test.FilemanagmentTest.FilemanagmentTest" Expanded="true" />
-    <Node UniqueName="[0-1001]Test.FilemanagmentTest.IntegrationTest" Expanded="true" />
+    <Node UniqueName="[0-1016]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\bin\Debug\Test.UnitTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1017]Test" Expanded="true" />
+    <Node UniqueName="[0-1018]Test.ContentTests" Expanded="true" />
+    <Node UniqueName="[0-1001]Test.ContentTests.ContentTest" Expanded="true" />
+    <Node UniqueName="[0-1019]Test.FilemanagmentTest" Expanded="true" />
+    <Node UniqueName="[0-1009]Test.FilemanagmentTest.FilemanagmentTest" Expanded="true" />
+    <Node UniqueName="[0-1007]Test.FilemanagmentTest.IntegrationTest" Expanded="true" />
   </Nodes>
 </VisualState>

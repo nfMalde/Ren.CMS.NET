@@ -14,6 +14,7 @@
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Repositories;
     using Ren.CMS.CORE.Helper;
+using System.Web;
 
     public class nContent
     {
@@ -101,6 +102,7 @@
 
             if (id > 0)
             {
+                this.Attachments = new nAttachmentManager(id);
                 //Hotfix: Get Clicks
                 SqlHelper SQL = new SqlHelper();
                 string query = "SELECT COUNT(*) as ClickCount FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "Content_ClickCounter WHERE cid=@id";
@@ -120,6 +122,8 @@
                 }
                 Clicks.Close();
                 SQL.SysDisconnect();
+
+
             }
         }
 
@@ -158,6 +162,7 @@
 
             if (ContentPostModel.ID > 0)
             {
+                this.Attachments = new nAttachmentManager(ContentPostModel.ID);
                 //Hotfix: Get Clicks
                 SqlHelper SQL = new SqlHelper();
                 string query = "SELECT COUNT(*) as ClickCount FROM " + (new Ren.CMS.CORE.ThisApplication.ThisApplication().getSqlPrefix) + "Content_ClickCounter WHERE cid=@id";
@@ -194,6 +199,10 @@
 
                 return this.cCID;
             }
+            set
+            {
+                this.cCID = value;
+            }
         }
 
         /// <summary>
@@ -207,11 +216,16 @@
                 return this.cCategory;
 
             }
+            set
+            {
+                this.cCategory = value;
+            }
         }
 
         public int ClickCount
         {
             get { return this.clicks; }
+            set { this.clicks = value; }
         }
 
         /// <summary>
@@ -225,6 +239,11 @@
                 return this.cType;
 
             }
+
+            set
+            {
+                this.cType = value;
+            }
         }
 
         /// <summary>
@@ -237,6 +256,10 @@
 
                 return this.cDate;
 
+            }
+            set
+            {
+                this.cDate = value;    
             }
         }
 
@@ -309,6 +332,10 @@
                 return this.cLocked;
 
             }
+            set
+            {
+                this.cLocked = value;
+            }
         }
 
         /// <summary>
@@ -359,15 +386,10 @@
         }
 
         #endregion Properties
+ 
 
         #region Methods
-
-        public List<nAttachment> Attachments(string attachmentType = "ALL", string attachmentArgument = "ALL")
-        {
-            //TODO: Rewrite
-            
-            return new List<nAttachment>();
-        }
+ 
 
         /// <summary>
         /// This Functions generates the final Controller Name and Action Path
@@ -438,24 +460,7 @@
 
             return Buffer;
         }
-
-        public void RegisterNewAttachment(string attachmentType, string fileName, string filePath, string thumpNail = "", string AttachmentArgument = "", string AttachmentTitle = "")
-        {
-            Ren.CMS.Persistence.Repositories.ContentAttachmentRepository Repo = new Persistence.Repositories.ContentAttachmentRepository();
-
-            Ren.CMS.Persistence.Domain.ContentAttachment Model = new Persistence.Domain.ContentAttachment();
-            Model.Contentid = this.ID;
-            Model.Title = AttachmentTitle;
-           // Model. = AttachmentArgument;
-           // Model.AttachmentRemarks = String.Empty;
-           // Model.AttachmentType = attachmentType;
-           // Model.ContentType = this.ContentType;
-            Model.Filepath = filePath;
-            Model.Pkid = Guid.NewGuid();
-            Model.Thumnailpath = thumpNail ?? fileName ?? filePath;
-            Repo.Add(Model);
-        }
-
+ 
         private string getColValue(string col)
         {
             string v = "";
@@ -523,128 +528,8 @@
 
         #endregion Methods
 
-        #region Nested Types
-
-        public partial class nAttachment
-        {
-            #region Fields
-
-            private string Argument = "";
-            private string attachment_type = "";
-            private string contenttype = "";
-            private string fName = "";
-            private string fPath = "";
-            private string pkID = "";
-            private string pRemark = "";
-            private string pTitle = "";
-            private string thumpnail = "";
-
-            #endregion Fields
-
-            #region Constructors
-
-            /// <summary>
-            /// Generates a Model für Content Attachments.  
-            /// </summary>
-            /// <param name="contentType">Content Type of the Attachment´s Content if you want to load from the Storage Folder</param>
-            /// <param name="fileName">Filename of the Attachment</param>
-            /// <param name="filePath">Filepath of the Attachment</param>
-            /// <param name="thumpnailname">Thumpnail Name of the Attachment. Must be saved on Storage/Misc/Thumpnails</param>
-            /// <param name="attachmenttype">There are 2 Attachmenttypes registered: image or video.</param>
-            /// <param name="attachmentargument">Special Argument for the Attachment. For Example in the News Module for getting the Index IMG: indeximg</param>
-            public nAttachment(string contentType, string fileName, string filePath, string thumpnailname, string attachmenttype, string attachmentargument = "default", string title = "", string remark="")
-            {
-                this.fName = fileName;
-                this.fPath = filePath;
-                this.contenttype = contentType;
-                this.thumpnail = thumpnailname;
-                this.attachment_type = attachmenttype;
-                this.Argument = attachmentargument;
-                this.pTitle = title;
-                this.pRemark = remark;
-            }
-
-            public nAttachment(string id, string contentType, string fileName, string filePath, string thumpnailname, string attachmenttype, string attachmentargument = "default", string title = "", string remark ="")
-            {
-                this.pkID = id;
-                this.fName = fileName;
-                this.fPath = filePath;
-                this.contenttype = contentType;
-                this.thumpnail = thumpnailname;
-                this.attachment_type = attachmenttype;
-                this.Argument = attachmentargument;
-                this.pTitle = title;
-                this.pRemark = remark;
-            }
-
-            #endregion Constructors
-
-            #region Properties
-
-            public string AttachmentArgument
-            {
-                get { return this.Argument; }
-            }
-
-            public string AttachmentRemark
-            {
-                get { return this.pRemark; } set { this.pRemark = value; }
-            }
-
-            public string AttachmentType
-            {
-                get { return this.attachment_type; }
-            }
-
-            public string Path
-            {
-                get
-                {
-
-                    return (this.fPath + "/" + this.fName).Replace("//","/"); //Bad Request preventing
-
-                }
-                set {
-
-                    string p = value;
-
-                    this.fPath = p.Remove(p.LastIndexOf(System.IO.Path.GetFileName(p)));
-                    this.fName = System.IO.Path.GetFileName(p);
-
-                }
-            }
-
-            public string PKID
-            {
-                get { return this.pkID; }
-                set { this.pkID = value; }
-            }
-
-            public string ThumpnailPath
-            {
-                get { return this.thumpnail; } set { this.thumpnail = value; }
-            }
-
-            public string Title
-            {
-                get
-                {
-
-                    return this.pTitle;
-                }
-
-                set
-                {
-
-                    this.pTitle = value;
-
-                }
-            }
-
-            #endregion Properties
-        }
-
-        #endregion Nested Types
+        public nAttachmentManager Attachments { get; set; }
+       
     }
 
     public class nContentText

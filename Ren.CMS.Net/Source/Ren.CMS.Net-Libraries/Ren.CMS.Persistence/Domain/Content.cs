@@ -20,7 +20,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual System.Guid Cid
+        public virtual System.Guid? Cid
         {
             get; set;
         }
@@ -35,7 +35,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual System.Guid CreatorPKID
+        public virtual System.Guid? CreatorPKID
         {
             get; set;
         }
@@ -60,10 +60,10 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual IEnumerable<Persistence.Domain.ContentText> Texts
-        {
-            get; set;
-        }
+        public virtual IList<ContentText> Texts { get; set; }
+
+        public virtual IList<ContentAttachment> Attachments { get; set; }
+
 
         public virtual User User
         {

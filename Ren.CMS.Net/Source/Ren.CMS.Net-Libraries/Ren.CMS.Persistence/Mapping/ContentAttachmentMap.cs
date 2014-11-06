@@ -29,22 +29,18 @@ namespace Ren.CMS.Persistence.Mapping
                 });
 
             
-            Property(x => x.Contentid, map => map.NotNullable(true));
-            Property(x => x.AttachmentTypeId, map => {
-                map.NotNullable(true); 
-              });
-            Property(x => x.RoleId, map => map.NotNullable(true));
-            Property(x => x.ArgumentId, map => map.NotNullable(true));
-            Property(x => x.FileId, map => map.NotNullable(true));
+            //Property(x => x.Contentid, map => map.NotNullable(true));
+ 
+            //Property(x => x.FileId, map => map.NotNullable(true));
 
             ManyToOne(x => x.AttachmentType, m =>
             {
 
                 m.Column("AttachmentTypeId");
-                m.Fetch(FetchKind.Select);
+                m.Fetch(FetchKind.Join);
                 m.Cascade(Cascade.None);
-                m.Insert(false);
-                m.Update(false);
+                m.Insert(true);
+                m.Update(true);
                 m.Lazy(LazyRelation.NoLazy);
 
             });
@@ -55,8 +51,8 @@ namespace Ren.CMS.Persistence.Mapping
                 m.Column("RoleId");
                 m.Fetch(FetchKind.Join);
                 m.Cascade(Cascade.None);
-                m.Insert(false);
-                m.Update(false);
+                m.Insert(true);
+                m.Update(true);
                 m.Lazy(LazyRelation.NoLazy);
 
             });
@@ -66,19 +62,32 @@ namespace Ren.CMS.Persistence.Mapping
                 m.Column("ArgumentId");
                 m.Fetch(FetchKind.Join);
                 m.Cascade(Cascade.None);
-                m.Insert(false);
-                m.Update(false);
+                m.Insert(true);
+                m.Update(true);
                 m.Lazy(LazyRelation.NoLazy);
             });
 
-            OneToOne(x => x.File, m =>
+
+            ManyToOne(x => x.File, m =>
             {
-                m.ForeignKey("FileId");
-                m.Lazy(LazyRelation.NoLazy);
+                m.Column("FileId");
+                m.Fetch(FetchKind.Join);
                 m.Cascade(Cascade.All);
-
+                m.Insert(true);
+                m.Update(true);
+                m.Lazy(LazyRelation.NoLazy);
             });
 
+
+            ManyToOne(x => x.Content, m =>
+            {
+                m.Column("ContentId");
+                m.Fetch(FetchKind.Select);
+                m.Cascade(Cascade.None);
+                m.Insert(true);
+                m.Update(true);
+                m.Lazy(LazyRelation.NoLazy);
+            });
 
 
             Set(x => x.Remarks, mapping =>
@@ -93,6 +102,23 @@ namespace Ren.CMS.Persistence.Mapping
 
             },
                r => r.OneToMany());
+ 
+
+            Bag(x => x.Texts, mapping =>
+            {
+                mapping.Lazy(CollectionLazy.NoLazy);
+                mapping.Key(k =>
+                {
+                    k.Column("AttachmentId");
+
+                });
+                mapping.Inverse(true);
+                mapping.Cascade(Cascade.All);
+
+                mapping.Fetch(CollectionFetchMode.Select);
+
+            },
+              r => r.OneToMany());
         }
 
         #endregion Constructors

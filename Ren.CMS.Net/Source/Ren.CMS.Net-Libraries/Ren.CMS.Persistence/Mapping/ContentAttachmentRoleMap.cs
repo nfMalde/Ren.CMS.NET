@@ -19,25 +19,30 @@ namespace Ren.CMS.Persistence.Mapping
         {
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"Content_Attachment_Roles");
             Schema("dbo");
-            Lazy(true);
+            Lazy(false);
             Id(e => e.Id, map => map.Generator(Generators.Identity));
  
             Property(x => x.Rolename, map => map.NotNullable(true));
             Property(x => x.Rolelangline);
             Property(x => x.Rolelangpackage);
 
-            Set(x => x.Arguments, mapping =>
+        
+
+            Bag(x => x.Arguments, mapping =>
             {
                 mapping.Lazy(CollectionLazy.NoLazy);
                 mapping.Key(k =>
                 {
                     k.Column("RoleId");
+
                 });
                 mapping.Inverse(true);
                 mapping.Cascade(Cascade.All);
 
+                mapping.Fetch(CollectionFetchMode.Select);
+
             },
-             r => r.OneToMany());
+         r => r.OneToMany());
         }
 
         #endregion Constructors

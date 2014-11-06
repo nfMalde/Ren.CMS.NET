@@ -68,10 +68,6 @@
             if (entity == null || entity.Id < 1)
                 return false;
 
-            ContentAttachmentRepository ARepo = new ContentAttachmentRepository();
-
-            var attachs = ARepo.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.Contentid == entity.Id));
-            attachs.ToList().ForEach(e => this.DeleteAttachment(e.Pkid.ToString()));
 
             var refconts = Repo.GetMany(NHibernate.Criterion.Expression.Where<TContent>(e => e.ContentRef == entity.Id));
 
@@ -127,17 +123,18 @@
 
         public bool InsertContent(ref nContent eContent)
         {
-            try
-            {
+            
             ContentRepository Repo = new ContentRepository();
             TContent M = new TContent();
-            M.Cid = Guid.Parse(eContent.CategoryID.ToString());
+            if (eContent.CategoryID != null)
+             M.Cid = Guid.Parse(eContent.CategoryID.ToString());
               //  M.Category = new BaseRepository<Category>().GetOne(expression: NHibernate.Criterion.Expression.Where<Category>(c => c.Pkid == M.Cid)) ?? new Category();
 
             M.CDate = eContent.CreationDate;
             M.ContentRef = eContent.ReferenceID;
             M.ContentType = eContent.ContentType;
-            M.CreatorPKID = Guid.Parse(eContent.CreatorPKID.ToString());
+            if (eContent.CreatorPKID != null)
+                M.CreatorPKID = Guid.Parse(eContent.CreatorPKID.ToString());
             M.CreatorSpecialName = eContent.CreatorSpecialName;
 
             M.Locked = eContent.Locked;
@@ -147,7 +144,7 @@
             foreach(nContentText t in eContent.Texts)
             {
 
-                Tx.Add(
+                M.Texts.Add(
                     new ContentText()
                     {
                         Title = t.Title,
@@ -156,13 +153,14 @@
                         LongText = t.LongText,
                         PreviewText = t.PreviewText,
                         MetaDescription = t.MetaDescription,
-                        MetaKeyWords = t.MetaKeyWords
-
+                        MetaKeyWords = t.MetaKeyWords,
+                        Content = M
+                        
                     });
 
             }
 
-            M.Texts = Tx;
+          
 
                object id = Repo.AddAndGetId(M);
 
@@ -184,13 +182,7 @@
                 return true;
             }
 
-            }
-            catch (Exception e)
-            {
-
-                return false;
-
-            }
+           
 
             return false;
         }
@@ -207,32 +199,68 @@
                 var texts = pContent.Texts;
                 List<ContentText> TX = new List<ContentText>();
 
-                foreach (ContentText text in pContent.Texts)
+               
+                 
+                foreach(nContentText newText in eContent.Texts)
                 {
-                    if (eContent.Texts.Any(e => e.Id == text.Id))
+                    if(newText.Id <= 0 || !pContent.Texts.Any(e => e.Id == newText.Id))
                     {
-                        var etexts = eContent.Texts.Where(e => e.Id == text.Id).FirstOrDefault();
-                        text.LangCode = etexts.LangCode;
-                        text.LongText = etexts.LongText;
-                        text.MetaDescription = etexts.MetaDescription;
-                        text.PreviewText = etexts.PreviewText;
-                        text.Seoname = etexts.SEOName;
-                        text.Title = etexts.Title;
-                        TX.Add(text);
+                          if(pContent.Texts.Any(e => e.LangCode == newText.LangCode))
+                          {
+                              var text = pContent.Texts.Where(e => e.LangCode == newText.LangCode).FirstOrDefault();
+                              pContent.Texts.Remove(text);
+                          }
 
+                          pContent.Texts.Add(new ContentText()
+                          {
+                              Content = pContent,
+                              ContentId = pContent.Id,
+                              LangCode = newText.LangCode,
+                              LongText = newText.LongText,
+                              MetaDescription = newText.MetaDescription,
+                              MetaKeyWords = newText.MetaKeyWords,
+                              PreviewText = newText.PreviewText,
+                              Seoname = newText.SEOName,
+                              Title = newText.Title
+
+                          });
                     }
-                    continue;
 
+                    
                 }
 
-                pContent.Texts = TX;
+
+                BaseRepository<ContentText> TextRepo = new BaseRepository<ContentText>();
+
+                List<ContentText> toDelete = new List<ContentText>();
+                foreach (ContentText entityText in pContent.Texts)
+                {
+                    if(!eContent.Texts.Any(e=>e.Id == entityText.Id))
+                    {
+                        TextRepo.Delete(entityText);
+                        toDelete.Add(entityText);
+                    }
+                }
+
+                foreach (var v in toDelete)
+                    pContent.Texts.Remove(v);
+                
+                 
+
                 pContent.Locked = eContent.Locked;
                 pContent.RatingGroupID = eContent.RatingGroupID;
                 pContent.CDate = eContent.CreationDate;
-                pContent.Cid = Guid.Parse(eContent.CategoryID.ToString());
+                if (eContent.CategoryID != null)
+                    pContent.Cid = Guid.Parse(eContent.CategoryID.ToString());
+                else
+                    pContent.Cid = null;
                 pContent.ContentRef = eContent.ReferenceID;
                 pContent.ContentType = eContent.ContentType;
-                pContent.CreatorPKID = Guid.Parse(eContent.CreatorPKID.ToString());
+                if (pContent.CreatorPKID != null)
+                    pContent.CreatorPKID = Guid.Parse(eContent.CreatorPKID.ToString());
+                else
+                    pContent.CreatorPKID = null;
+
                 pContent.CreatorSpecialName = eContent.CreatorSpecialName;
 
                 Repo.Update(pContent);
@@ -326,9 +354,9 @@
 
                         c.ContentType,
                         c.Cid,
-                        c.Category.LongName,
+                        (c.Category != null ? c.Category.LongName : null),
                         c.CreatorPKID,
-                        c.User.Username,
+                       (c.User != null ? c.User.Username : null),
                         c.Locked,
 
                         0,
@@ -390,9 +418,9 @@
 
                         c.ContentType,
                         c.Cid,
-                        c.Category.LongName,
+                       (c.Category != null ? c.Category.LongName : null),
                         c.CreatorPKID,
-                        c.User.Username,
+                       (c.User != null ? c.User.Username : null),
                         c.Locked,
 
                         0,
@@ -434,10 +462,10 @@
                        id: c.Id,
                         contentTexts: t,
                        type: c.ContentType,
-                       cid: c.Cid.ToString(),
-                       category: c.Category.LongName,
+                       cid: c.Cid,
+                       category: (c.Category != null ? c.Category.LongName : null),
                        creatorPKid: c.CreatorPKID,
-                       username: c.User.Username,
+                       username: (c.User != null ? c.User.Username : null),
                        locked: c.Locked,
 
                        ratinggroupid: 0,
