@@ -11,7 +11,7 @@
 
     using Ren.CMS.Content;
     using Ren.CMS.CORE.Config;
-    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.Filemanagement;
     using Ren.CMS.CORE.Language;
     using Ren.CMS.CORE.Language.LanguageDefaults;
     using Ren.CMS.CORE.Permissions;
@@ -28,6 +28,8 @@
     using Ren.Config.Helper;
     using Mvc.JQuery.Datatables;
     using Ren.CMS.CORE.DataTables.BackendModels;
+    using Ren.CMS.CORE.Taskmanagement;
+    using Ren.CMS.Content.Tasks;
 
     public class BackendHandlerContentController : Controller
     {
@@ -35,197 +37,75 @@
 
         [AcceptVerbs(HttpVerbs.Post)]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_UPLOAD_CONTENT_ATTACHMENTS")]
-        public JsonResult AddAttachment(int id)
+        public JsonResult AddAttachment(List<AddAttachmentModel> Model)
         {
-            List<object> _Files = new List<object>();
-            //Initing File Management
-            Ren.CMS.CORE.FileManagement.FileManagement FM = new CORE.FileManagement.FileManagement();
-
-            //Declare File Model
-
-            Ren.CMS.CORE.FileManagement.nFile Temp = new CORE.FileManagement.nFile();
-
-            Ren.CMS.Content.ContentManagement.GetContent GC = new Content.ContentManagement.GetContent(id, true, 0);
-            CORE.FileManagement.FileManagement.nFileProfiles prof = new CORE.FileManagement.FileManagement.nFileProfiles("contentImages");
-
-            List<Ren.CMS.Content.nContent> C = GC.getList();
-
-            if (C.Count == 0) return Json(new { files = "" });
-
-            Ren.CMS.Content.nContent Con = C[0];
-            foreach (HttpPostedFileBase f in Request.Files.GetMultiple("FileData[]"))
+            if (ModelState.IsValid)
             {
-                string ext = System.IO.Path.GetExtension(f.FileName);
-
-                if (!ext.StartsWith(".")) ext = "." + ext;
-                SqlHelper SQL = new SqlHelper();
-                SQL.SysConnect();
-                Temp.aliasName = (SQL.getLastId(RenConfig.DB.Prefix +"Files")+1) +"-"+System.IO.Path.GetFileNameWithoutExtension(f.FileName) + "-"+ Con.ID + ext;
-                string fExists = Temp.aliasName;
-                int fExtens = 1;
-                while (FM.getFile(fExists, false).id > 0)
+                List<object> _Files = new List<object>();
+                FilemanagementCrossBrowsersRepository Repo = new FilemanagementCrossBrowsersRepository();
+                ConvertVideoTask Task = new ConvertVideoTask();
+                List<nContentAttachment> ToConvert = new List<nContentAttachment>();
+                Task.TaskData.Add("_FORMATS", Repo.GetAll().ToList());
+                foreach(AddAttachmentModel model in Model)
                 {
-                    fExists = fExtens + "-" + fExists;
-                    fExtens++;
-                }
-
-                Temp.aliasName = fExists;
-                Temp.isActive = true;
-                Temp.ProfileID = prof.ID;
-                Temp.filepath = "/Storage/Content/" + Con.ContentType;
-
-                string aType = "FILE";
-
-                string role = "default";
-                if (FM.isImage(f))
-                {
-
-                    aType = "image";
-
-                        role = "GALLERY";
-
-                    FM.RegisterFile(Temp, f, false);
-                }
-                nFile FX = FM.getFile(Temp.aliasName);
-                if (FM.isVideo(f))
-                {
-                    role = "GALLERY";
-                    if (!nPermissions.permissionKeyExists("CAN_CONFIGURE_CONTENTTYPES"))
-                        nPermissions.RegisterPermissionKey("CAN_CONFIGURE_CONTENTTYPES", true, new CORE.Language.LanguageDefaults.LanguageDefaultValues("LANG_PERM_CT_CONVERT"){
-                            { "de-DE" , "Benutzer kann Inhaltstypen konfigurieren"}
-                            , { "en-US" , "User cann configure content types"}
-                        });
-
-                    FM.RegisterFile(Temp, f, false);
-                    FX = FM.getFile(Temp.aliasName);
-                    aType = "video";
-                    #region GLB_CONVERT_MOVIE
-                    if (!RenConfigHelper.Settings<GlobalSettings>.Exists("GLB_CONVERT_MOVIE"))
+                    Ren.CMS.Content.ContentManagement.GetContent GC = new Content.ContentManagement.GetContent(model.ContentId, true, 0);
+                    var clist = GC.getList();
+                    if(clist.Count > 0)
                     {
-                        RenConfigHelper.Settings<GlobalSettings>.Add(new nSetting()
+                        nContent c = clist.First();
+                        nAttachmentRole Role  = nAttachmentRoleManager.GetRoleById(model.RoleId);
+                        nAttachmentArgument Argument = null;
+                        if(!Role.Arguments.Any(e => e.Id == model.ArgumentId))
+                            Argument = Role.Arguments.First();
+                        else
+                            Argument = Role.Arguments.First(e => e.Id == model.ArgumentId);
+
+                        nContentAttachmenType type = nContentAttachmenTypeManager.GetTypeById(model.TypeId);
+                        if(type == null)
+                         continue;
+                        nContentAttachment attachment = null;
+                        if (model.Physical)
+                           attachment = c.Attachments.AddAttachment(model.File, type, Role, Argument);
+                        else
+                           attachment = c.Attachments.AddAttachment(model.Url, type, Role, Argument);
+                        if(attachment != null)
                         {
-                            Name = "GLB_CONVERT_MOVIE",
-                            CategoryName = "CONTENT_SETTINGS",
-                            DefaultValue = true,
-                            Description = new  Ren.CMS.CORE.Language.LanguageDefaults.LanguageDefaultValues("LANG_GLB_CONVERT_MOVIE","GLOBAL_SETTINGS"){
-                                {"de-DE", "Aktivieren, um die automatische Umwandlung in *.mp4 von Video Anängen zu ermöglichen. Benötigt Ausführrechte der FFMEG.exe"},
-                                {"en-US", "Enable to activate the automatic convert to *.mp4 of video attachments. Requires exec. rights for FFMPEG.exe"}
-                            }.ReturnLangLine(),
-                            DescriptionLanguageLine = "LANG_GLB_CONVERT_MOVIE",
-                            Label = new Ren.CMS.CORE.Language.LanguageDefaults.LanguageDefaultValues("LANG_GLB_CONVERT_MOVIE_LABEL", "GLOBAL_SETTINGS"){
-                                {"de-DE", "Videos automatisch umwandeln"},
-                                {"en-US", "Convert video files automated"}
-                            }.ReturnLangLine(),
-                            LabelLanguageLine = "LANG_GLB_CONVERT_MOVIE_LABEL",
-                            PermissionBackend = "CAN_CONFIGURE_CONTENTTYPES",
-                            PermissionFrontend = "CAN_CONFIGURE_CONTENTTYPES",
-                            SettingRelation = "GLOBAL_SETTINGS",
-                            SettingType = nSettingType.SettingString,
-                          Value = true,
-                          ValueType = nValueType.ValueString
+                            _Files.Add(new
+                            {
+                                deleteType = "POST",
+                                deleteUrl = "/BackendHandler/Content/DeleteAttachment/" + attachment.AttachmentID,
+                                name = attachment.File.AliasName,
+                                size =  attachment.File.FileSize,
+                                thumbnailUrl = Url.Content("~/ContentFiles/Thumpnail/"+attachment.File.Id +"/"+ attachment.File.AliasName),
+                                type = MimeMapping.GetMimeMapping(attachment.File.FilePath),
+                                url = Url.Content("~/ContentFiles/Orig/" + attachment.File.Id + "/" + attachment.File.AliasName)
 
-                        });
-                    }
-            #endregion
+                            });
 
-                    #region GLB_CONVERT_MOVIE_FFMEG_PATH
-                    if (!RenConfigHelper.Settings<GlobalSettings>.Exists("GLB_CONVERT_MOVIE_FFMEG_PATH"))
-                    {
-                        RenConfigHelper.Settings<GlobalSettings>.Add(new nSetting()
-                        {
-                            Name = "GLB_CONVERT_MOVIE_FFMEG_PATH",
-                            CategoryName = "CONTENT_SETTINGS",
-                            DefaultValue = Server.MapPath("~/Binaries/Converter/FFMPEG.exe"),
-                            Description = new Ren.CMS.CORE.Language.LanguageDefaults.LanguageDefaultValues("LANG_GLB_CONVERT_MOVIE_FFMEG_PATH", "GLOBAL_SETTINGS"){
-                                {"de-DE", "Geben Sie hier den kompletten physikalischen Pfad zur FFMPEG.exe an."},
-                                {"en-US", "Enter here the complete physical path to FFMPEG.exe"}
-                            }.ReturnLangLine(),
-                            DescriptionLanguageLine = "LANG_GLB_CONVERT_MOVIE_FFMEG_PATH",
-                            Label = new Ren.CMS.CORE.Language.LanguageDefaults.LanguageDefaultValues("LANG_GLB_CONVERT_MOVIE_FFMEG_PATH_LABEL", "GLOBAL_SETTINGS"){
-                                {"de-DE", "Pfad zur FFMEG.exe"},
-                                {"en-US", "Path to FFMEG.exe"}
-                            }.ReturnLangLine(),
-                            LabelLanguageLine = "LANG_GLB_CONVERT_MOVIE_FFMEG_PATH_LABEL",
-                            PermissionBackend = "CAN_CONFIGURE_CONTENTTYPES",
-                            PermissionFrontend = "CAN_CONFIGURE_CONTENTTYPES",
-                            SettingRelation = "GLOBAL_SETTINGS",
-                            SettingType = nSettingType.SettingString,
-                            Value = Server.MapPath("~/Binaries/Converter/FFMEG.exe"),
-                            ValueType = nValueType.ValueString
-
-                        });
-                    }
-                    #endregion
-
-                    var convert = RenConfigHelper.Settings<GlobalSettings>.Get("GLB_CONVERT_MOVIE");
-
-                  if (convert.ValueAsBoolean())
-                    {
-                        string FFMEG = RenConfigHelper.Settings<GlobalSettings>.Get("GLB_CONVERT_MOVIE_FFMEG_PATH").Value.ToString();
-
-                        if (!System.IO.File.Exists(FFMEG))
-                        {
-
-                            throw new Exception("FFMEG Path error: Unable to find file  " + FFMEG + " please check the path in the Settings or deactivate the Convert Option");
+                            if(MimeMapping.GetMimeMapping(attachment.File.FilePath).ToLower().StartsWith("video") && 
+                                attachment.AttachmentType.Settings.Any(e => e.Extension == System.IO.Path.GetExtension(attachment.File.FilePath ) 
+                                    && e.Convertfile) && attachment.File.Physical)
+                            {
+                                ToConvert.Add(attachment);
+                            }
 
                         }
 
-                        Ren.CMS.Persistence.Repositories.FilemanagementCrossBrowsersRepository crossBrowser = new Persistence.Repositories.FilemanagementCrossBrowsersRepository();
-
-                        var targetFormatDefault = crossBrowser.GetDefault();
-
-                        var targetFormatM =  crossBrowser.GetByBrowserID(Request.Browser.Browser) ?? targetFormatDefault;
-                        var  targetFormat = "."+ targetFormatM.FileFormat;
-
-                        if (FM.ConvertFile(FX, ffmpegPath: FFMEG, targetExtension: targetFormat))
-                            FX = FM.getFile(System.IO.Path.GetFileNameWithoutExtension(Temp.aliasName) + targetFormat);
 
                     }
-
-                       }
-
-                Con.RegisterNewAttachment(aType, FX.aliasName, "/FileManagement/" + aType + "/" + Con.ContentType,String.Empty, role, System.IO.Path.GetFileNameWithoutExtension(f.FileName));
-                string thump = "";
-                string pkid = "";
-                string url = "";
-
-                //Thumpnail
-                if (Con.Attachments().Any(e => System.IO.Path.GetFileName(e.Path) == FX.aliasName))
-                {
-
-                    var ax = Con.Attachments().Where(e => System.IO.Path.GetFileName(e.Path) == FX.aliasName).First();
-                    pkid = ax.PKID;
-                    ContentAttachmentRepository RepoAA = new ContentAttachmentRepository();
-                    var M = RepoAA.GetByPKid(Guid.Parse(ax.PKID));
-                    M.ThumpNail = "/Thumpnail/" + Con.ID + "/" + M.Pkid.ToString() + "/" + System.IO.Path.GetFileNameWithoutExtension(ax.Path) + ".jpg";
-                    RepoAA.Update(M);
-                    thump = M.ThumpNail;
-                    url = ax.Path;
-                    if (ax.AttachmentType == "video")
-                    {
-                        try
-                        {
-                            new FileManagement().getVideoThumpnailRawImage(Guid.Parse(ax.PKID), RenConfigHelper.Settings<GlobalSettings>.Get("GLB_CONVERT_MOVIE_FFMEG_PATH").Value.ToString());
-                        }
-                        catch { }
-                    }
-
                 }
 
-                _Files.Add(new {
-                    deleteType = "POST",
-                    deleteUrl = "/BackendHandler/Content/DeleteAttachment/"+ pkid,
-                    name = FX.aliasName,
-                    size = f.ContentLength,
-                    thumbnailUrl = thump,
-                    type = FX.mimetype,
-                    url = url
+                Task.TaskData.Add("_ATTACHMENTS", ToConvert);
+                
+                int taskId = Taskmanagement.RegisterTask<ConvertVideoTask>(Task);
 
-                });
-
+                return Json(new { files = _Files, TaskID = taskId, Errors = ModelState.Errors() });
             }
 
-            return Json(new { files = _Files });
+            return Json(new { Errors = ModelState.Errors() });
+            
+
+
         }
 
         [nPermissionVal(NeededPermissionKeys="USR_CAN_ADD_CONTENT_CATEGORY")]
@@ -614,14 +494,57 @@
 
             if(A == null)
                 return Json(new { success = false, message ="entity not found" });
+             
+            //What the heck? Update?
+            ContentManagement.GetContent GC = new ContentManagement.GetContent(id: A.Content.Id);
+            var list = GC.getList();
+            if(list.Count == 0)
+                return Json(new { success = false, message = "entity not found" });
 
-            A.ATitle = MDL.title;
-            A.AttachmentRemarks = MDL.remark;
-            A.AttachmentArgument = MDL.role;
+            var content = list.First();
 
-            Repo.Update(A);
+            var attachs = content.Attachments.GetAttachments();
+            if(attachs.Any(e => e.AttachmentID == Guid.Parse(MDL.id)))
+            {
+                nContentAttachment attachment = attachs.First(e => e.AttachmentID == Guid.Parse(MDL.id));
 
-            return Json(new { success = true });
+                //Remarks
+                attachment.Remarks.Clear();
+                foreach(var remark in MDL.Remarks)
+                {
+                   var type = RemarkTypeManager.GetRemarkTypeById(remark.RemarkTypeId);
+                   if(type != null)
+                   {
+                       nAttachmentRemark Remark = null;
+                       BaseRepository<ContentAttachmentRemarks> Repo2 = new BaseRepository<ContentAttachmentRemarks>();
+                       var entity = Repo2.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachmentRemarks>(e => e.Id == remark.RemarkId));
+                       if (entity != null)
+                           Remark = new nAttachmentRemark(entity);
+                       else
+                           Remark = new nAttachmentRemark(remark.RemarkText, type);
+
+                       Remark.Remarktext = remark.RemarkText;
+                       attachment.Remarks.Add(Remark);
+                   }
+                }
+
+                //Texts
+                attachment.Texts.Clear();
+                foreach(var text in MDL.Texts)
+                {
+                    attachment.Texts.Add(text);
+                }
+
+
+                var handler = attachment.AttachmentType.Handler;
+                handler.SetSource(attachment);
+                handler.Update(attachment);
+
+                return Json(new { success = true });
+            }
+ 
+
+            return Json(new { success = false });
         }
 
         [nPermissionVal(NeededPermissionKeys="USR_CAN_EDIT_CONTENT_CATEGORY")]
@@ -748,36 +671,28 @@
             return Json(new { success = false, message = "ERROR: Required field not set" });
         }
 
-        [HttpPost]
+        [HttpGet]
         [nPermissionVal(NeededPermissionKeys="USR_CAN_ENTER_BACKEND")]
-        public JsonResult GetAttachmentInfo(string id)
+        public PartialViewResult GetAttachmentInfo(string id)
         {
             ContentAttachmentRepository Repo = new ContentAttachmentRepository();
 
             var Attachment = Repo.GetOne(NHibernate.Criterion.Expression.Where<ContentAttachment>(e => e.Pkid == Guid.Parse(id)));
+            nContentAttachment Attach = new nContentAttachment(Attachment);
+            EditAttachment Model = new EditAttachment();
+            Model.ArgumentId = Attachment.Argument.Id;
+            Model.id = Attachment.Pkid.ToString();
+            Model.RoleId = Attachment.Role.Id;
+            Model.Remarks = new List<vAttachmentRemark>();
+            foreach(var remark in Attach.Remarks)
+            {
+                Model.Remarks.Add(new vAttachmentRemark() { RemarkId = remark.Id, RemarkText = remark.Remarktext, RemarkTypeId = remark.Type.Id });
+            }
 
-            string title = Attachment.ATitle;
-            string argument = Attachment.AttachmentArgument;
-            string atype = Attachment.AttachmentType;
-            string remark = Attachment.AttachmentRemarks;
+            Model.Texts = Attach.Texts;
 
-            BaseRepository<ContentAttachmentRole> RepoRoles = new BaseRepository<ContentAttachmentRole>();
-
-            var Roles = RepoRoles.GetMany(NHibernate.Criterion.Expression.Where<ContentAttachmentRole>(e => e.AType == atype));
-
-            List<object> aRoles = new List<object>();
-            Ren.CMS.CORE.Language.Language LANG = new CORE.Language.Language("__USER__","ATTACHMENT_ROLES");
-            Roles.ToList<ContentAttachmentRole>().ForEach(r =>
-                aRoles.Add(
-                new
-                {
-                    value = r.RoleName,
-                    text = (String.IsNullOrEmpty(LANG.getLine(r.RoleLangLine)) ?
-                    r.RoleName :
-                    LANG.getLine(r.RoleLangLine))
-                }));
-
-            return Json(new { title=title, role=argument, remark = remark, roles = aRoles });
+            return PartialView("~/Views/Backend/widgets/__SHARED/Content/Modals/EditFile.cshtml", Model);
+            
         }
 
         [HttpPost]
@@ -794,21 +709,51 @@
 
             Ren.CMS.Content.nContent Con = C[0];
 
-            List<Ren.CMS.Content.nContent.nAttachment> Attachs =  Con.Attachments();
-            foreach (Ren.CMS.Content.nContent.nAttachment Att in Attachs)
+            var listOfAttachments = Con.Attachments.GetAttachments();
+
+
+            foreach (Ren.CMS.Content.nContentAttachment Att in listOfAttachments)
             {
                 string shadowboxCommand = "shadowbox[Mixed]";
-                if (Att.AttachmentType == "video")
+                string title = "";
+                if (Att.Texts.Any(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage))
+                    title = Att.Texts.First(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.CurrentLanguage).Title;
+                else if (Att.Texts.Any(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.DefaultLanguage))
+                    title = Att.Texts.First(e => e.LangCode == Ren.CMS.CORE.Helper.CurrentLanguageHelper.DefaultLanguage).Title;
+                else if (Att.Texts.Count > 0)
+                    title = Att.Texts.First().Title;
+                else
+                    title = Att.AttachmentID.ToString();
+                string path = Att.File.FilePath;
+                    if (Att.GetFileType(true) == "video")
+                    {
+
+                        path = "/SharedElements/JPlayer?filePath=" + Att.File.FilePath + "&Title=" + HttpUtility.UrlEncode(title) + "width=640&height=264";
+                        shadowboxCommand += ";width=640;height=264";
+                    }
+
+                
+                string op = "<a href=\"javascript: editAttachment('"+ Att.AttachmentID +"')\">Anpassen</a> | <a href=\"javascript: deleteAttachment('"+ Att.AttachmentID +"')\">Löschen</a>";
+                string fname = "<a href=\"" + path + "\" rel=\""+ shadowboxCommand +"\">" + Att.File.AliasName + "</a>";
+                string argument = "";
+                if(Att.Argument != null)
                 {
-                    Att.Path = "/SharedElements/JPlayer?filePath=" + Att.Path + "&Title=" + HttpUtility.UrlEncode(Att.Title) +"width=640&height=264";
-                    shadowboxCommand += ";width=640;height=264";
+                    Language lang = new Language("__USER__", Att.Argument.Argumentlangpackage);
+                    argument = lang.getLine(Att.Argument.Argumentlangline);
                 }
-                string op = "<a href=\"javascript: editAttachment('"+ Att.PKID +"')\">Anpassen</a> | <a href=\"javascript: deleteAttachment('"+ Att.PKID +"')\">Löschen</a>";
-                string fname = "<a href=\"" + Att.Path + "\" rel=\""+ shadowboxCommand +"\">" + System.IO.Path.GetFileName(Att.Path) + "</a>";
+                string role = "";
+
+                 if(Att.Role != null)
+                {
+                    Language lang = new Language("__USER__", Att.Role.Rolelangpackage);
+                    role = lang.getLine(Att.Role.Rolelangline);
+                }
+
+                string fullRole = role + (!String.IsNullOrEmpty(argument) ? " -> "+ argument : "");
 
                 _list.Add(
 
-                    new ContentAttachmentListView() { ID = Att.PKID , FileName = fname, Role = Att.AttachmentArgument, FileType = Att.AttachmentType }
+                    new ContentAttachmentListView() { ID = Att.AttachmentID.ToString() , FileName = fname, Role = fullRole, FileType = Att.GetFileType() }
 
                         
                         );

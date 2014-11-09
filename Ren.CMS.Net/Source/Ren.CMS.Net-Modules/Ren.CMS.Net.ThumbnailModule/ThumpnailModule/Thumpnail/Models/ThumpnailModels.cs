@@ -17,7 +17,7 @@
   
 
     using Ren.CMS.Content;
-    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.Filemanagement;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.Persistence.Base;
     using Ren.CMS.Persistence.Domain;
@@ -71,7 +71,7 @@
                 ContentAttachmentRepository Attach = new ContentAttachmentRepository();
 
                 var img = Attach.GetByPKid(attachID);
-                string fileName = Path.GetFileName(img.FPath);
+                string fileName = Path.GetFileName(img.File.FilePath);
                 string filePath = img.FPath;
                 if (img != null)
                 {

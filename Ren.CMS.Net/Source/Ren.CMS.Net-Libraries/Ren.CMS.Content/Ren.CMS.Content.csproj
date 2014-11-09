@@ -36,6 +36,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="MediaToolkit">
+      <HintPath>..\..\packages\MediaToolkit.1.0.2.0\lib\net40\MediaToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="MVC Foolproof Validation">
       <HintPath>..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
     </Reference>
@@ -98,6 +101,10 @@
     <Compile Include="ContentCoreModels.cs" />
     <Compile Include="ContentManagement.cs" />
     <Compile Include="ContentValidator.cs" />
+    <Compile Include="nAttachmentRemark.cs" />
+    <Compile Include="nAttachmentRemarkType.cs" />
+    <Compile Include="RemarkTypeManager.cs" />
+    <Compile Include="Tasks\ConvertVideoTask.cs" />
     <None Include="CoreModels.cs.exclide" />
     <Compile Include="LinkHelper.cs" />
     <Compile Include="nAttachmentArgument.cs" />

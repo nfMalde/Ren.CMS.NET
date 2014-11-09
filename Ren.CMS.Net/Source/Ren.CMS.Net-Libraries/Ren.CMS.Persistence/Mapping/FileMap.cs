@@ -25,9 +25,18 @@ namespace Ren.CMS.Persistence.Mapping
             Property(x => x.AliasName, map => map.NotNullable(true));
             Property(x => x.isActive, map => map.NotNullable(true));
             Property(x => x.Physical);
-            Property(x => x.FileReference, map => map.NotNullable(false));
+            Property(x => x.FileSize);
 
-            Set(x => x.ReferencedFiles, mapping =>
+            ManyToOne(x => x.MainFile, map =>
+            {
+                map.Column("FileReference");
+                map.Lazy(LazyRelation.NoLazy);
+                map.Fetch(FetchKind.Select);
+                map.Insert(true);
+                map.Update(true);
+                map.Cascade(Cascade.None);
+            });
+            Bag(x => x.ReferencedFiles, mapping =>
             {
                 mapping.Lazy(CollectionLazy.NoLazy);
                 mapping.Key(k =>

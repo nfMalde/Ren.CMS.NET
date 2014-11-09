@@ -185,7 +185,29 @@ namespace Ren.CMS.Filemanagement
 
             return target;
         }
+        private static string GenerateFileName(string Origfilename, long ContentLength, string target)
+        {
 
+            string oldExtension = Path.GetExtension(Origfilename);
+            int fs = Directory.GetFiles(target).Length;
+
+            Ren.CMS.CORE.Security.CryptoServices Crypto = new CORE.Security.CryptoServices();
+            string fileName = ContentLength + "_" + Origfilename + "_" + fs + 1;
+            fileName = Crypto.ConvertToSHA1(fileName);
+
+            if (fs > 0)
+            {
+                fileName += "_" + fs + 1;
+            }
+
+            if (!oldExtension.StartsWith("."))
+                oldExtension = "." + oldExtension;
+
+            fileName = fileName + oldExtension;
+            target += fileName;
+
+            return target;
+        }
         private static string GenerateFileName(string Origfilename, int ContentLength, string target)
         {
 
@@ -223,7 +245,7 @@ namespace Ren.CMS.Filemanagement
             NewFile.AliasName = getUniqueAliasName(Path.GetFileName(postedFile.FileName));
             NewFile.FilePath = target;
             if (fileReference > 0)
-                NewFile.FileReference = fileReference;
+                NewFile.MainFile = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(e => e.Id == fileReference));
 
 
             return AddFile(NewFile);
@@ -242,12 +264,37 @@ namespace Ren.CMS.Filemanagement
             NewFile.AliasName = getUniqueAliasName(Path.GetFileName(postedFile.FileName));
             NewFile.FilePath = target;
             if (fileReference > 0)
-                NewFile.FileReference = fileReference;
+                NewFile.MainFile =  Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(e => e.Id == fileReference));
 
 
             return AddFile(NewFile);
         }
 
+
+        public static nFile CreateFileFromFile(string filePath, string subPath = "Files", bool active = true, int fileReference = 0)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File " + filePath + " not found");
+            }
+
+            string target = GetAndPrepareTarget(subPath);
+            target = GenerateFileName(filePath, new FileInfo(filePath).Length, target);
+
+            System.IO.File.Copy(filePath, target);
+            Ren.CMS.Persistence.Domain.File NewFile = new Persistence.Domain.File();
+            NewFile.Physical = true;
+            NewFile.isActive = active;
+            NewFile.AliasName = getUniqueAliasName(Path.GetFileName(filePath));
+            NewFile.FilePath = target;
+            if (fileReference > 0)
+                NewFile.MainFile = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(e => e.Id == fileReference));
+
+
+            return AddFile(NewFile);
+
+
+        }
         private static  bool RemoteFileExists(Uri url)
         {
             try
@@ -280,9 +327,46 @@ namespace Ren.CMS.Filemanagement
                 NewFile.AliasName = getUniqueAliasName(Path.GetFileName(url.ToString()));
                 NewFile.FilePath = url.ToString();
                 if (fileReference > 0)
-                    NewFile.FileReference = fileReference;
+                    NewFile.MainFile = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(e => e.Id == fileReference));
 
                 return AddFile(NewFile);
+        }
+
+        private static long GetFileSize(Ren.CMS.Persistence.Domain.File  file)
+        {
+            long fileSize = 0;
+            if(file.Physical)
+            {
+                if(System.IO.File.Exists(file.FilePath))
+                {
+                    fileSize = new FileInfo(file.FilePath).Length;
+                }
+            }
+            else
+            {
+                try
+                {
+                    //Creating the HttpWebRequest
+                    HttpWebRequest request = WebRequest.Create(file.FilePath) as HttpWebRequest;
+                    //Setting the Request method HEAD, you can also use GET too.
+                    request.Method = "HEAD";
+                    //Getting the Web Response.
+                    HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                    //Returns TRUE if the Status code == 200
+                    if (response.StatusCode == HttpStatusCode.OK);
+                    {
+                        fileSize = response.ContentLength;
+                    }
+                }
+                catch
+                {
+                    //Any exception will returns false.
+                  
+                }
+               
+            }
+
+            return fileSize;
         }
 
         public static nFile CreateFile(string url, bool active, int fileReference = 0)
@@ -297,7 +381,7 @@ namespace Ren.CMS.Filemanagement
             NewFile.AliasName = getUniqueAliasName(Path.GetFileName(url.ToString()));
             NewFile.FilePath = url.ToString();
             if (fileReference > 0)
-                NewFile.FileReference = fileReference;
+                NewFile.MainFile = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.File>(e => e.Id == fileReference));
 
             return AddFile(NewFile);
         }
@@ -306,6 +390,7 @@ namespace Ren.CMS.Filemanagement
 
         private static nFile AddFile(Ren.CMS.Persistence.Domain.File NewFile)
         {
+            NewFile.FileSize = GetFileSize(NewFile);
             int id = (int)Repo.AddAndGetId(NewFile);
             Ren.CMS.Persistence.Domain.File eFile = Repo.GetOne(NHibernate.Criterion.Expression.Where<Persistence.Domain.File>(e => e.Id == id));
 

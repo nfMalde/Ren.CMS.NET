@@ -20,6 +20,7 @@
             Property(x => x.Remarklocalline);
             Property(x => x.Remarklocalpackage);
             Property(x => x.Remarkname);
+            Lazy(false);
             
        
         }

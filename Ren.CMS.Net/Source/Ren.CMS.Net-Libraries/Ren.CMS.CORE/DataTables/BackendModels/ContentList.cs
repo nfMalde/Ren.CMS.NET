@@ -111,7 +111,7 @@ namespace Ren.CMS.CORE.DataTables.BackendModels
 
         // [DataTables(DisplayName = Language.LanguageDefaults.LanguageDefaultsContent.LANG_CONTENT_CREATOR.ReturnLangLine())]
         //[RenDataTables(LanguageLine = "LANG_CONTENT_CATEGORY", LanguagePackage = "CONTENT_MANAGEMENT")]
-        [DataTables(DisplayName = "Rolle")]
+        [DataTables(DisplayName = "Art")]
         public string Role { get; set; }
 
         // [DataTables(DisplayName = Language.LanguageDefaults.LanguageDefaultsContent.LANG_CONTENT_CREATION_DATE.ReturnLangLine())]

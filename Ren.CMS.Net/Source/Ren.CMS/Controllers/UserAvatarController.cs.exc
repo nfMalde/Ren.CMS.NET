@@ -8,7 +8,7 @@
     using System.Web;
     using System.Web.Mvc;
 
-    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.Filemanagement;
     using Ren.CMS.Models;
 
     public class UserAvatarController : Controller

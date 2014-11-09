@@ -20,6 +20,8 @@ namespace Ren.CMS.Filemanagement
 
         public bool Physical { get;set;}
 
+        public long FileSize { get; set; }
+
         public List<nFile> ReferencedFiles { get; set; }
 
         public nFile()
@@ -46,6 +48,9 @@ namespace Ren.CMS.Filemanagement
             this.isActive = pFile.isActive;
             this.Physical = pFile.Physical;
             this.ReferencedFiles = new List<nFile>();
+            this.FileSize = pFile.FileSize;
+
+
             if (pFile.ReferencedFiles != null && pFile.ReferencedFiles.Count > 0)
             {
                 this.ReferencedFiles = new List<nFile>();

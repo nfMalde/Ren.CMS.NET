@@ -18,13 +18,26 @@
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix + "Content_Attachment_Remarks");
             Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.Remarktext);
-            Property(x => x.Remarktype);
+            Lazy(false);
             ManyToOne(x => x.RemarkType, map =>
             {
                 map.Column("Remarktype");
                 map.Cascade(Cascade.None);
-                map.Insert(false);
+                map.Insert(true);
                 map.Update(true);
+                map.Fetch(FetchKind.Select);
+                map.Lazy(LazyRelation.NoLazy);
+            });
+
+            ManyToOne(x => x.Attachment, m =>
+            {
+                m.Column("AttachmentId");
+                m.Cascade(Cascade.None);
+                m.Fetch(FetchKind.Select);
+                m.Lazy(LazyRelation.NoLazy);
+                m.Update(true);
+                m.Insert(true);
+
             });
         }
     }

@@ -171,6 +171,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement.csproj">
+      <Project>{ab3ac34c-9d43-4c9d-ab1c-a1dc018c2df1}</Project>
+      <Name>Ren.CMS.Filemanagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Ren.CMS.Net-Libraries\Ren.CMS.Config\Ren.CMS.Config.csproj">
       <Project>{a4f4a9e2-733a-4bec-b64e-840be608c9ea}</Project>
       <Name>Ren.CMS.Config</Name>

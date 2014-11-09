@@ -32,7 +32,14 @@ namespace Ren.CMS.Content
             this.Attachment = attachment;
             this._langCode = LangCode;
         }
-
+        public nContentAttachmentTexts(string title, string description, string LangCode)
+        {
+            //this._id = Text.id;
+            this._title = title;
+            this._description = description;
+            //this.Attachment = attachment;
+            this._langCode = LangCode;
+        }
 
         public string Title { get { return this._title; } set { this._title = value; } }
         public string Description { get { return this._description; } set { this._description = value;  } }

@@ -627,6 +627,8 @@
             }
             Sett.Close();
             myHelper.SysDisconnect();
+            if (S.ID == 0)
+                return null;
             return S;
         }
 

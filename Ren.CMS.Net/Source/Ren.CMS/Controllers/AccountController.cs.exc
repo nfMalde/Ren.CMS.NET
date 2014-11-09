@@ -9,7 +9,7 @@
     using System.Web.Security;
 
     using Ren.CMS.CORE.Extras;
-    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.Filemanagement;
     using Ren.CMS.CORE.Permissions;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.MemberShip;

@@ -13,18 +13,45 @@
     using Ren.CMS.Persistence;
 
     #region Enumerations
-
-    public enum ReleaseStages
+    
+   
+    public enum InstallTypeEnum
     {
-        alpha1,
-        alpha2,
-        beta,
-        rc1
-        , rc2
-        , stable
+        full =1,
+        update = 2
     }
 
     #endregion Enumerations
+
+    public class LicenseModel
+    {
+        public bool IAccept { get; set; }
+    }
+
+
+    public class InstallType
+    {
+        public InstallTypeEnum Type { get; set; }
+    }
+
+    public class Languages
+    {
+        public string FileName { get; set; }
+        public string LanguageName { get; set; }
+    }
+
+    public class InstallModel
+    {
+        public bool FullInstall { get; set; }
+
+        public List<Languages> Languages { get; set; }
+    }
+
+    public class DatabaseConnection
+    {
+        public string ConnectionString { get; set; }
+        public string TablePrefix { get; set; }
+    }
 
     public class DatabaseMSIPackage
     {

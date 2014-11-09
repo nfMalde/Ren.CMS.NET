@@ -130,6 +130,7 @@
     <Compile Include="Language\LanguageDefaults.cs" />
     <Compile Include="Language\LanguageDefaultsBackend.cs" />
     <Compile Include="Language\LanguageDefaultsShared.cs" />
+    <Compile Include="Language\LanguageFileReader.cs" />
     <Compile Include="Links\Links.cs" />
     <Compile Include="Mailer\Mailer.cs" />
     <Compile Include="Mailer\MailerCredentials.cs" />

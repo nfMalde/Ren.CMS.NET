@@ -20,10 +20,12 @@ namespace Ren.CMS.Persistence.Domain
         public virtual bool isActive { get; set; }
 
         public virtual bool Physical { get; set; }
+
+        public virtual long FileSize { get; set; }
         
         //Referenced Files
         public virtual ICollection<File> ReferencedFiles { get; set; }
-
+        public virtual File MainFile { get; set; }
  
         #endregion Properties
     }

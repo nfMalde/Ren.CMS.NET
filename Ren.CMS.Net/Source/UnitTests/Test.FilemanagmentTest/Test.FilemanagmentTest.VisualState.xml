@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="true">
   <TopNode>[0-1000]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit</TopNode>
-  <SelectedNode>[0-1006]Test.ContentTests.ContentTest.AddContentAttachmentTest</SelectedNode>
+  <SelectedNode>[0-1005]Test.ContentTests.ContentTest.DeleteContentTest</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" Expanded="true" />
@@ -9,8 +9,14 @@
     <Node UniqueName="[0-1017]Test" Expanded="true" />
     <Node UniqueName="[0-1018]Test.ContentTests" Expanded="true" />
     <Node UniqueName="[0-1001]Test.ContentTests.ContentTest" Expanded="true" />
+    <Node UniqueName="[0-1006]Test.ContentTests.ContentTest.AddAttachmentRoleTest" Checked="true" />
+    <Node UniqueName="[0-1007]Test.ContentTests.ContentTest.AddAttachmentTypeTest" Checked="true" />
+    <Node UniqueName="[0-1008]Test.ContentTests.ContentTest.AddContentAttachmentTest" Checked="true" />
+    <Node UniqueName="[0-1002]Test.ContentTests.ContentTest.AddContentTest" Checked="true" />
+    <Node UniqueName="[0-1005]Test.ContentTests.ContentTest.DeleteContentTest" Checked="true" />
+    <Node UniqueName="[0-1003]Test.ContentTests.ContentTest.GetContent" Checked="true" />
+    <Node UniqueName="[0-1004]Test.ContentTests.ContentTest.UpdateContentTest" Checked="true" />
     <Node UniqueName="[0-1019]Test.FilemanagmentTest" Expanded="true" />
     <Node UniqueName="[0-1009]Test.FilemanagmentTest.FilemanagmentTest" Expanded="true" />
-    <Node UniqueName="[0-1007]Test.FilemanagmentTest.IntegrationTest" Expanded="true" />
   </Nodes>
 </VisualState>

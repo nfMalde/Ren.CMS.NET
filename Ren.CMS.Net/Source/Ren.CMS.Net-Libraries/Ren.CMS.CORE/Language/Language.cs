@@ -11,6 +11,7 @@
 
     using Ren.CMS.CORE.SettingsHelper;
     using Ren.CMS.CORE.SqlHelper;
+    using Ren.CMS.Persistence.Base;
 
     public class Language
     {
@@ -144,7 +145,17 @@
 
             if (this.LanglineExists(name, Package, this.lngcode) && !overwriteDB)
                 throw new Exception("Language Line " + name + "(" + this.lngcode + ") does allready exists in Package: " + Package);
+            if (this.LanglineExists(name, Package, this.lngcode){
+                BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage> LangRepo = new BaseRepository<Persistence.Domain.tbLanguage>();
+                Ren.CMS.Persistence.Domain.tbLanguage l  = LangRepo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.tbLanguage>(e => e.Code == this.lngcode && e.Name == name && e.Package == Package));
+                if(l != null)
+                {
+                    l.Content = Content;
+                    LangRepo.Update(l);
+                }
 
+            }
+            else{
             string cmd = "INSERT INTO " + AppT.getSqlPrefix + "Language (Name, Content, Package, Code) VALUES (@Name,@Content,@Package,@Code)";
             SqlParameter[] Parameters = new SqlParameter[]{
             new SqlParameter("@Name", name),
@@ -169,6 +180,7 @@
             finally
             {
 
+            }
             }
         }
 

@@ -15,7 +15,7 @@ namespace Ren.CMS.Content
         public ContentAttachmentHandlerBase Handler { get; set; }
         public List<nContentAttachmenTypeExtensions> Settings { get; set; }
         public nContentAttachmenType() { }
-        public nContentAttachmenType(Persistence.Domain.ContentAttachmenttypes Entity)
+        public nContentAttachmenType(Persistence.Domain.ContentAttachmenttypes Entity, nContentAttachment source = null)
         {
            
             this.Name = Entity.Typename;
@@ -24,7 +24,7 @@ namespace Ren.CMS.Content
                 this.Settings.Add(new nContentAttachmenTypeExtensions(setting));
             this.StoragePath = Entity.Storagepath;
             this.Id = Entity.Id;
-            this.Handler = Activator.CreateInstance(Type.GetType(Entity.HandlerNamespace)) as ContentAttachmentHandlerBase;
+            this.Handler = Activator.CreateInstance(Type.GetType(Entity.HandlerNamespace), source) as ContentAttachmentHandlerBase;
         }
     }
 }

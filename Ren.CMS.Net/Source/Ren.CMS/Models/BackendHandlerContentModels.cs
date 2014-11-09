@@ -13,6 +13,35 @@
     using Ren.CMS.CORE.SqlHelper;
     using Ren.CMS.CORE.ThisApplication;
     using Ren.CMS.MemberShip;
+    using Ren.CMS.nModules.Helper;
+using System.Web;
+
+    public class AddAttachmentModel
+    {
+        [Required]
+        public int ContentId { get; set; }
+
+        [LocaleDisplayName("LANG_BACKEND_CONTENT_ATTACHMENT_PHYSICAL", "BACKEND", "__USER__")]
+        public bool Physical { get; set; }
+
+        [RequiredIf("Physical", true)]
+        [LocaleDisplayName("LANG_BACKEND_CONTENT_ATTACHMENT_FILE", "BACKEND", "__USER__")]
+        public HttpPostedFileBase File { get; set; }
+
+        [RequiredIf("Physical", false)]
+        [LocaleDisplayName("LANG_BACKEND_CONTENT_ATTACHMENT_URL", "BACKEND", "__USER__")]
+        public string Url { get; set; }
+
+        [Required]
+        public int TypeId { get; set; }
+
+        [Required]
+        public int RoleId { get; set; }
+
+        public int ArgumentId { get; set; }
+
+        
+    }
 
     public class CategoryModel
     {
@@ -179,6 +208,13 @@
         #endregion Methods
     }
 
+    public class vAttachmentRemark
+    {
+        public int RemarkTypeId { get; set; }
+        public string RemarkText { get; set; }
+        public int RemarkId { get; set; }
+    }
+
     public class EditAttachment
     {
         #region Properties
@@ -188,21 +224,13 @@
             get; set;
         }
 
-        public string remark
-        {
-            get; set;
-        }
+        public List<vAttachmentRemark> Remarks { get; set; }
 
-        public string role
-        {
-            get; set;
-        }
+        public int RoleId { get; set; }
 
-        public string title
-        {
-            get; set;
-        }
+        public int ArgumentId { get; set; }
 
+        public List<Ren.CMS.Content.nContentAttachmentTexts> Texts { get; set; }
         #endregion Properties
     }
 

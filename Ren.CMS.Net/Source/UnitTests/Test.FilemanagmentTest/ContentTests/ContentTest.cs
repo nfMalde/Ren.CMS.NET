@@ -183,6 +183,19 @@ namespace Test.ContentTests
         }
 
         [Test]
+        public void AddAttachmentRemarkTypeTest()
+        {
+            nAttachmentRemarkType t = RemarkTypeManager.GetRemarkTypeByName("Test");
+            if (t != null)
+                RemarkTypeManager.DeleteType(t.Id);
+            t = RemarkTypeManager.RegisterNewType(new nAttachmentRemarkType() { Name = "Test", Remarklocalline = "test", Remarklocalpackage = "Test" });
+            Assert.AreEqual("Test", t.Name);
+            Assert.AreEqual("test", t.Remarklocalline);
+            Assert.AreEqual("Test", t.Remarklocalpackage);
+            Assert.Greater(t.Id, 0);
+        }
+
+        [Test]
         public void AddContentAttachmentTest()
         {
             ContentManagement.GetContent GC = new ContentManagement.GetContent(new string[] { "eNews" });
@@ -210,14 +223,56 @@ namespace Test.ContentTests
                 type = nContentAttachmenTypeManager.GetTypeByName("DEFAULT");
             }
 
+            nAttachmentRemarkType RemarkType = RemarkTypeManager.GetRemarkTypeByName("Test");
+            if(RemarkType == null)
+            {
+                AddAttachmentRemarkTypeTest();
+                RemarkType = RemarkTypeManager.GetRemarkTypeByName("Test");
+            }
+
+            List<nContentAttachmentTexts> Texts = new List<nContentAttachmentTexts>();
+            Texts.Add(new nContentAttachmentTexts(title: "TestTitle", description: "TestDescr",  LangCode: "de-DE"));
+
+
             nContentAttachment attach = c.Attachments.AddAttachment(
                 url: "http://downloads.networkfreaks.de/unittests/test.txt",
                 cType: type,
                 Argument: Role.Arguments.First(),
-                Role: Role);
+                Texts: Texts,
+                Role: Role, Remarks: new List<nAttachmentRemark>() { new nAttachmentRemark(){ Type = RemarkType, Remarktext = "Test"} });
+
+            //Asserts
+            Assert.NotNull(attach.File);
+            Assert.Greater(attach.File.Id, 0);
+            Assert.AreEqual("http://downloads.networkfreaks.de/unittests/test.txt", attach.File.FilePath);
+            Assert.IsInstanceOf<Guid>(attach.AttachmentID);
+            Assert.NotNull(attach.Argument);
+            Assert.NotNull(attach.Role);
+            Assert.Greater(attach.Argument.Id, 0);
+            Assert.Greater(attach.Role.Id, 0);
+            Assert.AreEqual(Role.Arguments.First().ArgumentName , attach.Argument.ArgumentName);
+            Assert.AreEqual(Role.Rolename, attach.Role.Rolename);
+            Assert.Greater(attach.Remarks.Count, 0);
+            foreach(var remark in attach.Remarks)
+            {
+                Assert.AreEqual("Test", remark.Remarktext);
+                Assert.NotNull(remark.Type);
+                Assert.AreEqual("Test", remark.Type.Name);
+            }
+            Assert.NotNull(attach.Texts);
+            Assert.Greater(attach.Texts.Count, 0);
+            foreach(var text in attach.Texts)
+            {
+                Assert.AreEqual("TestTitle", text.Title);
+                Assert.AreEqual("TestDescr", text.Description);
+                Assert.AreEqual("de-DE", text.LangCode);
+            }
+
+
+
             
           }
 
-
+        
     }
 }

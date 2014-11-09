@@ -6,7 +6,7 @@
     using System.Web;
     using System.Web.Mvc;
 
-    using Ren.CMS.CORE.FileManagement;
+    using Ren.CMS.Filemanagement;
     using Ren.CMS.Models.SharedElements;
     using Ren.CMS.Persistence.Repositories;
 

@@ -90,7 +90,7 @@ namespace Ren.CMS.Persistence.Mapping
             });
 
 
-            Set(x => x.Remarks, mapping =>
+            Bag(x => x.Remarks, mapping =>
             {
                 mapping.Lazy(CollectionLazy.NoLazy);
                 mapping.Key(k =>
@@ -99,6 +99,7 @@ namespace Ren.CMS.Persistence.Mapping
                 });
                 mapping.Inverse(true);
                 mapping.Cascade(Cascade.All);
+
 
             },
                r => r.OneToMany());

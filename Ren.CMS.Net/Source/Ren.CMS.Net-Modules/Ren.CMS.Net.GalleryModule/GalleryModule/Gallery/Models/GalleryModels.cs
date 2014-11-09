@@ -9,6 +9,11 @@
 
     using Ren.CMS.Content;
 
+    public class GelleryFileModel
+    {
+ 
+    }
+
     public class GalleryNavigation
     {
         #region Properties
@@ -50,7 +55,7 @@
                 this.Content.GenerateLink();
             }
 
-            var Attachments = this.Content.Attachments(type, "gallery");
+            var Attachments = this.Content.Attachments.GetAttachments(null, "gallery");
 
             if (Attachments.Count < page)
             {
@@ -86,7 +91,7 @@
             get; set;
         }
 
-        public nContent.nAttachment CurrentView
+        public nContentAttachment CurrentView
         {
             get;
             set;

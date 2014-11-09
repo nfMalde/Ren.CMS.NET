@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
 
     using Ren.CMS.CORE.Settings;
+    using System.ComponentModel.DataAnnotations;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class DynamicAttribute : Attribute
@@ -42,7 +43,8 @@
         #endregion Properties
     }
 
-    class LocaleDisplayName : DisplayNameAttribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class LocaleDisplayName : DisplayNameAttribute
     {
         #region Fields
 
@@ -80,5 +82,30 @@
         }
 
         #endregion Properties
+    }
+
+    public class RequiredIfAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute
+    {
+        private String PropertyName { get; set; }
+        private Object DesiredValue { get; set; }
+
+        public RequiredIfAttribute(String propertyName, Object desiredvalue)
+        {
+            PropertyName = propertyName;
+            DesiredValue = desiredvalue;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext context)
+        {
+            Object instance = context.ObjectInstance;
+            Type type = instance.GetType();
+            Object proprtyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
+            if (proprtyvalue.ToString() == DesiredValue.ToString())
+            {
+                ValidationResult result = base.IsValid(value, context);
+                return result;
+            }
+            return ValidationResult.Success;
+        }
     }
 }

@@ -35,7 +35,7 @@
 
                 if (contentList.Count() > 0)
                 {
-                    var attachments = contentList.First().Attachments(Model.Type, "gallery");
+                    var attachments = contentList.First().Attachments.GetAttachments(null, "gallery");
 
                     if (attachments.Count > 0)
                     {
@@ -47,7 +47,7 @@
                 }
             }
 
-            return Json(new { success = false, items = new List<nContent.nAttachment>() });
+            return Json(new { success = false, items = new List<nContentAttachment>() });
         }
 
         //

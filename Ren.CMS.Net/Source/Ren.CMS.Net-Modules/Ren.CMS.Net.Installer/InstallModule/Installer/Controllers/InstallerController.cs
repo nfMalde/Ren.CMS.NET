@@ -13,139 +13,527 @@
     using Ren.CMS.CORE.Permissions;
     using Ren.CMS.CORE.Settings;
     using Ren.CMS.CORE.ThisApplication;
-
+    using System.Data.SqlClient;
+    using System.Configuration;
+    using System.Web.Configuration;
+using InstallModule.Installer.Models;
+    using NHibernate.Tool.hbm2ddl;
+    using Ren.CMS.Persistence.Base;
     public class InstallerController : Controller
     {
         #region Methods
 
         //
         // GET: /Installer/
-        public void Index(string id)
+        [HttpGet]
+        public ActionResult Index()
         {
-            this.RedirectToAction("Install_" + id);
+            return View();
         }
 
-        public JsonResult Install_DBase_Shema(string id = "ALL")
+        [HttpGet]
+        public ActionResult License()
         {
-            return Json(new { });
+            return View();
         }
 
-        public ActionResult Install_MailerSettings()
+        [HttpPost]
+        public ActionResult License(InstallModule.Installer.Models.LicenseModel Model)
         {
-            GlobalSettings GS = new GlobalSettings();
-            bool CAN_MANAGE_MAIL_LAYOUTS = nPermissions.RegisterPermissionKey("CAN_MANAGE_MAIL_LAYOUTS", false, new LanguageDefaultValues("", "")
-                                                                                {
-                                                                                    {"de-DE", "Benutzer darf Mail Layouts verwalten."},
-                                                                                    {"en-US", "User can manage mail layouts"}
-                                                                                });
-            bool CAN_MANAGE_SMTP = nPermissions.RegisterPermissionKey("CAN_MANAGE_SMTP", false, new LanguageDefaultValues("", "")
-                                                                                {
-                                                                                    {"de-DE", "Benutzer darf Mail Layouts verwalten."},
-                                                                                    {"en-US", "User can manage mail layouts"}
-                                                                                });
-
-            if (!CAN_MANAGE_MAIL_LAYOUTS)
-                Response.Write("CAN_MANAGE_MAIL_LAYOUTS => Unable to register Permissionkey<br/>");
-            if (!CAN_MANAGE_SMTP)
-                Response.Write("CAN_MANAGE_SMTP => Unable to register Permissionkey<br/>");
-
-            //SMTP Settings:
-            GS.AddSetting(this.SettingReady("LAYOUT_SETTINGS_MAILER", "CAN_MANAGE_MAIL_LAYOUTS", "CAN_MANAGE_MAIL_LAYOUTS", "MAILER_DEFAULT_LAYOUT"
-                         , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_DEFAULT_LAYOUT"));
-
-            this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTPSERVER", new Dictionary<string, string>(){
-                                                                                {"de-DE", "SMTP Server"},
-                                                                                {"en-US", "SMTP server"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER","CAN_MANAGE_SMTP","CAN_MANAGE_SMTP", "MAILER_SMTPSERVER"
-                         , "mail.example.com", nSettingType.SettingString, nValueType.ValueString,"LANG_MAILER_SMTPSERVER"));
-
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTPSERVER", new Dictionary<string, string>(){
-                                                                                {"de-DE", "SMTP Server"},
-                                                                                {"en-US", "SMTP server"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SMTP_PORT"
-                         , "95", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SMTP_PORT"));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTP_PORT", new Dictionary<string, string>(){
-                                                                                {"de-DE", "SMTP Port"},
-                                                                                {"en-US", "SMTP port"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SMTPLOGIN"
-                        , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SMTPLOGIN"));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTPLOGIN", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Benutzername"},
-                                                                                {"en-US", "Login"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SMTP_PASSWORD"
-                        , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SMTP_PASSWORD"));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTP_PASSWORD", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Passwort"},
-                                                                                {"en-US", "Password"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SENDER_EMAILADDRESS"
-                     , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SENDER_EMAILADDRESS"));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SENDER_EMAILADDRESS", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Absender Emailadresse"},
-                                                                                {"en-US", "Sender eMail Address"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SENDERNAME"
-                    , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SENDERNAME"));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SENDERNAME", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Abesendername"},
-                                                                                {"en-US", "Sender name"}});
-
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SMTP_REQUIRES_AUTH"
-                    , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SMTP_REQUIRES_AUTH", new List<nSettingStoreItem>() { new nSettingStoreItem() { ID = 0, Label = "LANG_SHARED_YES", Value = "true" },
-                                                                                                                    new nSettingStoreItem() { ID = 0, Label = "LANG_SHARED_NO", Value = "false" } }));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTP_REQUIRES_AUTH", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Ausgangsserver erfordert Authorisierung"},
-                                                                                {"en-US", "SMPT Server requires Credentials"}});
-               GS.AddSetting(this.SettingReady("SMTP_SETTINGS_MAILER", "CAN_MANAGE_SMTP", "CAN_MANAGE_SMTP", "MAILER_SMTP_REQUIRES_HTTPS"
-              , "", nSettingType.SettingString, nValueType.ValueString, "LANG_MAILER_SMTP_REQUIRES_HTTPS", new List<nSettingStoreItem>() { new nSettingStoreItem() { ID = 0, Label = "LANG_SHARED_YES", Value = "true" },
-                                                                                                                    new nSettingStoreItem() { ID = 0, Label = "LANG_SHARED_NO", Value = "false" } }));
-               this.InsertLangLine("SMTP_SETTINGS_MAILER", "LANG_MAILER_SMTP_REQUIRES_HTTPS", new Dictionary<string, string>(){
-                                                                                {"de-DE", "Ausgangsserver erfordert HTTPS"},
-                                                                                {"en-US", "SMPT Server requires HTTPS"}});
-
-               return Content("Complete") ;
-        }
-
-        private void InsertLangLine(string PCKG, string Name, Dictionary<string,string> LangVals)
-        {
-            Language Lang = new Language("__USER__", PCKG);
-            Lang.getLine(Name, LangVals);
-        }
-
-        private nSetting SettingReady(string Rel, string PermissionFrontEnd, string PermissionBackEnd, string SettingName, string Value,  string SettingType, string ValueType, string LangLine, List<nSettingStoreItem> Store = null)
-        {
-            nSetting Setting = new nSetting();
-            Setting.Name = SettingName;
-            Setting.PermissionBackend = PermissionBackEnd;
-            Setting.PermissionFrontend = PermissionFrontEnd;
-            Setting.SettingType = SettingType;
-            Setting.ValueType = ValueType;
-            Setting.DefaultValue = Value;
-            Setting.SettingRelation = Rel;
-            Setting.LabelLanguageLine = LangLine;
-
-            if (SettingType == nSettingType.SettingArray)
+            if(Model.IAccept)
             {
-                if(Store != null)
-                {
-                    if (Store.Count > 0)
-                    {
-                        foreach (nSettingStoreItem I in Store)
-                            Setting.Store.Add(I);
+                Session.Timeout = int.MaxValue;
+                Session.Add("__LICENSE__", true);
+                return RedirectToActionPermanent("InstallType");
+            }
 
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult InstallType()
+        { 
+           if(Session["__LICENSE__"] != null)
+           {
+               Session.Timeout = int.MaxValue;
+               Session.Add("__LICENSE__", true);
+               return View();
+           }
+
+           return RedirectToActionPermanent("__LICENSE__");
+        }
+
+        [HttpPost]
+        public ActionResult InstallType(InstallModule.Installer.Models.InstallType Model)
+        {
+            if (Session["__LICENSE__"] != null)
+            {
+                Session.Timeout = int.MaxValue;
+                Session.Add("__LICENSE__", true);
+
+                if(Model.Type == Models.InstallTypeEnum.full)
+                {
+                    Session.Add("__INSTALLTYPE__", "full");
+
+                }
+                else
+                {
+                    Session.Add("__INSTALLTYPE__", "update");
+                }
+
+
+                return RedirectToActionPermanent("DatabaseConnection");
+            }
+
+            return RedirectToActionPermanent("License");
+        }
+
+        public ActionResult DatabaseConnection()
+        {
+            if (Session["__LICENSE__"] != null)
+            {
+                Session.Timeout = int.MaxValue;
+                Session.Add("__LICENSE__", true);
+
+                return View();
+            }
+
+            return RedirectToActionPermanent("License");
+        }
+
+        [HttpPost]
+        public ActionResult DatabaseConnection(Models.DatabaseConnection Model)
+        {
+            if (Session["__LICENSE__"] != null && ModelState.IsValid)
+            {
+                Session.Timeout = int.MaxValue;
+                Session.Add("__LICENSE__", true);
+                if (Session["__INSTALLTYPE__"] != null)
+                    Session.Add("__INSTALLTYPE__", Session["__INSTALLTYPE__"]);
+                else
+                    return RedirectToActionPermanent("InstallType");
+                try
+                {
+                    SqlConnection Con = new SqlConnection(Model.ConnectionString);
+                    Con.Open();
+
+                    Con.Close();
+                }
+                catch(Exception e)
+                {
+                    ModelState.AddModelError("ConnectionString", e.Message);
+                    return View(Model);
+                }
+
+                //Add ConnectionString
+                var configuration = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (ConnectionStringsSection)configuration.GetSection("connectionStrings");
+                section.ConnectionStrings["nfCMS"].ConnectionString = Model.ConnectionString;
+                if (configuration.AppSettings.Settings.AllKeys.Any(e => e == "nfcmsSQLPrefix"))
+                {
+                    configuration.AppSettings.Settings.Remove("nfcmsSQLPrefix");
+                }
+                configuration.AppSettings.Settings.Add("nfcmsSQLPrefix", Model.TablePrefix);
+                configuration.Save();
+
+                return RedirectToActionPermanent("Install");
+              
+            }
+
+            return RedirectToActionPermanent("License");
+        }
+
+        [HttpGet]
+        public ActionResult Install()
+        {
+            if (Session["__LICENSE__"] != null)
+            {
+                if (Session["__INSTALLTYPE__"] != null)
+                    Session.Add("__INSTALLTYPE__", Session["__INSTALLTYPE__"]);
+                else
+                    return RedirectToActionPermanent("InstallType");
+
+                //Scan Folder: ~/Install/Language
+                string folder = Server.MapPath("~/Install/Languages");
+                string[] files = System.IO.Directory.GetFiles(folder, "*.lang.xml");
+                Models.InstallModel Model = new Models.InstallModel();
+                Model.Languages = new List<Models.Languages>();
+                Model.FullInstall = (Session["__INSTALLTYPE__"] == "full");
+
+                foreach(string file in files)
+                {
+                    //Get Header Only
+                    string fileName = Path.GetFileName(file);
+                    string fpath = Server.MapPath("~/Install/Languages/"+ fileName);
+
+                    LanguageFileReader Reader = new LanguageFileReader(fpath);
+                    Model.Languages.Add(new Models.Languages() { FileName = fileName, LanguageName = Reader.GetHeader().Title });
+                }
+                return View(Model);
+
+            }
+
+            return RedirectToActionPermanent("License");
+        }
+        
+        [HttpPost]
+        public JsonResult GetInstallActions()
+        {
+
+            List<object> Actions = new List<object>();
+
+            Actions.Add(new { actionName = "InstallDB", title = "Database Structure" });
+            Actions.Add(new { actionName = "InstallLanguage", title = "Localization Files" });
+
+            Actions.Add(new { actionName = "InstallSettings", title = "Default Settings" });
+            Actions.Add(new { actionName = "InstallPermissions", title = "Permissions and Permissiongroups" });
+            Actions.Add(new { actionName = "InstallFilemanagement", title = "Filemanagement System" });
+            Actions.Add(new { actionName = "InstallContent", title = "Contentmanagement System" });
+
+
+            return Json(new { actions = Actions } );
+        }
+        #endregion Methods
+
+        #region Install Actions
+
+        [HttpPost]
+        public JsonResult InstallDB(InstallModel Model)
+        {
+            try
+            {
+                var nconfig = Ren.CMS.Persistence.NHibernateHelper.GetConfiguration();
+                
+                if(Model.FullInstall)
+                {
+                    new SchemaExport(nconfig).Execute(true, true, false);
+                }
+                else
+                {
+                    new SchemaUpdate(nconfig).Execute(true, true);
+                }
+
+                return Json(new { success = true });
+            }
+            catch(Exception e)
+            {
+                return Json(new { success = false, message = e.Message });
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult InstallLanguage(InstallModel Model)
+        {
+            try
+            {
+                Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode> Repo = new Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.LangCode>();
+
+                foreach (var l in Model.Languages)
+                {
+                    string file = Server.MapPath("~/Install/Languages/" + l.FileName);
+                    LanguageFileReader Reader = new LanguageFileReader(file);
+                    LanguageFileHeader Header = Reader.GetHeader();
+                    var one = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.LangCode>(e => e.Code == Header.LangCode));
+                    if (one == null && !String.IsNullOrEmpty(Header.LangName))
+                    {
+                        Ren.CMS.Persistence.Domain.LangCode NewCode = new Ren.CMS.Persistence.Domain.LangCode();
+                        NewCode.Code = Header.LangCode;
+                        NewCode.Name = Header.LangName;
+                        Repo.Add(NewCode);
+                    }
+
+                    foreach (var line in Reader.GetLines())
+                    {
+                        Language L = new Language(Header.LangCode, line.LanguagePackage);
+
+                        if(Model.FullInstall || !L.LanglineExists(line.LanguageLineName, line.LanguagePackage, Header.LangCode))
+                            L.InsertLine(line.LanguageLineName, line.LanguageLineValue, true);
                     }
 
                 }
 
+                return Json(new { success = true });
             }
-
-            return Setting;
+            catch(Exception e)
+            {
+                return Json(new { success = false, message = e.Message });
+            }
         }
 
-        #endregion Methods
+        public JsonResult InstallSettings(InstallModel Model)
+        {
+
+            GlobalSettings Settings = new GlobalSettings();
+            //Install Global Settings
+
+            //Site Settings
+            if(Model.FullInstall ||  Settings.getSetting("SITE_TITLE") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_TITLE";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_TITLE";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+                MODEL.Value = "Ren.CMS.NET - Free Open Source CMS";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_DESCIRPTION") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_DESCIRPTION";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_DESCRIPTION";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+                MODEL.Value = "This is your site descirption for Meta Tags";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_KEYWORDS") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_KEYWORDS";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_KEYWORDS";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+                MODEL.Value = "Keywords, for, your, site";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_OFFLINE") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_OFFLINE";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_OFFLINE";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+                MODEL.Value = true;
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_URL_HTTP") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_URL_HTTP";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTP";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_URL_HTTPS") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_URL_HTTPS";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTPS";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = string.Format("{0}://{1}{2}", "https", Request.Url.Authority, Url.Content("~"));
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("SITE_INSTALLATION_DIR") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "SITE_INSTALLATION_DIR";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_INSTALLATION_DIR";
+                MODEL.SettingRelation = "SITE_SETTINGS";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = Server.MapPath("~/");
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            //General
+            if (Model.FullInstall || Settings.getSetting("GENERAL_THEME") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "GENERAL_THEME";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_THEME";
+                MODEL.SettingRelation = "GENERAL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "ren.cms";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("GENERAL_DEFAULT_LANGUAGE") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "GENERAL_DEFAULT_LANGUAGE";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_DEFAULT_LANGUAGE";
+                MODEL.SettingRelation = "GENERAL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                BaseRepository<Ren.CMS.Persistence.Domain.LangCode> Repo = new BaseRepository<Ren.CMS.Persistence.Domain.LangCode>();
+                var list = Repo.GetMany();
+                if (list.Any(e => e.Code == "en-US"))
+                    MODEL.Value = "en-US";
+                else
+                    MODEL.Value = list.First().Code;
+
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+
+            if (Model.FullInstall || Settings.getSetting("GENERAL_FORCELANGUAGE") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "GENERAL_FORCELANGUAGE";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_FORCELANGUAGE";
+                MODEL.SettingRelation = "GENERAL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = false;
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+            
+            //Mail Settings
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_FROM") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_FROM";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_FROM";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "ren.cms@" + Request.Url.Authority;
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_TO") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_TO";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_TO";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "ren.cms@" + Request.Url.Authority;
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_NAME") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_NAME";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_NAME";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "Ren.CMS Admin";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_SERVER") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_SMTP_SERVER";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_SERVER";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_PORT") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_SMTP_PORT";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PORT";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_USER") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_SMTP_USER";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_USER";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_PASSWORD") == null)
+            {
+                nSetting MODEL = new nSetting();
+                MODEL.Name = "MAIL_SMTP_PASSWORD";
+                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PASSWORD";
+                MODEL.SettingRelation = "MAIL";
+                MODEL.SettingType = nSettingType.SettingString;
+
+                MODEL.Value = "";
+                MODEL.ValueType = nValueType.ValueString;
+
+                Settings.AddSetting(MODEL);
+
+            }
+
+            return Json(new {success =true});
+
+        }
+        #endregion 
     }
 }

@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" total="7" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-11-06" time="22:46:27">
+<test-results name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" total="7" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-11-09" time="14:01:10">
   <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.8000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.6.3\bin" machine-name="X1X2X34" user="Malte" user-domain="X1X2X34" />
   <culture-info current-culture="de-DE" current-uiculture="de-DE" />
-  <test-suite type="Project" name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" executed="True" result="Success" success="True" time="10.578" asserts="0">
+  <test-suite type="Project" name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\Test.FilemanagmentTest.nunit" executed="True" result="Success" success="True" time="11.746" asserts="0">
     <results>
-      <test-suite type="Assembly" name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\bin\Debug\Test.UnitTests.dll" executed="True" result="Success" success="True" time="10.559" asserts="0">
+      <test-suite type="Assembly" name="D:\Github\Ren.CMS.NET\Ren.CMS.Net\Source\UnitTests\Test.FilemanagmentTest\bin\Debug\Test.UnitTests.dll" executed="True" result="Success" success="True" time="11.726" asserts="0">
         <results>
-          <test-suite type="Namespace" name="Test" executed="True" result="Success" success="True" time="10.559" asserts="0">
+          <test-suite type="Namespace" name="Test" executed="True" result="Success" success="True" time="11.726" asserts="0">
             <results>
-              <test-suite type="Namespace" name="ContentTests" executed="True" result="Success" success="True" time="10.559" asserts="0">
+              <test-suite type="Namespace" name="ContentTests" executed="True" result="Success" success="True" time="11.725" asserts="0">
                 <results>
-                  <test-suite type="TestFixture" name="ContentTest" executed="True" result="Success" success="True" time="10.556" asserts="0">
+                  <test-suite type="TestFixture" name="ContentTest" executed="True" result="Success" success="True" time="11.723" asserts="0">
                     <results>
-                      <test-case name="Test.ContentTests.ContentTest.AddAttachmentRoleTest" executed="True" result="Success" success="True" time="1.007" asserts="5" />
-                      <test-case name="Test.ContentTests.ContentTest.AddAttachmentTypeTest" executed="True" result="Success" success="True" time="0.033" asserts="4" />
-                      <test-case name="Test.ContentTests.ContentTest.AddContentAttachmentTest" executed="True" result="Success" success="True" time="0.911" asserts="13" />
-                      <test-case name="Test.ContentTests.ContentTest.AddContentTest" executed="True" result="Success" success="True" time="0.007" asserts="11" />
-                      <test-case name="Test.ContentTests.ContentTest.DeleteContentTest" executed="True" result="Success" success="True" time="0.093" asserts="3" />
-                      <test-case name="Test.ContentTests.ContentTest.GetContent" executed="True" result="Success" success="True" time="0.012" asserts="13" />
-                      <test-case name="Test.ContentTests.ContentTest.UpdateContentTest" executed="True" result="Success" success="True" time="0.058" asserts="13" />
+                      <test-case name="Test.ContentTests.ContentTest.AddAttachmentRoleTest" executed="True" result="Success" success="True" time="1.084" asserts="5" />
+                      <test-case name="Test.ContentTests.ContentTest.AddAttachmentTypeTest" executed="True" result="Success" success="True" time="0.037" asserts="4" />
+                      <test-case name="Test.ContentTests.ContentTest.AddContentAttachmentTest" executed="True" result="Success" success="True" time="0.979" asserts="36" />
+                      <test-case name="Test.ContentTests.ContentTest.AddContentTest" executed="True" result="Success" success="True" time="0.008" asserts="11" />
+                      <test-case name="Test.ContentTests.ContentTest.DeleteContentTest" executed="True" result="Success" success="True" time="0.110" asserts="3" />
+                      <test-case name="Test.ContentTests.ContentTest.GetContent" executed="True" result="Success" success="True" time="0.011" asserts="13" />
+                      <test-case name="Test.ContentTests.ContentTest.UpdateContentTest" executed="True" result="Success" success="True" time="0.061" asserts="13" />
                     </results>
                   </test-suite>
                 </results>

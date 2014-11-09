@@ -221,17 +221,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BackendHandlerAccountController.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <None Include="Controllers\AccountController.cs.exc" />
     <Compile Include="Controllers\BackendController.cs" />
     <Compile Include="Controllers\BackendHandlerContentController.cs" />
     <Compile Include="Controllers\BackendHandlerLayoutController.cs" />
     <Compile Include="Controllers\BackendHandlerUsersController.cs" />
-    <Compile Include="Controllers\FileManagementController.cs" />
+    <None Include="Controllers\FileManagementController.cs.exc" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SharedElementsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\TreeViewController.cs" />
-    <Compile Include="Controllers\UserAvatarController.cs" />
+    <None Include="Controllers\UserAvatarController.cs.exc" />
     <Compile Include="Controllers\LinkController.cs" />
     <Compile Include="DataWarehousing.cs" />
     <Compile Include="Global.asax.cs">
@@ -5667,6 +5667,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement\Ren.CMS.Filemanagement.csproj">
+      <Project>{ab3ac34c-9d43-4c9d-ab1c-a1dc018c2df1}</Project>
+      <Name>Ren.CMS.Filemanagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ren.CMS.Net-Libraries\Ren.CMS.API\Ren.CMS.API.csproj">
       <Project>{c137ddd8-be79-4956-8c87-a8b1b21d33a1}</Project>
       <Name>Ren.CMS.API</Name>
@@ -5730,10 +5734,6 @@
     <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\Ren.CMS.InstallModule.csproj">
       <Project>{aeecaf45-aeef-4d6c-95b7-35c44dc88de2}</Project>
       <Name>Ren.CMS.InstallModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.ThumbnailModule\ThumpnailModule\Ren.CMS.ThumpnailModule.csproj">
-      <Project>{1b17db37-062a-4251-a666-75954c4e225f}</Project>
-      <Name>Ren.CMS.ThumpnailModule</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
