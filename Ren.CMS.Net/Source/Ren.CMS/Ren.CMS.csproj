@@ -61,10 +61,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="DirectShowLib-2005, Version=2.1.0.0, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternDLLs\DirectShowLib-2005.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -221,6 +217,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BackendHandlerAccountController.cs" />
+    <Content Include="Content\Installer\bootstrap-wizard.css" />
+    <Content Include="Content\Installer\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\Installer\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\Installer\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Controllers\AccountController.cs.exc" />
     <Compile Include="Controllers\BackendController.cs" />
     <Compile Include="Controllers\BackendHandlerContentController.cs" />
@@ -1043,6 +1043,15 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\Installer\bootstrap\bootstrap.css" />
+    <Content Include="Content\Installer\bootstrap\bootstrap.min.css" />
+    <Content Include="Content\Installer\chosen\chosen-sprite%402x.png" />
+    <Content Include="Content\Installer\chosen\chosen-sprite.png" />
+    <Content Include="Content\Installer\chosen\chosen.css" />
+    <Content Include="Content\Installer\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\Installer\img\folder.png" />
+    <Content Include="Content\Installer\img\groups.png" />
+    <Content Include="Content\Installer\img\server_new.png" />
     <Content Include="Content\jquery.dataTables.columnFilter.js" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.min.css" />
@@ -1058,7 +1067,6 @@
     <Content Include="Content\nftheme\videojs\video-js-skins\vim.css" />
     <Content Include="Content\nftheme\videojs\video-js.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="INSTALL\DB_SETUP.sql" />
     <Content Include="LanguagePackagesInstall\Installation.de-DE.en-US.Alpha.msi.xml" />
     <Content Include="log4net.config" />
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.eot" />
@@ -1109,6 +1117,8 @@
     <Content Include="Scripts\ckeditor\skins\bootstrapck\scss\config\_config.scss" />
     <Content Include="Scripts\ckeditor\skins\bootstrapck\scss\config\_defaults.scss" />
     <Content Include="Scripts\ckeditor\skins\bootstrapck\scss\dialog\dialog.scss" />
+    <Content Include="Scripts\Installer\bootstrap-wizard.js" />
+    <Content Include="Scripts\Installer\jquery-2.0.3.min.map" />
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -4851,6 +4861,16 @@
     <Content Include="Scripts\ckeditor\styles.js" />
     <Content Include="Scripts\datatable.columnfilter.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
+    <Content Include="Scripts\Installer\bootstrap.js" />
+    <Content Include="Scripts\Installer\bootstrap.min.js" />
+    <Content Include="Scripts\Installer\chosen.jquery.js" />
+    <Content Include="Scripts\Installer\chosen.jquery.min.js" />
+    <Content Include="Scripts\Installer\chosen.proto.js" />
+    <Content Include="Scripts\Installer\chosen.proto.min.js" />
+    <Content Include="Scripts\Installer\html5shiv-3.7.0.js" />
+    <Content Include="Scripts\Installer\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\Installer\prettify.js" />
+    <Content Include="Scripts\Installer\respond-1.3.0.min.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />
     <Content Include="Scripts\jquery-2.0.0.js" />
@@ -4921,20 +4941,20 @@
     <Content Include="Scripts\shared\videojs\video.js" />
     <Content Include="Swf\flowplayer-3.2.7.swf" />
     <Content Include="Swf\flowplayer.controls-3.2.5.swf" />
-    <Content Include="Views\nftheme\Blog\Comments.cshtml" />
-    <Content Include="Views\nftheme\Gallery\Gallery.cshtml" />
+    <Content Include="Views\ren.cms\Blog\Comments.cshtml" />
+    <Content Include="Views\ren.cms\Gallery\Gallery.cshtml" />
     <Content Include="Scripts\shared\shadowbox\LICENSE" />
     <Content Include="Scripts\shared\shadowbox\README" />
-    <Content Include="Views\nftheme\SharedElements\Web.config">
+    <Content Include="Views\ren.cms\SharedElements\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\nftheme\SharedElements\Jplayer\jplayer.partial.cshtml" />
+    <Content Include="Views\ren.cms\SharedElements\Jplayer\jplayer.partial.cshtml" />
     <Content Include="Scripts\shared\video-js\demo.captions.vtt" />
     <Content Include="Scripts\shared\video-js\font\vjs.eot" />
     <Content Include="Scripts\shared\video-js\font\vjs.ttf" />
     <Content Include="Scripts\shared\video-js\font\vjs.woff" />
-    <Content Include="Views\nftheme\Blog\eNews\show.cshtml" />
-    <Content Include="Views\nftheme\SharedElements\Jplayer\jplayerEmbed.cshtml" />
+    <Content Include="Views\ren.cms\Blog\eNews\show.cshtml" />
+    <Content Include="Views\ren.cms\SharedElements\Jplayer\jplayerEmbed.cshtml" />
     <Content Include="Views\Backend\widgets\__SHARED\Content\Tabs\Generaltab.cshtml" />
     <Content Include="Views\Backend\widgets\__SHARED\Content\Tabs\SEOTab.cshtml" />
     <Content Include="Views\Backend\widgets\__SHARED\Content\Tabs\TagsTab.cshtml" />
@@ -4946,6 +4966,22 @@
     <Content Include="Views\Backend\widgets\CONTENT_LIST\list.cshtml" />
     <Content Include="Scripts\Ren.Modalbox.js" />
     <Content Include="Views\Backend\Shared\_SharedBootstrapTabs.cshtml" />
+    <Content Include="Views\ren.cms\Theme.config" />
+    <Content Include="Views\Installer\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Installer\_ViewStart.cshtml" />
+    <Content Include="Views\Installer\Shared\_Layout.cshtml" />
+    <Content Include="Views\Installer\Installer\Index.cshtml" />
+    <Content Include="Views\Installer\Shared\_License.cshtml" />
+    <Content Include="Views\Installer\Shared\_InstallType.cshtml" />
+    <Content Include="Views\Installer\Shared\_Welcome.cshtml" />
+    <Content Include="Views\Installer\Shared\_DatabaseConnection.cshtml" />
+    <Content Include="Views\Installer\Shared\_Install.cshtml" />
+    <Content Include="Views\Installer\Shared\_Summary.cshtml" />
+    <Content Include="Views\Installer\Shared\_CreateAdmin.cshtml" />
+    <Content Include="Views\Installer\Shared\_Finish.cshtml" />
+    <Content Include="Views\Installer\Shared\_SummaryContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\chosen-sprite%402x.png" />
@@ -5597,56 +5633,56 @@
     <Content Include="Scripts\shared\jquerymigration\jquery.migrate.js" />
     <Content Include="Views\Backend\widgets\SETTINGS_MAILER\settings.cshtml" />
     <Content Include="Views\Backend\widgets\SETTINGS_MAILER\smtp.cshtml" />
-    <Content Include="Views\nftheme\_ViewStart.cshtml" />
-    <Content Include="Views\nftheme\Account\ChangeAvatar.cshtml" />
-    <Content Include="Views\nftheme\Account\ChangePassword.cshtml" />
-    <Content Include="Views\nftheme\Account\ChangePasswordSuccess.cshtml" />
-    <Content Include="Views\nftheme\Account\ChangeProfile.cshtml" />
-    <Content Include="Views\nftheme\Account\Index.cshtml" />
-    <Content Include="Views\nftheme\Account\LogOn.cshtml" />
-    <Content Include="Views\nftheme\Account\Register.cshtml" />
-    <Content Include="Views\nftheme\Account\Settings.cshtml" />
-    <Content Include="Views\nftheme\AddThisButtons\addthis_button_facebook_like.cshtml" />
-    <Content Include="Views\nftheme\AddThisButtons\addthis_button_google_plusone.cshtml" />
-    <Content Include="Views\nftheme\AddThisButtons\addthis_button_tweet.cshtml" />
-    <Content Include="Views\nftheme\Article\_Article_Show_Top.cshtml" />
-    <Content Include="Views\nftheme\Article\_ArticleBottom.cshtml" />
-    <Content Include="Views\nftheme\Article\_ArticleMiddle.cshtml" />
-    <Content Include="Views\nftheme\Article\_NewsListRow.cshtml" />
-    <Content Include="Views\nftheme\Article\_NewsShortRow.cshtml" />
-    <Content Include="Views\nftheme\Article\Archive.cshtml" />
-    <Content Include="Views\nftheme\Article\CaptchaError.cshtml" />
-    <Content Include="Views\nftheme\Article\Category.cshtml" />
-    <Content Include="Views\nftheme\Article\GalleryAjaxadapter.cshtml" />
-    <Content Include="Views\nftheme\Article\Show.cshtml" />
-    <Content Include="Views\nftheme\Article\SubCategory.cshtml" />
-    <Content Include="Views\nftheme\Article\Tag.cshtml" />
-    <Content Include="Views\nftheme\Home\About.cshtml" />
-    <Content Include="Views\nftheme\Home\Index.cshtml" />
-    <Content Include="Views\nftheme\Link\Forward.cshtml" />
-    <Content Include="Views\nftheme\Blog\Archive.cshtml" />
-    <Content Include="Views\nftheme\Blog\Category.cshtml" />
-    <Content Include="Views\nftheme\Blog\Show.cshtml" />
-    <Content Include="Views\nftheme\Blog\Tag.cshtml" />
-    <Content Include="Views\nftheme\Shared\_AddThisButtonsForContent.cshtml" />
-    <Content Include="Views\nftheme\Shared\_Layout.cshtml" />
-    <Content Include="Views\nftheme\Shared\_Locationbar.cshtml" />
-    <Content Include="Views\nftheme\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\nftheme\Shared\_MenuCapt.cshtml" />
-    <Content Include="Views\nftheme\Shared\_Social_Sharing.cshtml" />
-    <Content Include="Views\nftheme\Shared\EditorTemplates\tinymce_jquery_full.cshtml" />
-    <Content Include="Views\nftheme\Shared\Error.cshtml" />
-    <Content Include="Views\nftheme\Shared\Slider.cshtml" />
-    <Content Include="Views\nftheme\TreeView\Index.cshtml" />
-    <Content Include="Views\nftheme\Web.config">
+    <Content Include="Views\ren.cms\_ViewStart.cshtml" />
+    <Content Include="Views\ren.cms\Account\ChangeAvatar.cshtml" />
+    <Content Include="Views\ren.cms\Account\ChangePassword.cshtml" />
+    <Content Include="Views\ren.cms\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\ren.cms\Account\ChangeProfile.cshtml" />
+    <Content Include="Views\ren.cms\Account\Index.cshtml" />
+    <Content Include="Views\ren.cms\Account\LogOn.cshtml" />
+    <Content Include="Views\ren.cms\Account\Register.cshtml" />
+    <Content Include="Views\ren.cms\Account\Settings.cshtml" />
+    <Content Include="Views\ren.cms\AddThisButtons\addthis_button_facebook_like.cshtml" />
+    <Content Include="Views\ren.cms\AddThisButtons\addthis_button_google_plusone.cshtml" />
+    <Content Include="Views\ren.cms\AddThisButtons\addthis_button_tweet.cshtml" />
+    <Content Include="Views\ren.cms\Article\_Article_Show_Top.cshtml" />
+    <Content Include="Views\ren.cms\Article\_ArticleBottom.cshtml" />
+    <Content Include="Views\ren.cms\Article\_ArticleMiddle.cshtml" />
+    <Content Include="Views\ren.cms\Article\_NewsListRow.cshtml" />
+    <Content Include="Views\ren.cms\Article\_NewsShortRow.cshtml" />
+    <Content Include="Views\ren.cms\Article\Archive.cshtml" />
+    <Content Include="Views\ren.cms\Article\CaptchaError.cshtml" />
+    <Content Include="Views\ren.cms\Article\Category.cshtml" />
+    <Content Include="Views\ren.cms\Article\GalleryAjaxadapter.cshtml" />
+    <Content Include="Views\ren.cms\Article\Show.cshtml" />
+    <Content Include="Views\ren.cms\Article\SubCategory.cshtml" />
+    <Content Include="Views\ren.cms\Article\Tag.cshtml" />
+    <Content Include="Views\ren.cms\Home\About.cshtml" />
+    <Content Include="Views\ren.cms\Home\Index.cshtml" />
+    <Content Include="Views\ren.cms\Link\Forward.cshtml" />
+    <Content Include="Views\ren.cms\Blog\Archive.cshtml" />
+    <Content Include="Views\ren.cms\Blog\Category.cshtml" />
+    <Content Include="Views\ren.cms\Blog\Show.cshtml" />
+    <Content Include="Views\ren.cms\Blog\Tag.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_AddThisButtonsForContent.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_Layout.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_Locationbar.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_LogOnPartial.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_MenuCapt.cshtml" />
+    <Content Include="Views\ren.cms\Shared\_Social_Sharing.cshtml" />
+    <Content Include="Views\ren.cms\Shared\EditorTemplates\tinymce_jquery_full.cshtml" />
+    <Content Include="Views\ren.cms\Shared\Error.cshtml" />
+    <Content Include="Views\ren.cms\Shared\Slider.cshtml" />
+    <Content Include="Views\ren.cms\TreeView\Index.cshtml" />
+    <Content Include="Views\ren.cms\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\nftheme\Home\Slider.cshtml" />
-    <Content Include="Views\nftheme\Home\_ContentBox.cshtml" />
-    <Content Include="Views\nftheme\Blog\CommentTree.cshtml" />
-    <Content Include="Views\nftheme\Blog\AddComment.cshtml" />
-    <Content Include="Views\nftheme\Blog\_CommentAnswers.cshtml" />
-    <Content Include="Views\nftheme\Blog\_CommentAnswerForm.cshtml" />
+    <Content Include="Views\ren.cms\Home\Slider.cshtml" />
+    <Content Include="Views\ren.cms\Home\_ContentBox.cshtml" />
+    <Content Include="Views\ren.cms\Blog\CommentTree.cshtml" />
+    <Content Include="Views\ren.cms\Blog\AddComment.cshtml" />
+    <Content Include="Views\ren.cms\Blog\_CommentAnswers.cshtml" />
+    <Content Include="Views\ren.cms\Blog\_CommentAnswerForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -5658,7 +5694,7 @@
     <Folder Include="Modules\" />
     <Folder Include="Storage\eArticle\" />
     <Folder Include="Storage\Users\" />
-    <Folder Include="Views\nftheme\Debug\" />
+    <Folder Include="Views\ren.cms\Debug\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -5722,14 +5758,6 @@
     <ProjectReference Include="..\Ren.CMS.Net-Libraries\Ren.Config.Helper\Ren.Config.Helper.csproj">
       <Project>{a062fbc9-ef6a-4d7e-99c0-6d04fc0a8d4b}</Project>
       <Name>Ren.Config.Helper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.BlogModule\BlogModule\Ren.CMS.BlogModule.csproj">
-      <Project>{821784f9-01ca-4483-a5f3-ad5320ffef36}</Project>
-      <Name>Ren.CMS.BlogModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.GalleryModule\GalleryModule\Ren.CMS.GalleryModule.csproj">
-      <Project>{63457497-594e-4093-83fd-0129e52ca6b7}</Project>
-      <Name>Ren.CMS.GalleryModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ren.CMS.Net-Modules\Ren.CMS.Net.Installer\InstallModule\Ren.CMS.InstallModule.csproj">
       <Project>{aeecaf45-aeef-4d6c-95b7-35c44dc88de2}</Project>

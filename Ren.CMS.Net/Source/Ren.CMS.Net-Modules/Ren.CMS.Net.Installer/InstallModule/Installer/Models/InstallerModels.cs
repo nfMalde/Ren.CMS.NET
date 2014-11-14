@@ -11,10 +11,135 @@
     using NHibernate.Tool.hbm2ddl;
 
     using Ren.CMS.Persistence;
+    using System.ComponentModel.DataAnnotations;
+    using Ren.CMS.nModules.Helper;
+using System.Web.Mvc;
 
     #region Enumerations
-    
+    public enum RequirementRule
+    {
+        gt, lt, eq
+    }
+
+    public enum IfRequirementRuleFails
+    {
+        error,
+        warning,
+        info
+    }
+    public class RequirementObject
+    {
+        public static object GetResult<T>(T expected, T actual, string Title, RequirementRule rule, IfRequirementRuleFails whatIf)
+        {
+            bool rulePassed = false;
+            if(rule == RequirementRule.eq)
+            {
+                rulePassed = (expected.ToString() == actual.ToString());
+            }
+            else if (rule == RequirementRule.gt)
+            {
+                rulePassed = ulong.Parse(expected.ToString()) <= ulong.Parse(actual.ToString());
+            }
+            else if (rule == RequirementRule.lt)
+            {
+                rulePassed = ulong.Parse(expected.ToString()) >= ulong.Parse(actual.ToString());
+            }
+
+            string css = "text-info";
+            bool failure = false;
+            if(!rulePassed)
+            {
+                if(whatIf == IfRequirementRuleFails.error)
+                {
+                    failure = true;
+                    css = "text-danger";
+                }
+                else if (whatIf == IfRequirementRuleFails.warning)
+                {
+                    css = "text-warning";
+                }
+            }
+            else
+            {
+                css = "text-success";
+            }
+
+
+
+            return new { title = Title, required = expected, actual = actual, failure = failure, cssClass = css };
+        }
+    }
+
+    public class TestConnectionModel
+    {
+        [Required]
+        public string connectionString { get; set; }
+
+    }
+    public class GenerateConnectioStringModel
+    {
+        [Required]
+        [Display(Name = "Server")]
+        public string ServerInstance { get; set; }
+
+        [Required]
+        public DBAuthTypeEnum Auth { get; set; }
+
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Username")]
+        public string ServerUserName { get; set; }
+
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Password")]
+        public string ServerPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Database")]
+        public string Database { get; set; }
+    }
    
+    public class InstallWizardModel
+    {
+        [Required]
+        [Display(Name = "I accept")]
+        public bool LicenseAccepted { get; set; }
+
+        [Required]
+        public InstallTypeEnum InstallationType { get; set; }
+
+        [Required]
+        [Display(Name = "Server")]
+        public string ServerInstance { get; set; }
+
+        [Required]
+        public DBAuthTypeEnum Auth { get; set; }
+
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Username")]
+        public string ServerUserName { get; set; }
+        
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Password")]
+        public string ServerPassword { get; set; }
+        
+        [Required]
+        [Display(Name = "Database")]
+        public string Database { get; set; }
+
+        [Required]
+        [MinLength(5)]
+        public string connectionString { get; set; }
+
+        public string ServerSelector { get; set; }
+
+    }
+
+    public enum DBAuthTypeEnum
+    {
+        windows = 1,
+        user = 2
+    }
+
     public enum InstallTypeEnum
     {
         full =1,
@@ -25,6 +150,7 @@
 
     public class LicenseModel
     {
+        [Display(Name = "I Accept this terms")]
         public bool IAccept { get; set; }
     }
 

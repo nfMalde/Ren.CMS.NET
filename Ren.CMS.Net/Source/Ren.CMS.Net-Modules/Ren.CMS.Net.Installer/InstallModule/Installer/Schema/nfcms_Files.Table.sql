@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Files (
+CREATE TABLE ren_cms_Files (
 		active INT NOT NULL 
 		, aliasName VARCHAR (255) NOT NULL 
 		, fileSize INT NULL 

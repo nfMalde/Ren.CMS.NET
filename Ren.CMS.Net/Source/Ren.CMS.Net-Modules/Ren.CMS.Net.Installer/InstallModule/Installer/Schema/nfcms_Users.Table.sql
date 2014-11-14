@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Users (
+CREATE TABLE ren_cms_Users (
 		ApplicationName VARCHAR (255) NOT NULL 
 		, Comment VARCHAR (255) NULL 
 		, CreationDate DATETIME NULL 

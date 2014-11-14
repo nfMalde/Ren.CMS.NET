@@ -145,7 +145,7 @@
 
             if (this.LanglineExists(name, Package, this.lngcode) && !overwriteDB)
                 throw new Exception("Language Line " + name + "(" + this.lngcode + ") does allready exists in Package: " + Package);
-            if (this.LanglineExists(name, Package, this.lngcode){
+            if (this.LanglineExists(name, Package, this.lngcode)){
                 BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage> LangRepo = new BaseRepository<Persistence.Domain.tbLanguage>();
                 Ren.CMS.Persistence.Domain.tbLanguage l  = LangRepo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.tbLanguage>(e => e.Code == this.lngcode && e.Name == name && e.Package == Package));
                 if(l != null)

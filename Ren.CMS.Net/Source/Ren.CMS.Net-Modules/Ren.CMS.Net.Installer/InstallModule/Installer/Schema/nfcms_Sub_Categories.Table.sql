@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Sub_Categories (
+CREATE TABLE ren_cms_Sub_Categories (
 		CID UNIQUEIDENTIFIER NULL 
 		, langCode VARCHAR (128) NOT NULL 
 		, longName VARCHAR (255) NOT NULL 

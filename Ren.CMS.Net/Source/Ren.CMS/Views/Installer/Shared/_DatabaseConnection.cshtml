@@ -1,0 +1,61 @@
+﻿@model InstallModule.Installer.Models.InstallWizardModel
+
+
+<div class="form-group">
+        <a href="javascript:void(0);" class="btn btn-link" id="findServer"><span class="glyphicon glyphicon-search"></span> Find Server</a>
+</div>
+<div id="serverbrowser" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close serverbrowserclose"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Server finden...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="serverSelector">
+
+                     <div class="alert alert-info">Note: SQL Server Express is by default not visible. Server Instances marked with not visible are not detectable.</div>
+                    @Html.DropDownListFor(e => e.ServerSelector, ViewBag.Servers as SelectList, " -- Please select ---", new { @class = "form-control" })
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default serverbrowserclose">Close</button>
+         
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="server-data">
+
+
+    <div class="form-group server-instance">
+        @Html.LabelFor(e => e.ServerInstance)
+        @Html.TextBoxFor(e => e.ServerInstance, new { @class = "form-control" })
+    </div>
+    <div class="form-group server-database">
+        @Html.LabelFor(e => e.Database)
+        @Html.TextBoxFor(e => e.Database)
+    </div>
+
+    <div class="form-group server-auth">
+        @Html.LabelFor(e => e.Auth)
+        @Html.DropDownListFor(e => e.Auth, ViewBag.Auths as SelectList, " -- Please select authentification mehtod ---", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group server-username" style="display:none">
+        @Html.LabelFor(e => e.ServerUserName)
+        @Html.TextBoxFor(e => e.ServerUserName, new { @class = "form-control" })
+    </div>
+
+
+    <div class="form-group server-password" style="display:none">
+        @Html.LabelFor(e => e.ServerPassword)
+        @Html.TextBoxFor(e => e.ServerPassword, new { @class = "form-control" })
+    </div>
+
+
+</div>
+ 
+ 

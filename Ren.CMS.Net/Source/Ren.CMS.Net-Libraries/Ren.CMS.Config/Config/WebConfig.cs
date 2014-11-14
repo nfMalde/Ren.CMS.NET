@@ -26,10 +26,10 @@
             {
                 get
                 {
-                    if (appsettings.Get("nfcmsSQLPrefix") != null)
+                    if (appsettings.Get("ren_cms_SQLPrefix") != null)
                     {
 
-                        return appsettings.Get("nfcmsSQLPrefix").ToString();
+                        return appsettings.Get("ren_cms_SQLPrefix").ToString();
 
                     }
 
@@ -38,7 +38,7 @@
                 }
                 set
                 {
-                    appsettings.Set("nfcmsSQLPrefix", value);
+                    appsettings.Set("ren_cms_SQLPrefix", value);
 
                 }
             }

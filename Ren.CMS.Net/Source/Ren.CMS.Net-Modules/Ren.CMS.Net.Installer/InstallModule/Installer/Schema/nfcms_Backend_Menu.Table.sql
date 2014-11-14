@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Backend_Menu (
+CREATE TABLE ren_cms_Backend_Menu (
 		action VARCHAR (100) NULL 
 		, headID INT NULL 
 		, iconUrl VARCHAR (250) NULL 

@@ -31,7 +31,7 @@
         public SqlHelper()
         {
             SqlConnection temp = new SqlConnection();
-            temp.ConnectionString = this.GetConnectionString("nfCMS");
+            temp.ConnectionString = this.GetConnectionString("ren_cms");
             ///* connection string building for sql and oledb from 1st line to 5th line*/
             SqlConnectionStringBuilder Obj_sqnbuild =
                new SqlConnectionStringBuilder();//making the instance for
@@ -70,7 +70,7 @@
         {
             DataSet Set = new DataSet();
 
-            string constr = ConfigurationManager.ConnectionStrings["nfCMS"].ConnectionString;
+            string constr = ConfigurationManager.ConnectionStrings["ren_cms"].ConnectionString;
             using (SqlConnection ncon = new SqlConnection(constr))
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();

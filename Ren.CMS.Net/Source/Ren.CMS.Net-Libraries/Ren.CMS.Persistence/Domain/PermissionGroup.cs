@@ -18,12 +18,12 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual string IsDefaultGroup
+        public virtual bool IsDefaultGroup
         {
             get; set;
         }
 
-        public virtual string IsGuestGroup
+        public virtual bool IsGuestGroup
         {
             get; set;
         }

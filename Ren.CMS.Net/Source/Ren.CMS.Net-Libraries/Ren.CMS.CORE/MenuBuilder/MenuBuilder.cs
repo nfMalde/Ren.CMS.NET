@@ -46,7 +46,7 @@
             if (theme == null || theme == "")
             {
 
-                theme = "nftheme";
+                theme = "ren.cms";
 
             }
 

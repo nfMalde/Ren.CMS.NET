@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_FileSettingValues (
+CREATE TABLE ren_cms_FileSettingValues (
 		id INT IDENTITY(1,1) NOT NULL 
 		, ProfileID INT NOT NULL 
 		, SettingID INT NOT NULL 

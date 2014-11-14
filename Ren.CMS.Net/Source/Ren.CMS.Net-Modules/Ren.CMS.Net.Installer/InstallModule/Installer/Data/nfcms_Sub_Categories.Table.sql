@@ -1,1 +1,1 @@
-INSERT INTO nfcms_Sub_Categories (CID, langCode, longName, PKID, ref, shortName) VALUES( '51cf5feb-46a3-42cc-8a10-f3500095634e', 'deDE', 'Test', '50ba5b12-fce8-44f5-b2ca-68afa52dfbfb', 'news', 'test')
+INSERT INTO ren_cms_Sub_Categories (CID, langCode, longName, PKID, ref, shortName) VALUES( '51cf5feb-46a3-42cc-8a10-f3500095634e', 'deDE', 'Test', '50ba5b12-fce8-44f5-b2ca-68afa52dfbfb', 'news', 'test')

@@ -16,6 +16,7 @@ namespace Ren.CMS
     using Ren.CMS.ViewEngine;
     using Ren.CMS.Models.Core;
     using Ren.CMS.CORE.ModelBinders;
+    using System.Configuration;
 
     // Hinweis: Anweisungen zum Aktivieren des klassischen Modus von IIS6 oder IIS7
     // finden Sie unter "http://go.microsoft.com/?LinkId=9394801".
@@ -222,14 +223,31 @@ namespace Ren.CMS
                 , new string[] { "Ren.CMS.Controllers" }
             );
         }
-
+        
         protected void Application_BeginRequest(object sender, EventArgs ex)
         {
-            /*string type = Request.RequestType;
-            string[] ignore = { "post", "httppost" };
-
-            if (!ignore.Any(e => e == type.ToLower()) && !PathIsIgnored())
+            //Check if Ren.CMS is installed
+            if (String.IsNullOrEmpty(ConfigurationManager.ConnectionStrings["ren_cms"].ConnectionString))
             {
+                string area = (HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] != null ? (string) HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] : null);
+                bool isInstaller = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Installer"));
+                bool isContent = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Content"));
+                bool isScripts = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Scripts"));
+
+                if (!isInstaller && !isScripts && !isContent)
+                {
+                    string url = UrlHelper.GenerateContentUrl("~/Installer/Index", Request.RequestContext.HttpContext);
+                    Response.Redirect(url);
+                }
+
+            }
+            else
+            {
+                string type = Request.RequestType;
+                string[] ignore = { "post", "httppost" };
+
+                if (!ignore.Any(e => e == type.ToLower()) && !PathIsIgnored())
+                {
 
                     //  throw new Exception(GetPreRoutData());
 
@@ -249,21 +267,22 @@ namespace Ren.CMS
                     }
                     else
                     {
-                       string  ISO = GetPreRoutData();
-                       BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
-                       if (Repo.GetMany(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == ISO)).Count() == 0)
-                       {
-                           Response.Redirect(GetFullUrl(writeLanguageForUser()));
-                       }
+                        string ISO = GetPreRoutData();
+                        BaseRepository<LangCode> Repo = new BaseRepository<LangCode>();
+                        if (Repo.GetMany(NHibernate.Criterion.Expression.Where<LangCode>(e => e.Code == ISO)).Count() == 0)
+                        {
+                            Response.Redirect(GetFullUrl(writeLanguageForUser()));
+                        }
 
                     }
 
+                }
             }
-             */
         }
 
         protected void Application_Start()
         {
+            
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new nTheming());
             AreaRegistration.RegisterAllAreas();

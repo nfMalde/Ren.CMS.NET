@@ -44,8 +44,8 @@
 
                     if (HttpContext.Current.Request.Url.Scheme.ToLower() == "https")
 
-                        return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTPS"];
-                    else return System.Configuration.ConfigurationManager.AppSettings["nfcmsBaseUrlHTTP"];
+                        return System.Configuration.ConfigurationManager.AppSettings["ren_cmsBaseUrlHTTPS"];
+                    else return System.Configuration.ConfigurationManager.AppSettings["ren_cmsBaseUrlHTTP"];
 
                 }
                 catch
@@ -65,7 +65,7 @@
                 string str = "";
                 try
                 {
-                    str = ConfigurationManager.AppSettings["nfcmsSQLPrefix"];
+                    str = ConfigurationManager.AppSettings["ren_cms_SQLPrefix"];
                 }
                 catch (StackOverflowException e)
                 {
@@ -78,7 +78,7 @@
             set
             {
 
-                @ConfigurationManager.AppSettings["nfcmsSQLPrefix"] = value;
+                @ConfigurationManager.AppSettings["ren_cms_SQLPrefix"] = value;
 
             }
         }

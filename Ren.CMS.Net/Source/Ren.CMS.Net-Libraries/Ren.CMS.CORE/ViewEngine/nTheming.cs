@@ -23,11 +23,15 @@
 
         public nTheming()
         {
+            
             MasterLocationFormats = new[] {
                 "~/Views/Backend/{0}.cshtml",
                 "~/Views/Backend/{1}/{0}.cshtml",
                 "~/Views/Backend/Shared/{0}.cshtml",
-
+                "~/Views/{areaname}/{0}.cshtml",
+                "~/Views/{areaname}/{1}/{0}.cshtml",
+                "~/Views/{areaname}/Shared/{0}.cshtml",
+                
                 "~/Views/{2}/{1}/{0}.cshtml",
                 "~/Views/{2}/{1}/{0}.vbhtml",
                 "~/Views/{2}/Shared/{0}.cshtml",
@@ -38,6 +42,10 @@
             "~/Views/Backend/{0}.cshtml",
                 "~/Views/Backend/{1}/{0}.cshtml",
                 "~/Views/Backend/Shared/{0}.cshtml",
+
+                    "~/Views/{areaname}/{0}.cshtml",
+                "~/Views/{areaname}/{1}/{0}.cshtml",
+                "~/Views/{areaname}/Shared/{0}.cshtml",
                 "~/Views/{2}/{1}/{0}.vbhtml",
                 "~/Views/{2}/Shared/{0}.cshtml",
                 "~/Views/{2}/Shared/{0}.vbhtml"
@@ -47,6 +55,9 @@
                "~/Views/Backend/{0}.cshtml",
                 "~/Views/Backend/{1}/{0}.cshtml",
                 "~/Views/Backend/Shared/{0}.cshtml",
+                 "~/Views/{areaname}/{0}.cshtml",
+                "~/Views/{areaname}/{1}/{0}.cshtml",
+                "~/Views/{areaname}/Shared/{0}.cshtml",
                 "~/Views/{2}/{1}/{0}.vbhtml",
                 "~/Views/{2}/Shared/{0}.cshtml",
                 "~/Views/{2}/Shared/{0}.vbhtml"
@@ -131,8 +142,15 @@
             //UserSettings USR = new UserSettings(U);
             //string theme = USR.getSetting("USER_THEME").Value.ToString();
 
-               // if (String.IsNullOrEmpty(theme)) theme = System.Configuration.ConfigurationManager.AppSettings["nfcmsThemeAtFirstRun"].ToString();
-               string theme = "nftheme";
+               // if (String.IsNullOrEmpty(theme)) theme = System.Configuration.ConfigurationManager.AppSettings["ren_cmsThemeAtFirstRun"].ToString();
+               string theme = "ren.cms";
+               if (!HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Installer"))
+               {
+                   GlobalSettings GS = new GlobalSettings();
+                   nSetting Setting = GS.getSetting("GENERAL_THEME");
+                   if (Setting != null && Setting.Value != null && !String.IsNullOrEmpty(Setting.Value.ToString()))
+                       theme = (string)Setting.Value;
+               }
             return theme;
         }
 
@@ -184,9 +202,11 @@
         {
             var virtualPath = string.Empty;
             searchedLocations = new string[locations.Length];
+            string areaName = (string)controllerContext.RouteData.DataTokens["area"];
+
             for (var i = 0; i < locations.Length; i++)
             {
-                var str2 = string.Format(CultureInfo.InvariantCulture, locations[i], new object[] { name, controllerName, themeName });
+                var str2 = string.Format(CultureInfo.InvariantCulture, locations[i].Replace("{areaname}", areaName), new object[] { name, controllerName, themeName });
 
                 if (FileExists(controllerContext, str2))
                 {
@@ -197,6 +217,10 @@
                 }
                 searchedLocations[i] = str2;
             }
+
+            //Search for AreaName
+             
+
             return virtualPath;
         }
 

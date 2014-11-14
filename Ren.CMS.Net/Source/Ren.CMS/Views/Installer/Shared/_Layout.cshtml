@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Ren.CMS Installation</title>
+    @Styles.Render("~/Content/Installer/bootstrap/bootstrap.css", "~/Content/Installer/bootstrap-wizard.css", "~/Content/Installer/chosen/chosen.css");
+ 
+ 
+    <style type="text/css">
+        .wizard-modal p {
+            margin: 0 0 10px;
+            padding: 0;
+        }
+
+        #wizard-ns-detail-servers, .wizard-additional-servers {
+            font-size: 12px;
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+
+            #wizard-ns-detail-servers > li, .wizard-additional-servers li {
+                line-height: 20px;
+                list-style-type: none;
+            }
+
+                #wizard-ns-detail-servers > li > img {
+                    padding-right: 5px;
+                }
+
+        .wizard-modal .chzn-container .chzn-results {
+            max-height: 150px;
+        }
+
+        .wizard-addl-subsection {
+            margin-bottom: 40px;
+        }
+
+        .create-server-agent-key {
+            margin-left: 15px;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+   
+    @RenderBody()
+
+
+    @Scripts.Render("~/Scripts/Installer/jquery-2.0.3.min.js", "~/Scripts/Installer/bootstrap.js", "~/Scripts/Installer/bootstrap-wizard.js", "~/Scripts/Installer/chosen.jquery.js", "~/Scripts/Installer/prettify.js")
+    @RenderSection("scripts",false)
+    
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+
+@{
+    List<Ren.CMS.Content.nContent.nAttachment> Attachs = (List<Ren.CMS.Content.nContent.nAttachment>)ViewData["Gallery"];
+    Ren.CMS.Content.nContent News = (Ren.CMS.Content.nContent)ViewData["News"];
+    
+    
+    }
+
+
+
+    @foreach (Ren.CMS.Content.nContent.nAttachment Img in Attachs)
+    { 
+    
+    
+    <li class="gitem">
+    @if (ViewBag.Type == "IMG")
+    {
+ <a href="@Img.Path"  rel="shadowbox[news]"><img src="@Img.Path" alt="@News.Title Bild" style="max-width:64px; max-height:64px"/></a> 
+    }
+    else { 
+    
+     <div>
+ 
+ <a href="@Img.Path"  rel="shadowbox[newsv]" class="videolink">
+
+ <img src="/Content/themes/ren.cms/images/btnPlay.png" style="border:0" alt="@Img.Title abspielen" title="@Img.Title abspielen" /></a> 
+ 
+<br />
+
+<b>@Img.Title</b>
+</div>
+    
+    
+    }
+    
+ </li>
+    
+    
+    
+    }

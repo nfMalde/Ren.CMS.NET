@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Backend_User_Desktops (
+CREATE TABLE ren_cms_Backend_User_Desktops (
 		Icon VARCHAR (250) NULL 
 		, iconID INT NOT NULL 
 		, id INT IDENTITY(1,1) NOT NULL 

@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_SettingModels (
+CREATE TABLE ren_cms_SettingModels (
 		CID INT NULL 
 		, id INT IDENTITY(1,1) NOT NULL 
 		, SettingDefaultValue TEXT NULL 

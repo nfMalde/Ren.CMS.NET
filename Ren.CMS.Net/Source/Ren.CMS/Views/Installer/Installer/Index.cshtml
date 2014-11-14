@@ -1,0 +1,375 @@
+﻿@model InstallModule.Installer.Models.InstallWizardModel
+
+
+<div class="wizard" id="rencmswizard" data-title="Ren.CMS.NET Install Wizard">
+    <div class="wizard-card" data-cardname="card1">
+        <h3>Howdy!</h3>
+        @{
+            Html.RenderPartial("_Welcome");
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card2">
+        <h3>License</h3>
+        @{
+            Html.RenderPartial("_License", Model);
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card3">
+        <h3>Installation Type</h3>
+        @{
+            Html.RenderPartial("_InstallType", Model);
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card4" data-validate="validateDB">
+        <h3>Database Connection</h3>
+        @{
+            Html.RenderPartial("_DatabaseConnection", Model);
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card5">
+        <h3>Summary</h3>
+        @{
+            Html.RenderPartial("_Summary", Model);
+        }
+    </div>
+
+
+    <div class="wizard-card" data-cardname="card6">
+        <h3>Install</h3>
+        @{
+            Html.RenderPartial("_Install", Model);
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card7">
+        <h3>Create Admin Account</h3>
+        @{
+            Html.RenderPartial("_CreateAdmin", Model);
+        }
+    </div>
+
+    <div class="wizard-card" data-cardname="card8">
+        <h3>Finish</h3>
+        @{
+            Html.RenderPartial("_Finish", Model);
+        }
+    </div>
+</div>
+
+
+@section scripts{
+<script>
+    $(function () {
+        $('#serverbrowser').modal({ show: false });
+        $('#findServer').click(function (e) {
+            e.preventDefault();
+            $(this).fadeOut(function () {
+                $('#serverbrowser').modal("show");
+            });
+
+        });
+ 
+        $('#serverbrowser').on("hidden.bs.modal", function () {
+            $('#findServer').fadeIn();
+        })
+        $('#serverSelector').find("select").change(function () {
+            var val = $(this).val();
+            $('.server-instance').find("input").val(val);
+            $('#serverSelector .close').click();
+        });
+
+        $('.serverbrowserclose').click(function () {
+            $('#serverbrowser').modal("hide");
+        });
+
+        $('.server-auth select').change(function () {
+            if ($(this).val() == '1') {
+                $('.server-username').fadeOut();
+                $('.server-password').fadeOut();
+            }
+            else {
+
+                $('.server-username').fadeIn();
+                $('.server-password').fadeIn();
+            }
+        });
+
+    });
+</script>
+
+    <script>
+        $(function () {
+            var options = { showClose: false, backdrop: 'static', contentWidth: 1050, contentHeight: 800};
+            var wizard = $("#rencmswizard").wizard(options);
+            wizard.show();
+
+            $('#recheck').click(function (e) {
+                e.preventDefault();
+               
+                summaryCheck();
+            });
+
+            function writeSummaryStatus($code)
+            {
+                var sp = $('#summary-status').val().split('-');
+                sp.push($code);
+               
+                $('#summary-status').val(sp.join('-'));
+                if ($('#summary-status').val().indexOf('-') == 0)
+                    $('#summary-status').val($('#summary-status').val().substr(1));
+
+            }
+
+            function summaryCheck() {
+                $.post('@Url.Action("GetSummaryTree")', function (data) {
+
+                    $('#summary-content').html(data);
+                $('#summary-status').val('');
+                //Hiding Buttons
+                wizard.hideButtons();
+                //Field Definition
+                var licenseField = $('#summary-license');
+                var installMethod = $('#summary-install-method');
+
+                //Check License
+                if ($('input[name="LicenseAccepted"]').is(":checked")) {
+
+
+                    licenseField.addClass("text-success");
+                    licenseField.css("font-weight", "bolder");
+                    licenseField.text("License: Accepted");
+                }
+                else {
+                    licenseField.addClass("text-danger");
+                    licenseField.css("font-weight", "bolder");
+                    licenseField.text("License: Not Accepted");
+                }
+
+                //Check Install Method
+                var summaryTextInstallType = '';
+                var summaryStatusInstallType = '';
+                switch ($('input[name="InstallationType"]').val()) {
+                    case '1':
+                        summaryTextInstallType = 'Full Installation';
+                        summaryStatusInstallType = 'text-success';
+                        break;
+                    case '2':
+                        summaryTextInstallType = 'Update';
+                        summaryStatusInstallType = 'text-success';
+                        break;
+                    default:
+                        summaryTextInstallType = 'Not selected';
+                        summaryStatusInstallType = 'text-danger';
+                        break;
+                }
+
+                installMethod.addClass(summaryStatusInstallType);
+                installMethod.css("font-weight", 'bold');
+                installMethod.text(summaryTextInstallType);
+
+                var servername = $('#summary-servername');
+                var serverAuth = $('#summary-auth');
+                var serverDB = $('#summary-db');
+                var serverUsername = $('#summary-username-server');
+                var serverPassword = $('#summary-password-server');
+                
+
+
+                //Add Summary for Server Data
+                var sInstance = $('input[name="ServerInstance"]').val()
+                servername.text("Servername: " + sInstance);
+                var sAuth = $('select[name="Auth"]').val();
+                var sAuthText = '';
+                switch(sAuth)
+                {
+                    case '1':
+                        sAuthText = 'Windows Authentification';
+                        $('#summary-username-server').hide();
+                        $('#summary-password-server').hide();
+                        break;
+                    case '2':
+                        sAuthText = 'User Authentification';
+                        $('#summary-username-server').show();
+                        $('#summary-password-server').show();
+                        $('#summary-username-server').text('Username: '+ $('input[name="ServerUserName"]').val());
+                        $('#summary-password-server').text('Password: ' + $('input[name="ServerPassword"]').val());
+                        break;
+                    default:
+
+                        break;
+                }
+                serverAuth.text("Authentification-Method: " + sAuthText);
+                $('#summary-db').text('Database: '+ $('input[name="Database"]').val())
+                $('#connectionString').val("Generating please wait...");
+                
+             
+                $.post('@Url.Action("getConnectionString")', wizard.cards.card4.el.find(":input").serialize(), function (data) {
+
+                    if (data.success == true) {
+                        $('#connectionString').removeClass('text-danger');
+                        $('#connectionString').val(data.connectionString);
+                    }
+                    else{
+                        $('#connectionString').addClass('text-danger');
+                        $('#connectionString').val('Error generating Connection-String');
+                        $('<p/>').text(data.error).insertAfter($('#connectionString'));
+
+                    }
+                    var summaryTest = $('#summary-connectiontest');
+                    summaryTest.text("Connectiontest: Pending...");
+                    var constr = { connectionString: data.connectionString };
+                    $.post('@Url.Action("testConnection")', constr , function (data) {
+                        var testClass = '';
+                        var testText = '';
+                        if (data.ok) {
+                            summaryTest.text("Connectiontest: Success.");
+                            summaryTest.addClass('text-success');
+                            $.post('@Url.Action("SystemRequirements")', constr, function (data) {
+                                var ul = $('#summary-system');
+                                ul.find("li").remove();
+
+                                for (var i = 0; i < data.data.length; i++) {
+                                    if (data.data[i].failure == true)
+                                        writeSummaryStatus('E');
+                                    else if (data.data[i].cssClass == 'text-warning')
+                                        writeSummaryStatus('W');
+                                    else
+                                        writeSummaryStatus('S');
+
+                                    var li = $('<li/>');
+                                    $(li).append('<strong>' + data.data[i].title + "</strong>");
+                                    var nUl = $('<ul/>');
+                                    $(nUl).append("<li>Required: " + data.data[i].required + "</li>");
+                                    $(nUl).append("<li class=\"" + data.data[i].cssClass + "\">Actual: " + data.data[i].actual + "</li>");
+
+                                    $(li).append(nUl);
+                                    $(ul).append(li);
+                                }
+                                wizard.showButtons();
+
+                            }, 'json');
+                        }
+                        else {
+                            summaryTest.text("Connectiontest: Failure. ("+ data.error +")");
+                            summaryTest.addClass('text-danger');
+                            //Show Buttons
+                            wizard.showButtons();
+
+                        }
+
+
+                    },'json')
+
+
+
+                }, 'json');
+
+
+
+
+
+
+
+
+                //Add Summary for System Requirements
+            });
+
+        }
+
+            wizard.cards.card5.on('selected', function () {
+                alert(true);
+                summaryCheck();
+
+            });
+
+        });
+
+        //Validation
+        function validateDB(card)
+        {
+
+            card.el.find(".popover").remove();
+            var valiDateUrl = "@Url.Action("ValidateDB")";
+            var connectionOK = false;
+            var serverinstance = card.el.find(".server-instance").find("input").val();
+            var authType = card.el.find(".server-auth").find("select").val();
+            var username = card.el.find(".server-username").find("input").val();
+            var password = card.el.find(".server-password").find("input").val();
+
+            switch(authType)
+            {
+                case '1':
+                    if (serverinstance == '') {
+                        card.wizard.errorPopover(card.el.find(".server-instance").find("input"), "Server instance cannot be empty");
+                        return false;
+                    }
+                    break;
+                case '2':
+                    if (serverinstance.trim() == '') {
+                        card.wizard.errorPopover(card.el.find(".server-instance").find("input"), "Server instance cannot be empty");
+                        return false;
+                    }
+                    if (username.trim() == '') {
+                        card.wizard.errorPopover(card.el.find(".server-username").find("input"), "Username cannot be empty");
+                        return false;
+                    }
+                    if (password.trim() == '') {
+                        card.wizard.errorPopover(card.el.find(".server-password").find("input"), "Password cannot be empty");
+                        return false;
+                    }
+                    break;
+                default:
+                    card.wizard.errorPopover(card.el.find(".server-auth").find("select"), "Please select an authentification method.");
+                    return false;
+                    break;
+            }
+
+
+            return true;
+        }
+        function validateLicense(el) {
+
+            var retValue = {};
+
+            if (!el.is(":checked")) {
+                retValue.status = false;
+                retValue.msg = "You need to accept the license to continue";
+            }
+            else {
+                retValue.status = true;
+            }
+
+            return retValue;
+        }
+
+        function validateInstallType(el)
+        {
+            var retValue = {};
+            //Radio Buttons!!!
+            var name = $(el).attr("name");
+            var checked = false;
+            $(el).closest(".form-group").find("input").filter(function () {
+
+                return $(this).attr("type") == "radio" && $(this).attr("name") == name;
+            }).each(function () {
+                if ($(this).is(":checked"))
+                    checked = true;
+            });
+
+            if (checked) {
+                retValue.status = true;
+            }
+            else
+            {
+                retValue.status = false;
+                retValue.msg = "Please select an installation type";
+            }
+
+            return retValue;
+        }
+    </script>
+}

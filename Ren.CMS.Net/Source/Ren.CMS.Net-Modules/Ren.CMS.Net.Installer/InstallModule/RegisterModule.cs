@@ -47,8 +47,8 @@
 
             );*/
 
-            context.MapRenCMSRoute("Install1", "Installer/{action}",
-                  new { controller = "Installer", action = "Start", id = "" },
+            context.MapRenCMSRoute("InstallModule_1", "Installer/{action}",
+                  new { controller = "Installer", action = "Index"},
                   thisNamespace);
 
             RegisterAreaEmbeddedResources();

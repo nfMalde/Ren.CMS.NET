@@ -18,7 +18,7 @@ namespace Ren.CMS.Persistence.Mapping
 
         public ContentMap()
         {
-            Table("nfcms_Content");
+            Table("ren_cms_Content");
             Schema("dbo");
             Lazy(false);
             Id<int>(x => x.Id, map => {

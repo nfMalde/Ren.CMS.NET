@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Backend_Widgets (
+CREATE TABLE ren_cms_Backend_Widgets (
 		definedHeight INT NULL 
 		, definedWidth INT NULL 
 		, Icon VARCHAR (50) NULL DEFAULT ('Defaulticon.png')

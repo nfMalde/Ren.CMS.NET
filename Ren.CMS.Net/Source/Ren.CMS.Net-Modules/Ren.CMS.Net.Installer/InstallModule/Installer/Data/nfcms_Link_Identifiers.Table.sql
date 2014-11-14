@@ -1,2 +1,2 @@
-INSERT INTO nfcms_Link_Identifiers (identiferName, theme) VALUES( 'TOP', 'nftheme')
-INSERT INTO nfcms_Link_Identifiers (identiferName, theme) VALUES( 'NAVI', 'nftheme')
+INSERT INTO ren_cms_Link_Identifiers (identiferName, theme) VALUES( 'TOP', 'ren.cms')
+INSERT INTO ren_cms_Link_Identifiers (identiferName, theme) VALUES( 'NAVI', 'ren.cms')

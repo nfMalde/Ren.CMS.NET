@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Content_Attachment (
+CREATE TABLE ren_cms_Content_Attachment (
 		aTitle VARCHAR (150) NULL 
 		, attachment_type VARCHAR (255) NOT NULL 
 		, AttachmentArgument VARCHAR (250) NULL 

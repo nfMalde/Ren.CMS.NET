@@ -97,7 +97,7 @@
                 }
                     Sql.SysDisconnect();
 
-                    throw new Exception("Table "+ tableName +" does not exists or nfcms was unable to load Table Shema");
+                    throw new Exception("Table "+ tableName +" does not exists or ren_cms was unable to load Table Shema");
 
                 }
                 else

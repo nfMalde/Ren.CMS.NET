@@ -163,6 +163,14 @@
             //>
         }
 
+        public static void DeletePermissionKey(string key)
+        {
+            Ren.CMS.Persistence.Base.BaseRepository<Ren.CMS.Persistence.Domain.Permissionkey> repo = new Persistence.Base.BaseRepository<Persistence.Domain.Permissionkey>();
+            var one = repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.Permissionkey>(e => e.Pkey == key));
+            if (one != null)
+                repo.Delete(one);
+        }
+
         private static bool _registerPermissionKey(string PermissionKey, bool DefaultValue, string languageLineName)
         {
             SqlHelper.SqlHelper SQL = new SqlHelper.SqlHelper();

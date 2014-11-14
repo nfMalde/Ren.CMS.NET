@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Links (
+CREATE TABLE ren_cms_Links (
 		HoverStateClass VARCHAR (50) NULL 
 		, id INT IDENTITY(1111,1212) NOT NULL 
 		, LinkAction VARCHAR (255) NULL 

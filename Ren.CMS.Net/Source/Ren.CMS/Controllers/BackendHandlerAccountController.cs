@@ -185,7 +185,7 @@
                     FormsAuthentication.SetAuthCookie(User.UserName, false);
                 }
 
-                hasPerm = nPermissions.hasPermission("USR_CAN_VIEW_BACKEND");
+                hasPerm = nPermissions.hasPermission("USR_CAN_ENTER_BACKEND");
                 string uname =
                     (User != null ? User.UserName : "Guest");
 

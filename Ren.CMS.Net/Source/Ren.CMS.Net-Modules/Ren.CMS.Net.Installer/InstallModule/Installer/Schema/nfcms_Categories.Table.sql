@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Categories (
+CREATE TABLE ren_cms_Categories (
 		contentType VARCHAR (255) NOT NULL 
 		, longName VARCHAR (255) NOT NULL 
 		, PKID UNIQUEIDENTIFIER ROWGUIDCOL NOT NULL 

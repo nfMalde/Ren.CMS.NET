@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Users_Settings (
+CREATE TABLE ren_cms_Users_Settings (
 		id INT IDENTITY(1111,1212) NOT NULL 
 		, settingName VARCHAR (250) NOT NULL 
 		, settingValue VARCHAR (250) NOT NULL 

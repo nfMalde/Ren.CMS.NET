@@ -18,7 +18,7 @@ namespace Ren.CMS.Persistence.Domain
             get; set;
         }
 
-        public virtual string Val
+        public virtual bool Val
         {
             get; set;
         }

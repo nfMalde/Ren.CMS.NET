@@ -1,0 +1,41 @@
+﻿@model Ren.CMS.Models.EditProfileModel
+
+
+
+
+@{
+    Ren.CMS.Models.ChangeAvatar MDL = new Ren.CMS.Models.ChangeAvatar();
+
+    MDL.nMaxFileSize = Model.nMaxFileSize;
+    MDL.nMaxHeight = Model.nMaxHeight;
+    MDL.nMinHeight = Model.nMinHeight;
+    MDL.nMinWidth = Model.nMinWidth;
+    MDL.nMaxWidth = Model.nMaxWidth;
+    MDL.ProfileImage = Model.ProfileImage;
+    MDL.ProfilePictureFileTypes = Model.ProfilePictureFileTypes;
+    MDL.User = Model.User;
+    MDL.picname = Model.picname;
+    ViewBag.Title = Model.title;
+    this.InitHelpers();
+    HeadLoader.addCSS("/Content/themes/ren.cms/jquery.fileupload-ui.css", this.ViewContext.Controller.ControllerContext);
+    HeadLoader.addScript("/Scripts/jquery.fileupload.js", ViewContext.Controller.ControllerContext);
+ 
+    
+}
+
+<div id="content">
+<h2>Profil ändern</h2>
+ @{Html.RenderPartial("../Shared/_LocationBar", ViewData);}
+
+@{
+    
+    
+    Html.RenderPartial("ChangeAvatar",MDL);
+    
+}
+
+ 
+            
+
+
+</div>

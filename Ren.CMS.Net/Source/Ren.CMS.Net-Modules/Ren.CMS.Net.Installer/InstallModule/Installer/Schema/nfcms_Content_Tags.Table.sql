@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Content_Tags (
+CREATE TABLE ren_cms_Content_Tags (
 		contentType VARCHAR (50) NOT NULL 
 		, enableBrowsing INT NOT NULL 
 		, id INT IDENTITY(1,1) NOT NULL 

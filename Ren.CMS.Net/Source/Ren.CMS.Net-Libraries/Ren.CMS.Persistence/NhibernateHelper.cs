@@ -13,7 +13,7 @@
 
     using Ren.CMS.Persistence.Domain;
     using Ren.CMS.Persistence.Mapping;
-
+ 
     public class NHibernateHelper
     {
         #region Fields
@@ -87,11 +87,13 @@
         }
 
         public static ISession OpenSession()
-        {
-            if(_currentSession == null || (!_currentSession.IsConnected || !_currentSession.IsOpen))
-            _currentSession = SessionFactory.OpenSession();
+        { //Check if Ren.CMS is installed
+             
+                if (_currentSession == null || (!_currentSession.IsConnected || !_currentSession.IsOpen))
+                    _currentSession = SessionFactory.OpenSession();
 
-            return SessionFactory.OpenSession();
+                return SessionFactory.OpenSession();
+           
         }
 
         private static void ConfigureAssemblies()

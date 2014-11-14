@@ -202,11 +202,11 @@
           <Line Name="LANG_CAN_MANAGE_SMTP_DESCRIPTION">Benutzer darf Mail Layouts verwalten.</Line>
           <Line Name="LANG_CAN_CONFIGURE_CONTENTTYPES_DESCRIPTION">Benutzer kann Inhaltstypen konfigurieren</Line>
         </Package>
-        <Package Name="NFTHEME">
-          <Line Name="LANG_NFTHEME_NEWS_CBOX_HEADER">News</Line>
-          <Line Name="LANG_NFTHEME_ARTICLE_CBOX_HEADER">Spieletests</Line>
-          <Line Name="LANG_NFTHEME_FORUM_CBOX_HEADER">Neues aus dem Forum</Line>
-          <Line Name="LANG_NFTHEME_MOST_DISCUSSED_CBOX_HEADER">Heiß diskutiert</Line>
+        <Package Name="ren.cms">
+          <Line Name="LANG_ren.cms_NEWS_CBOX_HEADER">News</Line>
+          <Line Name="LANG_ren.cms_ARTICLE_CBOX_HEADER">Spieletests</Line>
+          <Line Name="LANG_ren.cms_FORUM_CBOX_HEADER">Neues aus dem Forum</Line>
+          <Line Name="LANG_ren.cms_MOST_DISCUSSED_CBOX_HEADER">Heiß diskutiert</Line>
         </Package>
         <Package Name="CONTENT_MANAGEMENT">
           <Line Name="LANG_CONTENT_DIALOG_DELETE_TEXT">Möchten Sie diesen Inhalt wirklich löschen?</Line>
@@ -354,11 +354,11 @@
           <Line Name="LANG_CAN_MANAGE_SMTP_DESCRIPTION">User can manage mail layouts</Line>
           <Line Name="LANG_CAN_CONFIGURE_CONTENTTYPES_DESCRIPTION">User cann configure content types</Line>
         </Package>
-        <Package Name="NFTHEME">
-          <Line Name="LANG_NFTHEME_NEWS_CBOX_HEADER">News</Line>
-          <Line Name="LANG_NFTHEME_ARTICLE_CBOX_HEADER">Game tests</Line>
-          <Line Name="LANG_NFTHEME_FORUM_CBOX_HEADER">Latest forum posts</Line>
-          <Line Name="LANG_NFTHEME_MOST_DISCUSSED_CBOX_HEADER">Most Discussed</Line>
+        <Package Name="ren.cms">
+          <Line Name="LANG_ren.cms_NEWS_CBOX_HEADER">News</Line>
+          <Line Name="LANG_ren.cms_ARTICLE_CBOX_HEADER">Game tests</Line>
+          <Line Name="LANG_ren.cms_FORUM_CBOX_HEADER">Latest forum posts</Line>
+          <Line Name="LANG_ren.cms_MOST_DISCUSSED_CBOX_HEADER">Most Discussed</Line>
         </Package>
         <Package Name="Permissions">
           <Line Name="LANG_PERMISSIONS_TEST_KEY_DESCRIPTION">TEST ENG!</Line>

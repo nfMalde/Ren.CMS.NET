@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Users_Settings_Table (
+CREATE TABLE ren_cms_Users_Settings_Table (
 		DataType VARCHAR (50) NULL 
 		, id INT IDENTITY(1111,1212) NOT NULL 
 		, s_type CHAR (10) NULL 

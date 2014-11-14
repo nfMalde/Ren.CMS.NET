@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Language (
+CREATE TABLE ren_cms_Language (
 		Code VARCHAR (128) NOT NULL 
 		, Content TEXT NOT NULL 
 		, Name VARCHAR (255) NOT NULL 

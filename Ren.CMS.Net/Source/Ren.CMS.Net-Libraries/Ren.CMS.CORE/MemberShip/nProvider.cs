@@ -1620,7 +1620,7 @@
                 }
                 catch(Exception e) {
 
-                    throw new Exception("ERROR in nfCMS: " + e.Message + " in QUERY: " + query);
+                    throw new Exception("ERROR in ren_cms: " + e.Message + " in QUERY: " + query);
 
                 }
             }

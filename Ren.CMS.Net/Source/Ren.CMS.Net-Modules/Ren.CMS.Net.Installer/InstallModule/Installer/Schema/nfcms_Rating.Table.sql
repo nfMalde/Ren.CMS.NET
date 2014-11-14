@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Rating (
+CREATE TABLE ren_cms_Rating (
 		GroupID INT NOT NULL 
 		, id INT IDENTITY(1111,1212) NOT NULL 
 		, langCode VARCHAR (55) NOT NULL 

@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Routing_Synonyms (
+CREATE TABLE ren_cms_Routing_Synonyms (
 		action VARCHAR (150) NOT NULL 
 		, controller VARCHAR (150) NOT NULL 
 		, name VARCHAR (150) NOT NULL 

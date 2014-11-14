@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Content (
+CREATE TABLE ren_cms_Content (
 		cDate DATETIME NULL 
 		, CID UNIQUEIDENTIFIER NOT NULL 
 		, Content TEXT NOT NULL 

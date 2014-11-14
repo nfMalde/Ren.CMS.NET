@@ -1,4 +1,4 @@
-CREATE TABLE nfcms_Internal_Rating (
+CREATE TABLE ren_cms_Internal_Rating (
 		id INT IDENTITY(1,1) NOT NULL 
 		, refid INT NOT NULL 
 		, stars INT NOT NULL 
