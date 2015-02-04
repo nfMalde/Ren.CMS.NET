@@ -136,6 +136,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\recaptcha.1.0.5.0\lib\.NetFramework 4.0\Recaptcha.dll</HintPath>
     </Reference>
+    <Reference Include="RouteDebugger">
+      <HintPath>..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
+    </Reference>
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.0.2.2.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
