@@ -144,7 +144,7 @@
 
                // if (String.IsNullOrEmpty(theme)) theme = System.Configuration.ConfigurationManager.AppSettings["ren_cmsThemeAtFirstRun"].ToString();
                string theme = "ren.cms";
-               if (!HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Installer"))
+               if (!HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/en-US/Installer"))
                {
                    GlobalSettings GS = new GlobalSettings();
                    nSetting Setting = GS.getSetting("GENERAL_THEME");

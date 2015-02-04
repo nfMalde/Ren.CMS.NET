@@ -42,14 +42,14 @@
                 string ServerKey = "";
                 string ServerDisplay = "";
 
-                if (row["ServerName"] != null)
+                if (row["ServerName"] != null && row["ServerName"] != DBNull.Value)
                 {
                     ServerKey = (string)row["ServerName"];
                     ServerDisplay = (string)row["ServerName"];
 
                 }
 
-                if (row["InstanceName"] != null)
+                if (row["InstanceName"] != null && row["InstanceName"] != DBNull.Value)
                 {
                     ServerKey = (string)row["InstanceName"];
                     ServerDisplay = (string)row["InstanceName"];
