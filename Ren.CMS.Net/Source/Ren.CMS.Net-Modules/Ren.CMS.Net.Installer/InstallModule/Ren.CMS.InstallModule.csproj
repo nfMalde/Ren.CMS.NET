@@ -47,6 +47,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
@@ -54,14 +60,16 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="Microsoft.VisualBasic.Compatibility.Data" />
-    <Reference Include="Microsoft.Web.Mvc">
-      <HintPath>..\..\..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
+    <Reference Include="Microsoft.Web.Mvc, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Mvc4Futures.4.0.20710.0\lib\net40\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="MVC Foolproof Validation">
       <HintPath>..\..\..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
     </Reference>
-    <Reference Include="MvcContrib">
-      <HintPath>..\..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
+    <Reference Include="MvcContrib, Version=3.0.0.99, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\StudioDonder.MvcContrib.Mvc4.3.0.0.99\lib\MvcContrib.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,7 +91,6 @@
       <HintPath>..\..\..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.Entity" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,6 +104,10 @@
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.4.0.40804.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -123,171 +134,164 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.3.0.20105.1\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Providers">
       <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Installer\Controllers\InstallerController.cs" />
-    <Compile Include="Installer\Models\InstallerModels.cs" />
+    <Compile Include="Areas\Installer\Controllers\InstallerController.cs" />
+    <Compile Include="Areas\Installer\Models\InstallerModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterModule.cs" />
+    <Compile Include="Areas\Installer\RegisterModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Installer\config.xml" />
-    <None Include="Installer\Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Installer\Data\nfcms_Article_Rating.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Backend_Desktop_Backgrounds.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Backend_Desktop_Icons.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Backend_Menu.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Backend_User_Desktops.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Backend_Widgets.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Categories.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_Attachment.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_Attachment_Roles.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_ClickCounter.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_Tags.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_Tags2Content.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Content_Types.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FilemanagementControllers.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FilemanagementControllersAcceptMimeTypes.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FilemanagementControllersAcceptProfiles.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FileManagementFileSettings.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FileManagementProfiles.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FileManagementProfiles2FileSettings.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Files.Table.sql" />
-    <Content Include="Installer\Data\nfcms_FileSettingValues.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Global_Settings.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Internal_Pro_Contra.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Internal_Rating.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Language.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Lang_Codes.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Links.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Links2Identfiers.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Link_Identifiers.Table.sql" />
-    <Content Include="Installer\Data\nfcms_PermissionGroups.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Permissionkeys.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Permissions2Groups.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Permissions2Users.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Profile_User_Values.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Profile_Vars.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Rating.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Rating_Groups.Table.sql" />
-    <Content Include="Installer\Data\nfcms_RegisteredMIMETypes.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Routing_Synonyms.Table.sql" />
-    <Content Include="Installer\Data\nfcms_SettingCategories.Table.sql" />
-    <Content Include="Installer\Data\nfcms_SettingModels.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Settings2Permissions.Table.sql" />
-    <Content Include="Installer\Data\nfcms_SettingStores.Table.sql" />
-    <Content Include="Installer\Data\nfcms_SettingStores2Locales.Table.sql" />
-    <Content Include="Installer\Data\nfcms_SettingValues.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Sub_Categories.Table.sql" />
-    <Content Include="Installer\Data\nfcms_User2Settingvalues.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Users.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Users_Settings.Table.sql" />
-    <Content Include="Installer\Data\nfcms_Users_Settings_Table.Table.sql" />
-    <Content Include="Installer\Data\nfmcs_Internal_Rating.Table.sql" />
-    <Content Include="Installer\nfserverExporter.exe" />
-    <Content Include="Installer\Schema\nfcms_Article_Rating.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Backend_Desktop_Backgrounds.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Backend_Desktop_Icons.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Backend_Menu.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Backend_User_Desktops.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Backend_Widgets.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Categories.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_Attachment.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_Attachment_Roles.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_ClickCounter.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_Tags.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_Tags2Content.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Content_Types.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FilemanagementControllers.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FilemanagementControllersAcceptMimeTypes.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FilemanagementControllersAcceptProfiles.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FileManagementFileSettings.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FileManagementProfiles.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FileManagementProfiles2FileSettings.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Files.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_FileSettingValues.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Global_Settings.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Internal_Pro_Contra.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Internal_Rating.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Language.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Lang_Codes.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Links.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Links2Identfiers.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Link_Identifiers.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_PermissionGroups.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Permissionkeys.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Permissions2Groups.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Permissions2Users.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Profile_User_Values.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Profile_Vars.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Rating.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Rating_Groups.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_RegisteredMIMETypes.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Routing_Synonyms.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_SettingCategories.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_SettingModels.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Settings2Permissions.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_SettingStores.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_SettingStores2Locales.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_SettingValues.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Sub_Categories.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_User2Settingvalues.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Users.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Users_Settings.Table.sql" />
-    <Content Include="Installer\Schema\nfcms_Users_Settings_Table.Table.sql" />
-    <Content Include="Installer\Schema\nfmcs_Internal_Rating.Table.sql" />
-    <Content Include="Installer\Scripts\jquery-1.7.1.js" />
-    <Content Include="Installer\Scripts\jquery-1.7.1.min.js" />
-    <None Include="Installer\Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Installer\Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Installer\Scripts\jquery-ui-1.8.20.min.js" />
-    <Content Include="Installer\Scripts\jquery.validate.js" />
-    <Content Include="Installer\Scripts\jquery.validate.min.js" />
-    <Content Include="Installer\Scripts\modernizr-2.5.3.js" />
-    <None Include="Installer\Web.config.exclude" />
-    <None Include="Installer\Web.config.Debug.exclude">
+    <Content Include="Areas\Installer\config.xml" />
+    <None Include="Areas\Installer\Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Areas\Installer\Data\nfcms_Article_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Backend_Desktop_Backgrounds.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Backend_Desktop_Icons.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Backend_Menu.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Backend_User_Desktops.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Backend_Widgets.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Categories.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_Attachment.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_Attachment_Roles.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_ClickCounter.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_Tags.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_Tags2Content.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Content_Types.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FilemanagementControllers.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FilemanagementControllersAcceptMimeTypes.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FilemanagementControllersAcceptProfiles.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FileManagementFileSettings.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FileManagementProfiles.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FileManagementProfiles2FileSettings.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Files.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_FileSettingValues.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Global_Settings.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Internal_Pro_Contra.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Internal_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Language.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Lang_Codes.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Links.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Links2Identfiers.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Link_Identifiers.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_PermissionGroups.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Permissionkeys.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Permissions2Groups.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Permissions2Users.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Profile_User_Values.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Profile_Vars.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Rating_Groups.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_RegisteredMIMETypes.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Routing_Synonyms.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_SettingCategories.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_SettingModels.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Settings2Permissions.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_SettingStores.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_SettingStores2Locales.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_SettingValues.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Sub_Categories.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_User2Settingvalues.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Users.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Users_Settings.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfcms_Users_Settings_Table.Table.sql" />
+    <Content Include="Areas\Installer\Data\nfmcs_Internal_Rating.Table.sql" />
+    <Content Include="Areas\Installer\nfserverExporter.exe" />
+    <Content Include="Areas\Installer\Schema\nfcms_Article_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Backend_Desktop_Backgrounds.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Backend_Desktop_Icons.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Backend_Menu.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Backend_User_Desktops.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Backend_Widgets.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Categories.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_Attachment.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_Attachment_Roles.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_ClickCounter.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_Tags.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_Tags2Content.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Content_Types.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FilemanagementControllers.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FilemanagementControllersAcceptMimeTypes.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FilemanagementControllersAcceptProfiles.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FileManagementFileSettings.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FileManagementProfiles.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FileManagementProfiles2FileSettings.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Files.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_FileSettingValues.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Global_Settings.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Internal_Pro_Contra.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Internal_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Language.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Lang_Codes.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Links.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Links2Identfiers.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Link_Identifiers.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_PermissionGroups.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Permissionkeys.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Permissions2Groups.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Permissions2Users.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Profile_User_Values.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Profile_Vars.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Rating_Groups.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_RegisteredMIMETypes.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Routing_Synonyms.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_SettingCategories.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_SettingModels.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Settings2Permissions.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_SettingStores.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_SettingStores2Locales.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_SettingValues.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Sub_Categories.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_User2Settingvalues.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Users.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Users_Settings.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfcms_Users_Settings_Table.Table.sql" />
+    <Content Include="Areas\Installer\Schema\nfmcs_Internal_Rating.Table.sql" />
+    <Content Include="Areas\Installer\Scripts\jquery-1.7.1.js" />
+    <Content Include="Areas\Installer\Scripts\jquery-1.7.1.min.js" />
+    <None Include="Areas\Installer\Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Areas\Installer\Scripts\jquery-ui-1.8.20.js" />
+    <Content Include="Areas\Installer\Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.validate.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.validate.min.js" />
+    <Content Include="Areas\Installer\Scripts\modernizr-2.5.3.js" />
+    <None Include="Areas\Installer\Web.config.exclude" />
+    <None Include="Areas\Installer\Web.config.Debug.exclude">
       <DependentUpon>Web.config.exclude</DependentUpon>
     </None>
-    <None Include="Installer\Web.config.Release.exclude">
+    <None Include="Areas\Installer\Web.config.Release.exclude">
       <DependentUpon>Web.config.exclude</DependentUpon>
     </None>
-    <Content Include="Installer\Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Installer\Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Installer\Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Installer\Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Installer\Scripts\MicrosoftAjax.js" />
-    <Content Include="Installer\Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Installer\Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Installer\Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Installer\Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Installer\Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Areas\Installer\Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftAjax.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftAjax.debug.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftMvcAjax.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Areas\Installer\Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="nfserverExporter.exe.config" />
-    <Content Include="web.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
+    <Content Include="Web.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
     </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Installer\App_Data\" />
+    <Folder Include="Areas\Installer\App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

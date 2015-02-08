@@ -230,13 +230,15 @@ namespace Ren.CMS
             if (String.IsNullOrEmpty(ConfigurationManager.ConnectionStrings["ren_cms"].ConnectionString))
             {
                 string area = (HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] != null ? (string) HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] : null);
-                bool isInstaller = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Installer"));
+                bool isInstaller = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/en-US/Installer"));
                 bool isContent = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Content"));
                 bool isScripts = (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/Scripts"));
+                HttpContextBase currentContext = new HttpContextWrapper(HttpContext.Current);
+                RouteData routeData = RouteTable.Routes.GetRouteData(currentContext);
 
                 if (!isInstaller && !isScripts && !isContent)
                 {
-                    string url = UrlHelper.GenerateContentUrl("~/Installer/Index", Request.RequestContext.HttpContext);
+                    string url = UrlHelper.GenerateContentUrl("~/en-US/Installer/Index", Request.RequestContext.HttpContext);
                     Response.Redirect(url);
                 }
 
@@ -289,6 +291,7 @@ namespace Ren.CMS
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             MvcContrib.UI.InputBuilder.InputBuilder.BootStrap();
+          
             RegisterRoutes(RouteTable.Routes);
 
             ModelBinders.Binders.Add(typeof(nContentPostModel), new nContentPostMdlBinder());
