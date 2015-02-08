@@ -23,7 +23,7 @@ namespace Ren.CMS.Persistence.Mapping
             Property(x => x.Topic, map => map.NotNullable(true));
             Property(x => x.Refid, map => map.NotNullable(true));
             Property(x => x.Stars, map => map.NotNullable(true));
-            Property(x => x.Id, map => map.NotNullable(true));
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
         }
 
         #endregion Constructors

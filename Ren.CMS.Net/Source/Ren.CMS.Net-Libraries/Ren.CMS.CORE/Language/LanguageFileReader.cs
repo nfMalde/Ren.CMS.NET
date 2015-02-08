@@ -35,14 +35,18 @@ namespace Ren.CMS.CORE.Language
             LanguageFile LFile = new LanguageFile();
             LFile.Header = new LanguageFileHeader() { LangCode = headerLangCode, Title = headerTitle, LangName = headerLangName};
             LFile.Lines = new List<LanguageFileLine>();
-            XmlNodeList Lines = Doc.SelectNodes("//lines/line");
-            foreach(XmlNode Node in Lines)
+            XmlNodeList Packages = Doc.SelectNodes("/languageFile/package");
+            foreach(XmlNode Node in Packages)
             {
-                XmlNode Name = Node.SelectSingleNode("/name");
-                XmlNode Package = Node.SelectSingleNode("/package");
-                XmlNode Value = Node.SelectSingleNode("/value");
+                foreach (XmlNode line in Node.SelectNodes("line"))
+                {
 
-                LFile.Lines.Add(new LanguageFileLine() { LanguageLineName = Name.InnerText, LanguageLineValue = Value.InnerText, LanguagePackage = Package.InnerText });
+                    XmlNode Name = line.SelectSingleNode("name");
+
+                    XmlNode Value = line.SelectSingleNode("value");
+
+                    LFile.Lines.Add(new LanguageFileLine() { LanguageLineName = Name.InnerText, LanguageLineValue = Value.InnerText, LanguagePackage = Node.Attributes["name"].Value });
+                }
             }
 
             this.LangFile = LFile;

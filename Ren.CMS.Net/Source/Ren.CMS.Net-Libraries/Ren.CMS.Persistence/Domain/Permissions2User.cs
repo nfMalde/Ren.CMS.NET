@@ -8,6 +8,8 @@ namespace Ren.CMS.Persistence.Domain
     {
         #region Properties
 
+        public virtual int Id { get; set; }
+
         public virtual string GroupID
         {
             get; set;

@@ -20,6 +20,7 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"Permissions2Users");
             Schema("dbo");
             Lazy(true);
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.Pk);
             Property(x => x.GroupID);
             Property(x => x.Val);

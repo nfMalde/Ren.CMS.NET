@@ -1,6 +1,8 @@
 ﻿@model InstallModule.Installer.Models.InstallWizardModel
 
-
+@{
+    Model.Prefix = "rencms_";
+}
 <div class="form-group">
         <a href="javascript:void(0);" class="btn btn-link" id="findServer"><span class="glyphicon glyphicon-search"></span> Find Server</a>
 </div>
@@ -34,10 +36,7 @@
         @Html.LabelFor(e => e.ServerInstance)
         @Html.TextBoxFor(e => e.ServerInstance, new { @class = "form-control" })
     </div>
-    <div class="form-group server-database">
-        @Html.LabelFor(e => e.Database)
-        @Html.TextBoxFor(e => e.Database)
-    </div>
+
 
     <div class="form-group server-auth">
         @Html.LabelFor(e => e.Auth)
@@ -52,10 +51,24 @@
 
     <div class="form-group server-password" style="display:none">
         @Html.LabelFor(e => e.ServerPassword)
-        @Html.TextBoxFor(e => e.ServerPassword, new { @class = "form-control" })
+        @Html.PasswordFor(e => e.ServerPassword, new { @class = "form-control" })
+    </div>
+    <div class="form-group server-database">
+        @Html.LabelFor(e => e.Database)
+
+        
+        <a href="javascript:void(0);" class="btn btn-link" id="selectDatabases"> -- Select Databases --</a>
+        <select id="dbselector" class="form-control" style="display:none">
+            <option class="option-label"> -- Please select ---</option>
+        </select>
+        <p id="dbselect_errors" class="text-danger" style="display:none"></p>
+        @Html.TextBoxFor(e => e.Database, new { @class = "form-control" })
     </div>
 
-
+    <div class="form-group server-prefix">
+        @Html.LabelFor(e => e.Prefix)
+        @Html.TextBoxFor(e => e.Prefix, new { @class = "form-control" })
+    </div>
 </div>
  
  

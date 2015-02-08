@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<BackendDesktopIcon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <langLine>LANG_DESKTOPICONS_CONTENT_TAGS</langLine>
+  <Icon>fa fa fa-tags</Icon>
+  <Action>widget:CONTENT_TAGS:open</Action>
+</BackendDesktopIcon>

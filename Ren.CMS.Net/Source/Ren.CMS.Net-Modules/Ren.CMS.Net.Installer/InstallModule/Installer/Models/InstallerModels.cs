@@ -13,7 +13,10 @@
     using Ren.CMS.Persistence;
     using System.ComponentModel.DataAnnotations;
     using Ren.CMS.nModules.Helper;
-using System.Web.Mvc;
+    using System.Web.Mvc;
+
+
+ 
 
     #region Enumerations
     public enum RequirementRule
@@ -76,6 +79,27 @@ using System.Web.Mvc;
         public string connectionString { get; set; }
 
     }
+
+    public class GetDatabasesModel
+    {
+        [Required]
+        [Display(Name = "Server")]
+        public string ServerInstance { get; set; }
+
+        [Required]
+        public DBAuthTypeEnum Auth { get; set; }
+
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Username")]
+        public string ServerUserName { get; set; }
+
+        [RequiredIf("Auth", 2)]
+        [Display(Name = "Password")]
+        public string ServerPassword { get; set; }
+ 
+    }
+   
+
     public class GenerateConnectioStringModel
     {
         [Required]
@@ -127,12 +151,31 @@ using System.Web.Mvc;
         public string Database { get; set; }
 
         [Required]
+        [Display(Name = "Table Prefix")]
+        public string Prefix { get; set; }
+
+        [Required]
+        public string[] Languages { get; set; }
+
+        [Required]
+        public string DefaultLanguageFile { get; set; }
+
+        [Required]
         [MinLength(5)]
         public string connectionString { get; set; }
 
         public string ServerSelector { get; set; }
 
     }
+
+    public class CurrentlyInstalledLanguages
+    {
+        public string Name { get; set; }
+        public string LangCode { get; set; }
+        public int Count { get; set; }
+        public string File { get; set; }
+    }
+
 
     public enum DBAuthTypeEnum
     {

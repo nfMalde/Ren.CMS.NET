@@ -1052,6 +1052,7 @@
     <Content Include="Content\Installer\img\folder.png" />
     <Content Include="Content\Installer\img\groups.png" />
     <Content Include="Content\Installer\img\server_new.png" />
+    <Content Include="Content\Installer\Installer.css" />
     <Content Include="Content\jquery.dataTables.columnFilter.js" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\nftheme\bootstrap\css\bootstrap-theme.min.css" />
@@ -1067,7 +1068,25 @@
     <Content Include="Content\nftheme\videojs\video-js-skins\vim.css" />
     <Content Include="Content\nftheme\videojs\video-js.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Install\BackendDesktopIcons\APPS.dktico.xml" />
+    <Content Include="Install\BackendDesktopIcons\CONTENT_CATEGORIES.dktico.xml" />
+    <Content Include="Install\BackendDesktopIcons\CONTENT_LIST.dktico.xml" />
+    <Content Include="Install\BackendDesktopIcons\CONTENT_TAGS.dktico.xml" />
+    <Content Include="Install\BackendWidgets\APPS.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\CHANGE_BACKGROUND.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\CONTENT_CATEGORIES.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\CONTENT_LIST.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\CONTENT_TAGS.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\CREATE_CONTENT.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\EDIT_CATEGORY.wdgt.xml" />
+    <Content Include="Install\BackendWidgets\EDIT_CONTENT.wdgt.xml" />
+    <Content Include="Install\Languages\Language-de-DE_TEST.lng.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="LanguagePackagesInstall\Installation.de-DE.en-US.Alpha.msi.xml" />
+    <Content Include="Install\Languages\Language-de-DE.lng.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="log4net.config" />
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\nftheme\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
@@ -1118,6 +1137,7 @@
     <Content Include="Scripts\ckeditor\skins\bootstrapck\scss\config\_defaults.scss" />
     <Content Include="Scripts\ckeditor\skins\bootstrapck\scss\dialog\dialog.scss" />
     <Content Include="Scripts\Installer\bootstrap-wizard.js" />
+    <Content Include="Scripts\Installer\Installer.js" />
     <Content Include="Scripts\Installer\jquery-2.0.3.min.map" />
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
@@ -4982,6 +5002,7 @@
     <Content Include="Views\Installer\Shared\_CreateAdmin.cshtml" />
     <Content Include="Views\Installer\Shared\_Finish.cshtml" />
     <Content Include="Views\Installer\Shared\_SummaryContent.cshtml" />
+    <Content Include="Views\Installer\Shared\_Languages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\chosen-sprite%402x.png" />

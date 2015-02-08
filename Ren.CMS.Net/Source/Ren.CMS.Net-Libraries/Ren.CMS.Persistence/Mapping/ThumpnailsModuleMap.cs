@@ -20,7 +20,7 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"Thumpnails_Module");
             Schema("dbo");
             Lazy(true);
-            Property(x => x.Id, map => map.NotNullable(true));
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.AtID, map => map.NotNullable(true));
             Property(x => x.LastModification, map => map.NotNullable(true));
             Property(x => x.Path);

@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<languageFile>
+  <header>
+    <title>German Language - SIE</title>
+    <langCode>de-DE</langCode>
+    <langName>deutsch</langName>
+  </header>
+
+ 
+ 
+  <package name="Permissions">
+    <line>
+      <name>LANG_PERMISSIONS_WRITE_COMMENTS</name>
+      <value>User kann Kommentare verfassen?</value>
+    </line>
+  
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_DELETE_CONTENT_TAGS_DESCRIPTION</name>
+      <value>Benutzer darf Tags für Inhalte löschen</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_EDIT_CONTENT_TAGS_DESCRIPTION</name>
+      <value>Benutzer darf Tags für Inhalte bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_ADD_CONTENT_TAGS_DESCRIPTION</name>
+      <value>Benutzer darf Tags für Inhalte hinzufügen</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_EDIT_CONTENT_CATEGORY_DESCRIPTION</name>
+      <value>Benutzer darf Kategorien für Inhalte bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_UPLOAD_CONTENT_ATTACHMENTS_DESCRIPTION</name>
+      <value>Benutzer darf Dateien für Inhalte hochladen</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_DELETE_CONTENT_ATTACHMENTS_DESCRIPTION</name>
+      <value>Benutzer darf Dateien für Inhalte löschen (Wirkungslos wenn Benutzer Inhalte löschen darf!)</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_EDIT_CONTENT_ATTACHMENTS_DESCRIPTION</name>
+      <value>Benutzer darf hochgeladene Dateien für Inhalte anpassen</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_DELETE_CONTENTS_DESCRIPTION</name>
+      <value>Benutzer darf Inhalte löschen (Erlaubt den Benutzer ebenfalls Dateien für Inhalte zu löschen!)</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_DELETE_CONTENT_CATEGORIES_DESCRIPTION</name>
+      <value>Benutzer darf Kategorien für Inhalte löschen</value>
+    </line>
+    <line>
+      <name>LANG_PERMISSIONS_USR_CAN_ADD_CONTENT_CATEGORY_DESCRIPTION</name>
+      <value>Benutzer darf Kategorien für Inhalte hinzufügen</value>
+    </line>
+    <line>
+      <name>USR_CAN_DELETE_CONTENT_TAGS</name>
+      <value>Benutzer darf Tags für Inhalte löschen</value>
+    </line>
+    <line>
+      <name>USR_CAN_EDIT_CONTENT_TAGS</name>
+      <value>Benutzer darf Tags für Inhalte bearbeiten</value>
+    </line>
+    <line>
+      <name>USR_CAN_ADD_CONTENT_TAGS</name>
+      <value>Benutzer darf Tags für Inhalte hinzufügen</value>
+    </line>
+    <line>
+      <name>USR_CAN_EDIT_CONTENT_CATEGORY</name>
+      <value>Benutzer darf Kategorien für Inhalte bearbeiten</value>
+    </line>
+    <line>
+      <name>USR_CAN_UPLOAD_CONTENT_ATTACHMENTS</name>
+      <value>Benutzer darf Dateien für Inhalte hochladen</value>
+    </line>
+    <line>
+      <name>USR_CAN_DELETE_CONTENT_ATTACHMENTS</name>
+      <value>Benutzer darf Dateien für Inhalte löschen (Wirkungslos wenn Benutzer Inhalte löschen darf!)</value>
+    </line>
+    <line>
+      <name>USR_CAN_EDIT_CONTENT_ATTACHMENTS</name>
+      <value>Benutzer darf hochgeladene Dateien für Inhalte anpassen</value>
+    </line>
+    <line>
+      <name>USR_CAN_DELETE_CONTENTS</name>
+      <value>Benutzer darf Inhalte löschen (Erlaubt den Benutzer ebenfalls Dateien für Inhalte zu löschen!)</value>
+    </line>
+    <line>
+      <name>USR_CAN_DELETE_CONTENT_CATEGORIES</name>
+      <value>Benutzer darf Kategorien für Inhalte löschen</value>
+    </line>
+    <line>
+      <name>USR_CAN_ADD_CONTENT_CATEGORY</name>
+      <value>Benutzer darf Kategorien für Inhalte hinzufügen</value>
+    </line>
+    <line>
+      <name>USR_CAN_EDIT_CONTENT</name>
+      <value>Benutzer darf Inhalte bearbeiten.</value>
+    </line>
+    <line>
+      <name>USR_CAN_CREATE_CONTENT</name>
+      <value>Benutzer darf Inhalte erstellen.</value>
+    </line>
+  </package>
+ 
+  <package name="GLOBAL_SETTINGS">
+    <line>
+      <name>LANG_GLB_SETTING_ID0_GLOBAL_INDEX_MAX_ENTRIES_LABEL_GENERATED</name>
+      <value>Maximale Einträge auf der Startseite</value>
+    </line>
+    <line>
+      <name>LANG_GLB_SETTING_ID0_GLOBAL_INDEX_MAX_ENTRIES_DESCR_GENERATED</name>
+      <value>Hier können Sie die Maximalanzahl der Beiträge auf der Startseite einstellen</value>
+    </line>
+    <line>
+      <name>LANG_GLB_SETTING_ID0_GLOBAL_ADDTHIS_ENABLED_LABEL_GENERATED</name>
+      <value>AddThis aktiv</value>
+    </line>
+    <line>
+      <name>LANG_GLB_SETTING_ID0_GLOBAL_ADDTHIS_ENABLED_DESCR_GENERATED</name>
+      <value>Soll Addthis(&amp;copy) zum hinzufügen der Share Buttons (FaceBook, Google+ etc...) geladen werden?</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTPSERVER</name>
+      <value>SMTP Server</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTP_PORT</name>
+      <value>SMTP Port</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTPLOGIN</name>
+      <value>Benutzername</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTP_PASSWORD</name>
+      <value>Passwort</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SENDER_EMAILADDRESS</name>
+      <value>Absender Emailadresse</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SENDERNAME</name>
+      <value>Abesendername</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTP_REQUIRES_AUTH</name>
+      <value>Ausgangsserver erfordert Authorisierung</value>
+    </line>
+    <line>
+      <name>LANG_MAILER_SMTP_REQUIRES_HTTPS</name>
+      <value>Ausgangsserver erfordert HTTPS</value>
+    </line>
+    <line>
+      <name>LANG_GLB_CONVERT_MOVIE</name>
+      <value>Aktivieren, um die automatische Umwandlung in *.mp4 von Video Anängen zu ermöglichen. Benötigt Ausführrechte der FFMEG.exe</value>
+    </line>
+    <line>
+      <name>LANG_GLB_CONVERT_MOVIE_LABEL</name>
+      <value>Videos automatisch umwandeln</value>
+    </line>
+    <line>
+      <name>LANG_GLB_CONVERT_MOVIE_FFMEG_PATH</name>
+      <value>Geben Sie hier den kompletten physikalischen Pfad zur FFMPEG.exe an.</value>
+    </line>
+    <line>
+      <name>LANG_GLB_CONVERT_MOVIE_FFMEG_PATH_LABEL</name>
+      <value>Pfad zur FFPMEG.exe</value>
+    </line>
+  </package>
+  <package name="ACCOUNT">
+    <line>
+      <name>LANG_ACCOUNT_SUCCESS_TEXT</name>
+      <value>Deine Daten wurden erfolgreich gespeichert.</value>
+    </line>
+    <line>
+      <name>LANG_ACCOUNT_SUCCESS_TITLE</name>
+      <value>Daten gespeichert</value>
+    </line>
+    <line>
+      <name>LANG_ACCOUNT_SUCCESS_TITLE_ERROR</name>
+      <value>Fehler beim Speichern</value>
+    </line>
+    <line>
+      <name>LANG_ACCOUNT_SUCCESS_TEXT_ERROR</name>
+      <value>Es konnten %%NUMBER%% Daten nicht gespeichert werden. Fehlende Zugriffsrechte oder Serverfehler.</value>
+    </line>
+  </package>
+  <package name="DESKTOP_ICONS">
+    <line>
+      <name>LANG_DESKTOPICON_APPLICATIONS</name>
+      <value>Anwendungen</value>
+    </line>
+    <line>
+      <name>LANG_DESKTOPICON_MANAGECONTENT</name>
+      <value>Inhalte verwalten</value>
+    </line>
+    <line>
+      <name>LANG_DESKTOP_ICONS_CONTENT_CATEGORIES</name>
+      <value>Kategorien verwalten</value>
+    </line>
+    <line>
+      <name>LANG_DESKTOPICONS_CONTENT_TAGS</name>
+      <value>Inhalte-Tags verwalten</value>
+    </line>
+    <line>
+      <name>LANG_DESKTOPICON_USERMANAGEMENT</name>
+      <value>Benutzerverwaltung</value>
+    </line>
+    <line>
+      <name>LANG_DESKTOPICONS_MAILER_SETTINGS</name>
+      <value>E-Mail Einstellungen</value>
+    </line>
+  </package>
+  <package name="SETTING_STORES">
+    <line>
+      <name>LANG_STORE_SHOW_EMAIL_YES</name>
+      <value>Ja</value>
+    </line>
+    <line>
+      <name>LANG_STORE_SHOW_EMAIL_NO</name>
+      <value>Nein</value>
+    </line>
+    <line>
+      <name>LANG_STORE_RECIEVE_PMS_YES</name>
+      <value>Ja</value>
+    </line>
+    <line>
+      <name>LANG_STORE_RECIEVE_PMS_NO</name>
+      <value>Nein</value>
+    </line>
+    <line>
+      <name>LANG_STORE_PROFILE_PUBLIC_ALL</name>
+      <value>Alle Besucher</value>
+    </line>
+    <line>
+      <name>LANG_STORE_PROFILE_PUBLIC_ONLY_REGGED</name>
+      <value>Nur angemeldete Besucher</value>
+    </line>
+    <line>
+      <name>LANG_STORE_PROFILE_PUBLIC_ONLY_FRIENDS</name>
+      <value>Nur meine Freunde</value>
+    </line>
+    <line>
+      <name>LANG_STORE_PROFILE_PUBLIC_NOT</name>
+      <value>Nicht öffentlich</value>
+    </line>
+  </package>
+  <package name="BACKEND_WIDGETS">
+    <line>
+      <name>LANG_BACKEND_WIDGETS_APPS_TITLE</name>
+      <value>Anwendungen</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_CONTENT_CATEGORIES_TITLE</name>
+      <value>Kategorien verwalten</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_CHANGE_BACKGROUND_TITLE</name>
+      <value>Hintergrund ändern</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_UPLOAD_BACKGROUND_IMAGE_TITLE</name>
+      <value>Hintergrundbild hochladen</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_NEW_CATEGORY_TITLE</name>
+      <value>Neue Kategorie erstellen</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_EDIT_CATEGORY_TITLE</name>
+      <value>Kategorie bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_EDIT_CONTENT_TITLE</name>
+      <value>Inhalt bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_CREATE_CONTENT_TITLE</name>
+      <value>Inhalt anlegen</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_CONTENT_LIST_TITLE</name>
+      <value>Inhalte verwalten</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_CONTENT_TAGS_TITLE</name>
+      <value>Inhalte-Tags verwalten</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_USER_MANAGEMENT_TITLE</name>
+      <value>Benutzerverwaltung</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_WIDGETS_SETTINGS_MAILER_TITLE</name>
+      <value>E-Mail Einstellungen</value>
+    </line>
+  </package>
+  <package name="CONTENT_TYPES">
+    <line>
+      <name>LANG_CTYPE_ENEWS</name>
+      <value>Newsbeiträge</value>
+    </line>
+    <line>
+      <name>LANG_CTYPE_EARTICLE</name>
+      <value>Artikel</value>
+    </line>
+  </package>
+  
+  <package name="BACKEND-CATEGORIES">
+    <line>
+      <name>LANG_BACKEND_CATLIST_NEW</name>
+      <value>Neue Kategorie</value>
+    </line>
+    <line>
+      <name>LANG_BACKEND_CATLIST_PLEASE_SELECT_CT</name>
+      <value>Bitte w&amp;auml;hlen Sie einen Inhaltstyp aus, um Kategorien zu verwalten.</value>
+    </line>
+  </package>
+  <package name="GLOBAL">
+    <line>
+      <name>LANG_GLOBAL_EDIT_SINGLE</name>
+      <value>Bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_GLOBAL_DELETE_SINGLE</name>
+      <value>L&amp;ouml;schen</value>
+    </line>
+    <line>
+      <name>LANG_GLOBAL_REFRESH_SINGLE</name>
+      <value>Aktualisieren</value>
+    </line>
+  </package>
+  <package name="CONTENT_TAGS">
+    <line>
+      <name>C_TAGS_CREATE</name>
+      <value>Tag erstellen</value>
+    </line>
+    <line>
+      <name>C_TAGS_EDIT</name>
+      <value>Tag bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_CT_TAGS_DELETE_MSG</name>
+      <value>M&amp;ouml;chten Sie das Tag wirklich löschen?</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_TAGS_ERROR_DELETE_SUCC</name>
+      <value>Das Tag wurde erfolgreich gel&amp;ouml;scht.</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_TAGS_ERROR_DELETE_FAILED</name>
+      <value>Das Tag konnte nicht gel&amp;ouml;scht werden. Grund hierfür k&amp;ouml;nnen fehlende Rechte sein.</value>
+    </line>
+    <line>
+      <name>LANG_CT_GRID_CONTENTTYPE</name>
+      <value>Inhaltstyp</value>
+    </line>
+    <line>
+      <name>LANG_CT_GRID_TAGNAME</name>
+      <value>Tag Name</value>
+    </line>
+    <line>
+      <name>LANG_CT_GRID_BROWSING</name>
+      <value>Durchsuchen aktiviert</value>
+    </line>
+    <line>
+      <name>LANG_CT_TAGS_HELPTEXT</name>
+      <value>     &lt;b&gt;Tags&lt;/b&gt; sind Stichworte/Besonderheiten von Inhalten, welche oft für die Suchmaschinen hervorgehoben werden oder Benutzern die Möglichkeit bietet weitere getaggte Inhalte zu lesen. Tags sind ähnlich wie Kategorien und können je nach Bedarf auch eine eigene Unterseite in diversen Modulen bekommen (Sofern das Modul diese Funktion unterstützt).Beliebt als Tags sind Marken, Hersteller oder Platformen (z.B. Windows, Linux, X-Box...)        &lt;br /&gt;</value>
+    </line>
+    <line>
+      <name>LANG_CT_GRID_TITLE</name>
+      <value>Auflistung aller Tags</value>
+    </line>
+    <line>
+      <name>LANG_CT_TAGS_NOT_EXISTING</name>
+      <value>Das angeforderte Tag existiert nicht. M&amp;ouml;glicher Weise wurde es bereits gel&amp;ouml;scht!</value>
+    </line>
+  </package>
+  <package name="ROOT">
+    <line>
+      <name>LANG_SHARED_YES</name>
+      <value>Ja</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_NO</name>
+      <value>Nein</value>
+    </line>
+  </package>
+  <package name="Root">
+    <line>
+      <name>LANG_SHARED_SUCCESS</name>
+      <value>Erfolg:</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_ERROR</name>
+      <value>Fehler:</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_SAVE</name>
+      <value>Speichern</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_ABORT</name>
+      <value>Abbrechen</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_CLICK_HERE_FOR_INFO</name>
+      <value>Klicken Sie hier um die Hilfe anzuzeigen</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_HIDE_HELP</name>
+      <value>Hilfe ausblenden</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_ADD</name>
+      <value>Hinzuf&amp;uuml;gen</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_EDIT</name>
+      <value>Bearbeiten</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_DELETE</name>
+      <value>L&amp;ouml;schen</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_MESSAGE_FORM_NOT_VALID</name>
+      <value>Ihre Angaben sind fehlerhaft und müssen korrigiert werden.</value>
+    </line>
+    <line>
+      <name>LANG_SHARED_MESSAGE_FORM_CONTENT_SAVED</name>
+      <value>Sie haben den Inhalt erfolgreich aktualisiert.</value>
+    </line>
+  </package>
+  <package name="USERS_BACKEND">
+    <line>
+      <name>LANG_M_USERS_PKID</name>
+      <value>Eind. ID</value>
+    </line>
+    <line>
+      <name>LANG_M_USERS_UNAME</name>
+      <value>Benutzername</value>
+    </line>
+    <line>
+      <name>LANG_M_USERS_PGROUP</name>
+      <value>Benutzergruppe</value>
+    </line>
+    <line>
+      <name>LANG_M_USERS_LOCKED</name>
+      <value>Gesperrt?</value>
+    </line>
+    <line>
+      <name>LANG_M_USERS_GRID_TITLE</name>
+      <value>Benutzerverwaltung</value>
+    </line>
+    <line>
+      <name>LANG_M_USERS_GRID_BTN_ADD</name>
+      <value>Benutzer erstellen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_CREATE_TITLE</name>
+      <value>Benutzer anlegen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_CREATE</name>
+      <value>Erstellen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_GENERATE_PW</name>
+      <value>Passwort generieren</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_PASSWORD</name>
+      <value>Passwort</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_PASSWORD_CONFIRM</name>
+      <value>Passwort best&amp;auml;tigen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_SECRET_QUESTION</name>
+      <value>Geheime Frage</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_STATUS</name>
+      <value>Benutzerstatus</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_STATUS_ACTIVATED</name>
+      <value>Aktiviert</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_STATUS_DEACTIVATED</name>
+      <value>Deaktiviert</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_LOCK</name>
+      <value>Benutzer sperren</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_EMAIL</name>
+      <value>E-Mail Adresse</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_INFORM_USER</name>
+      <value>Benutzer benachrichtigen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_INFORM_USER_YES</name>
+      <value>Benutzer benachrichtigen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_INFORM_USER_NO</name>
+      <value>Benutzer nicht benachrichtigen</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_COMMENT</name>
+      <value>Internes Kommentar</value>
+    </line>
+    <line>
+      <name>LANG_FM_DIALOG_COMMENT_NO_COMMENT</name>
+      <value>Kein Kommentar</value>
+    </line>
+  </package>
+  <package name="PERMISSION_KEYS">
+    <line>
+      <name>LANG_CAN_MANAGE_MAIL_LAYOUTS_DESCRIPTION</name>
+      <value>Benutzer darf Mail Layouts verwalten.</value>
+    </line>
+    <line>
+      <name>LANG_CAN_MANAGE_SMTP_DESCRIPTION</name>
+      <value>Benutzer darf Mail Layouts verwalten.</value>
+    </line>
+    <line>
+      <name>LANG_CAN_CONFIGURE_CONTENTTYPES_DESCRIPTION</name>
+      <value>Benutzer kann Inhaltstypen konfigurieren</value>
+    </line>
+  </package>
+ 
+  <package name="CONTENT_MANAGEMENT">
+    <line>
+      <name>LANG_CONTENT_DIALOG_DELETE_TEXT</name>
+      <value>Möchten Sie diesen Inhalt wirklich löschen?</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_TITLE</name>
+      <value>Titel</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_CREATOR</name>
+      <value>Erstellt von</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_CATEGORY</name>
+      <value>Kategorie</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_CREATION_DATE</name>
+      <value>Erstelldatum</value>
+    </line>
+    <line>
+      <name>LANG_CONTENTS</name>
+      <value>Inhalte</value>
+    </line>
+    <line>
+      <name>LANG_CONTENT_TYPE</name>
+      <value>Art des Inhaltes</value>
+    </line>
+  </package> 
+</languageFile>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<BackendDesktopIcon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <langLine>LANG_DESKTOP_ICONS_CONTENT_CATEGORIES</langLine>
+  <Icon>fa fa-folder-open</Icon>
+  <Action>widget:CONTENT_CATEGORIES:open</Action>
+</BackendDesktopIcon>

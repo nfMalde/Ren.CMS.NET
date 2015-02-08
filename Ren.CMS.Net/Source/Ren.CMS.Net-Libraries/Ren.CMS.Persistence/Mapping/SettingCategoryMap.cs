@@ -20,7 +20,8 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"SettingCategories");
             Schema("dbo");
             Lazy(true);
-            Property(x => x.Id, map => map.NotNullable(true));
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
+//            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.Name, map => map.NotNullable(true));
             Property(x => x.CatRel, map => map.NotNullable(true));
         }

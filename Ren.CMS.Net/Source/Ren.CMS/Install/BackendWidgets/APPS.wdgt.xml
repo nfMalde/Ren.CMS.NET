@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<BackendWidget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <widgetName>APPS</widgetName>
+  <definedWidth>0</definedWidth>
+  <definedHeight>0</definedHeight>
+  <neededPermission>USR_CAN_ENTER_BACKEND</neededPermission>
+  <widgetPartialView>widget_apps</widgetPartialView>
+  <Icon>fa fa-tachometer</Icon>
+</BackendWidget>

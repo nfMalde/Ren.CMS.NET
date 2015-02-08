@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<BackendWidget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <widgetName>CONTENT_LIST</widgetName>
+  <definedWidth>500</definedWidth>
+  <definedHeight>340</definedHeight>
+  <neededPermission>USR_CAN_ENTER_BACKEND</neededPermission>
+  <widgetPartialView>list</widgetPartialView>
+  <Icon>fa fa-pencil-square-o</Icon>
+</BackendWidget>

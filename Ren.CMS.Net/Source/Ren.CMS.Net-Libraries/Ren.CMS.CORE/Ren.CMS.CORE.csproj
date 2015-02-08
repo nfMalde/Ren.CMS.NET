@@ -105,6 +105,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\BackendDesktopIcon.cs" />
+    <Compile Include="Backend\BackendWidget.cs" />
     <Compile Include="Captcha\Captcha.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="CoreModels\Models.cs" />

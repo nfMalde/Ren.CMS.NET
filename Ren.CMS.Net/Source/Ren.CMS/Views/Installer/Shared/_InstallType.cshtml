@@ -4,13 +4,13 @@
     <div class="installation-type btn btn-default btn-block text-left">
         <h3>Full-Installation</h3>
         <p>New Installation. All contents of will be deleted and re-installed. Changes made on Ren.CMS Tables will be lost.</p>
-        @Html.RadioButtonFor(e => e.InstallationType, 1, new { data_validate = "validateInstallType" })
+        @Html.RadioButtonFor(e => e.InstallationType, 1)
     </div>
 
     <div class="installation-type btn-default btn btn-block text-left">
         <h3>Update</h3>
         <p>Updating Database Schema if exists or performing fresh install with no sample / default data.</p>
-        @Html.RadioButtonFor(e => e.InstallationType, 2, new { data_validate = "validateInstallType" })
+        @Html.RadioButtonFor(e => e.InstallationType, 2)
     </div>
 
 </div>

@@ -26,7 +26,7 @@ namespace Ren.CMS.Persistence.Mapping
                 map.Generator(Generators.Identity);
 
             });
-            //Property(x => x.Id, map => map.NotNullable(true));
+            //Id(x => x.Id, map => map.Generator(Generators.Identity));
 
             Property(x => x.Cid, map =>
             {

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<BackendDesktopIcon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <langLine>LANG_DESKTOPICON_MANAGECONTENT</langLine>
+  <Icon>fa fa-pencil-square-o</Icon>
+  <Action>widget:CONTENT_LIST:open</Action>
+</BackendDesktopIcon>

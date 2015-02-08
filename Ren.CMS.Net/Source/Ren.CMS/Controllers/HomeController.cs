@@ -48,23 +48,7 @@
             if (id<1) page = 1;
 
             int max = 0;
-            if (String.IsNullOrEmpty(INDEX_MAX)) {
-                nSetting N1 = new nSetting();
-                N1.Value = 10;
-                N1.Name = "GLOBAL_INDEX_MAX_ENTRIES";
-                N1.Label = "Maximale Einträge auf der Startseite";
-                N1.Description = "Hier können Sie die Maximalanzahl der Beiträge auf der Startseite einstellen";
-                N1.SettingType =  nSettingType.SettingString;
-                N1.ValueType =  nValueType.ValueString;
-                N1.PermissionFrontend = null;
-                N1.DefaultValue = 10;
-                N1.PermissionBackend = "USR_IS_ADMIN";
-                N1.CategoryName = "Contents";
-                bool ok = G.AddSetting(N1);
-                if(ok) maxX =N1;
-
-            }
-
+         
             max = maxX.toInt();
 
             Ren.CMS.Content.ContentManagement.GetContent News = new Ren.CMS.Content.ContentManagement.GetContent(new string[] {

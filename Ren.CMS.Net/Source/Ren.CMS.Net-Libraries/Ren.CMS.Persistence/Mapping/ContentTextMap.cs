@@ -40,7 +40,7 @@ namespace Ren.CMS.Persistence.Mapping
             });
             Property(x => x.LangCode, map => map.NotNullable(true));
 
-            //Property(x => x.Id, map => map.NotNullable(true));
+            //Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.Title, map => map.NotNullable(true));
 
             Property(x => x.Seoname);

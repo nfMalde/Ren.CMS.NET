@@ -20,7 +20,7 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"Users_Settings_Table");
             Schema("dbo");
             Lazy(true);
-            Property(x => x.Id, map => map.NotNullable(true));
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.SettingName, map => map.NotNullable(true));
             Property(x => x.SettingDefaultVal);
             Property(x => x.SettingLangLine);

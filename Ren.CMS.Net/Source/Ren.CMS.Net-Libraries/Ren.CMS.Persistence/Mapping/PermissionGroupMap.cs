@@ -20,7 +20,8 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"PermissionGroups");
             Schema("dbo");
             Lazy(true);
-            Property(x => x.Id, map => map.NotNullable(true));
+         
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.GroupName, map => map.NotNullable(true));
             Property(x => x.IsGuestGroup, map => map.NotNullable(true));
             Property(x => x.IsDefaultGroup, map => map.NotNullable(true));

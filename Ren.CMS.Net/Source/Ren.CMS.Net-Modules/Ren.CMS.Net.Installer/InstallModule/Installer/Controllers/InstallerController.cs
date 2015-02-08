@@ -22,6 +22,7 @@
     using Ren.CMS.Persistence.Base;
     using System.Data.Sql;
     using System.Runtime.InteropServices;
+    using System.Data;
     public class InstallerController : Controller
     {
         #region Methods
@@ -76,8 +77,61 @@
             SelectList AuthsList = new SelectList(Auths, "Key", "Value");
             ViewBag.Auths = AuthsList;
 
+            Dictionary<string, LanguageFileReader> LanguageFiles = new Dictionary<string, LanguageFileReader>();
+            List<string> ParserErrors = new List<string>();
+            //Check for installed versions...
+            List<CurrentlyInstalledLanguages> Currently = new List<CurrentlyInstalledLanguages>();
+            try
+            {
+                BaseRepository<Ren.CMS.Persistence.Domain.LangCode> Langs = new BaseRepository<Ren.CMS.Persistence.Domain.LangCode>();
+                var listCurrent = Langs.GetMany();
+                Ren.CMS.CORE.SettingsHelper.GlobalSettingsHelper GS = new Ren.CMS.CORE.SettingsHelper.GlobalSettingsHelper();
+
+                string l = GS.Read("GLOBAL_DEFAULT_LANGUAGE");
+
+                
+                foreach(var item in listCurrent)
+                {
+                    if(l == item.Code)
+                    {
+                        Model.DefaultLanguageFile = item.Code + ".pre-installed";
+                    }
+
+                    BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage> Ls = new BaseRepository<Ren.CMS.Persistence.Domain.tbLanguage>();
+                    var cs = Ls.GetMany(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.tbLanguage>(e => e.Code == item.Code));
+
+
+                    Currently.Add(new CurrentlyInstalledLanguages() { Name = item.Name, LangCode = item.Code, Count = cs.Count(), File = item.Code + ".pre-installed" });
+
+                    
+                }
+
+              
+
+            }
+            catch { }
+
+            ViewBag.Currently = Currently;
+
+            foreach(string file in System.IO.Directory.GetFiles(Server.MapPath("~/Install/Languages/"),"*.lng.xml"))
+            {
+                try
+                {
+                    LanguageFileReader Reader = new LanguageFileReader(Server.MapPath("~/Install/Languages/" + Path.GetFileName(file)));
+                    LanguageFiles.Add(Path.GetFileName(file), Reader);
+                }
+                catch (Exception e)
+                {
+                    ParserErrors.Add(string.Format("Error in parsing Language file {0}, File is not valid.", file));
+                }
+
+            }
+            ViewBag.Languages = LanguageFiles;
+            ViewBag.LanguageParseErrors = ParserErrors;
             return View(Model);
         }
+
+ 
 
         [HttpPost]
         public JsonResult getConnectionString(GenerateConnectioStringModel Model)
@@ -157,7 +211,7 @@
         out ulong lpTotalNumberOfBytes,
         out ulong lpTotalNumberOfFreeBytes);
 
-
+        [HttpPost]
         public JsonResult SystemRequirements(TestConnectionModel Model)
         {
             //Check
@@ -225,6 +279,49 @@
             return Json(new { data = Requirements });
         }
 
+        [HttpPost]
+        public JsonResult GetDatabases(GetDatabasesModel Model)
+        {
+            if(ModelState.IsValid)
+            {
+                List<object> DBS = new List<object>();
+                SqlConnectionStringBuilder Builder = new SqlConnectionStringBuilder();
+                Builder.DataSource = Model.ServerInstance;
+                Builder.IntegratedSecurity = (Model.Auth == DBAuthTypeEnum.windows);
+                if(Model.Auth == DBAuthTypeEnum.user)
+                {
+                    Builder.UserID = Model.ServerUserName;
+                    Builder.Password = Model.ServerPassword;
+
+                }
+
+                string constr = Builder.ConnectionString;
+                try
+                {
+                    SqlConnection Con = new SqlConnection(constr);
+                    Con.Open();
+                    DataTable tblDatabases = Con.GetSchema("Databases");
+                    Con.Close();
+                    //add to list
+                    foreach (DataRow row in tblDatabases.Rows) {
+                          String strDatabaseName = row["database_name"].ToString();
+
+                          DBS.Add(new { name = strDatabaseName });
+
+
+                    }
+     
+                }
+                catch(Exception e)
+                {
+                    return Json(new { success = false, message = e.Message });
+                }
+
+                return Json(new { success = true, dbs = DBS });
+            }
+
+            return Json(new { success = false, message = "Please check Database connection settings, some requried fields are missing." });
+        }
         [HttpPost]
         public ActionResult Index(int id = 0)
         {
@@ -355,69 +452,79 @@
 
             return RedirectToActionPermanent("License");
         }
-
-        [HttpGet]
-        public ActionResult Install()
+ 
+        [HttpPost]
+        public JsonResult WebConfig(InstallWizardModel Model)
         {
-            if (Session["__LICENSE__"] != null)
+            if (ModelState.IsValid)
             {
-                if (Session["__INSTALLTYPE__"] != null)
-                    Session.Add("__INSTALLTYPE__", Session["__INSTALLTYPE__"]);
-                else
-                    return RedirectToActionPermanent("InstallType");
-
-                //Scan Folder: ~/Install/Language
-                string folder = Server.MapPath("~/Install/Languages");
-                string[] files = System.IO.Directory.GetFiles(folder, "*.lang.xml");
-                Models.InstallModel Model = new Models.InstallModel();
-                Model.Languages = new List<Models.Languages>();
-                Model.FullInstall = ((string)Session["__INSTALLTYPE__"] == "full");
-
-                foreach(string file in files)
+                try
                 {
-                    //Get Header Only
-                    string fileName = Path.GetFileName(file);
-                    string fpath = Server.MapPath("~/Install/Languages/"+ fileName);
+                    SqlConnection Con = new SqlConnection(Model.connectionString);
+                    Con.Open();
 
-                    LanguageFileReader Reader = new LanguageFileReader(fpath);
-                    Model.Languages.Add(new Models.Languages() { FileName = fileName, LanguageName = Reader.GetHeader().Title });
+                    Con.Close();
                 }
-                return View(Model);
+                catch (Exception e)
+                {
+                    
+                    return Json(new { success = false, message = e.Message });
+                }
 
+                //Add ConnectionString
+                var configuration = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (ConnectionStringsSection)configuration.GetSection("connectionStrings");
+                section.ConnectionStrings["ren_cms"].ConnectionString = Model.connectionString;
+                if (configuration.AppSettings.Settings.AllKeys.Any(e => e == "ren_cms_SQLPrefix"))
+                {
+                    configuration.AppSettings.Settings.Remove("ren_cms_SQLPrefix");
+                }
+                configuration.AppSettings.Settings.Add("ren_cms_SQLPrefix", Model.Prefix);
+                configuration.Save();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, message = ModelState.ToList() });
             }
 
-            return RedirectToActionPermanent("License");
         }
-        
+
         [HttpPost]
         public JsonResult GetInstallActions()
         {
 
             List<object> Actions = new List<object>();
 
-            Actions.Add(new { actionName = "InstallDB", title = "Database Structure" });
-            Actions.Add(new { actionName = "InstallLanguage", title = "Localization Files" });
+            Actions.Add(new { url = Url.Action("WebConfig"), actionName = "WebConfig", title = "Web Configuration" });
+            
+            Actions.Add(new { url = Url.Action("InstallDB"), actionName = "InstallDB", title = "Database Structure" });
+            Actions.Add(new { url = Url.Action("InstallLanguage"), actionName = "InstallLanguage", title = "Localization Files" });
 
-            Actions.Add(new { actionName = "InstallSettings", title = "Default Settings" });
-            Actions.Add(new { actionName = "InstallPermissions", title = "Permissions and Permissiongroups" });
-            Actions.Add(new { actionName = "InstallFilemanagement", title = "Filemanagement System" });
-            Actions.Add(new { actionName = "InstallContent", title = "Contentmanagement System" });
+            Actions.Add(new { url = Url.Action("InstallSettings"), actionName = "InstallSettings", title = "Default Settings" });
+            Actions.Add(new { url = Url.Action("InstallPermissions"), actionName = "InstallPermissions", title = "Permissions and Permissiongroups" });
+            Actions.Add(new { url = Url.Action("InstallFilemanagement"), actionName = "InstallFilemanagement", title = "Filemanagement System" });
+            Actions.Add(new { url = Url.Action("InstallContent"), actionName = "InstallContent", title = "Contentmanagement System" });
+            Actions.Add(new { url = Url.Action("InstallWidgets"), actionName = "InstallWidgets", title = "Backend Applications" });
+            Actions.Add(new { url = Url.Action("InstallDesktop"), actionName = "InstallDesktop", title = "Backend Desktops" });
 
 
-            return Json(new { actions = Actions } );
+
+            return Json(new { success = true,  actions = Actions } );
         }
         #endregion Methods
 
         #region Install Actions
 
         [HttpPost]
-        public JsonResult InstallDB(InstallModel Model)
+        public JsonResult InstallDB(InstallWizardModel Model)
         {
             try
             {
                 var nconfig = Ren.CMS.Persistence.NHibernateHelper.GetConfiguration();
                 
-                if(Model.FullInstall)
+                if(Model.InstallationType == InstallTypeEnum.full)
                 {
                     new SchemaExport(nconfig).Execute(true, true, false);
                 }
@@ -436,7 +543,7 @@
 
 
         [HttpPost]
-        public JsonResult InstallLanguage(InstallModel Model)
+        public JsonResult InstallLanguage(InstallWizardModel Model)
         {
             try
             {
@@ -444,7 +551,9 @@
 
                 foreach (var l in Model.Languages)
                 {
-                    string file = Server.MapPath("~/Install/Languages/" + l.FileName);
+                    if (!l.EndsWith(".lng.xml"))
+                        continue;
+                    string file = Server.MapPath("~/Install/Languages/" + l);
                     LanguageFileReader Reader = new LanguageFileReader(file);
                     LanguageFileHeader Header = Reader.GetHeader();
                     var one = Repo.GetOne(NHibernate.Criterion.Expression.Where<Ren.CMS.Persistence.Domain.LangCode>(e => e.Code == Header.LangCode));
@@ -453,14 +562,16 @@
                         Ren.CMS.Persistence.Domain.LangCode NewCode = new Ren.CMS.Persistence.Domain.LangCode();
                         NewCode.Code = Header.LangCode;
                         NewCode.Name = Header.LangName;
+                        
                         Repo.Add(NewCode);
                     }
+ 
 
                     foreach (var line in Reader.GetLines())
                     {
                         Language L = new Language(Header.LangCode, line.LanguagePackage);
 
-                        if(Model.FullInstall || !L.LanglineExists(line.LanguageLineName, line.LanguagePackage, Header.LangCode))
+                        if(Model.InstallationType == InstallTypeEnum.full || !L.LanglineExists(line.LanguageLineName, line.LanguagePackage, Header.LangCode))
                             L.InsertLine(line.LanguageLineName, line.LanguageLineValue, true);
                     }
 
@@ -474,283 +585,320 @@
             }
         }
 
-        public JsonResult InstallSettings(InstallModel Model)
+        public JsonResult InstallSettings(InstallWizardModel Model)
         {
-
-            GlobalSettings Settings = new GlobalSettings();
-            //Install Global Settings
-
-            //Site Settings
-            if(Model.FullInstall ||  Settings.getSetting("SITE_TITLE") == null)
+            try
             {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_TITLE";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_TITLE";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-                MODEL.Value = "Ren.CMS.NET - Free Open Source CMS";
-                MODEL.ValueType = nValueType.ValueString;
+                GlobalSettings Settings = new GlobalSettings();
+                //Install Global Settings
 
-                Settings.AddSetting(MODEL);
+                //Site Settings
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_TITLE") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_TITLE";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_TITLE";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+                    MODEL.Value = "Ren.CMS.NET - Free Open Source CMS";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
 
-            }
+                }
 
-            if (Model.FullInstall || Settings.getSetting("SITE_DESCIRPTION") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_DESCIRPTION";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_DESCRIPTION";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-                MODEL.Value = "This is your site descirption for Meta Tags";
-                MODEL.ValueType = nValueType.ValueString;
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_DESCIRPTION") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_DESCIRPTION";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_DESCRIPTION";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+                    MODEL.Value = "This is your site descirption for Meta Tags";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
 
-                Settings.AddSetting(MODEL);
+                }
 
-            }
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_KEYWORDS") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_KEYWORDS";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_KEYWORDS";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+                    MODEL.Value = "Keywords, for, your, site";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
 
-            if (Model.FullInstall || Settings.getSetting("SITE_KEYWORDS") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_KEYWORDS";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_KEYWORDS";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-                MODEL.Value = "Keywords, for, your, site";
-                MODEL.ValueType = nValueType.ValueString;
+                }
 
-                Settings.AddSetting(MODEL);
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_OFFLINE") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_OFFLINE";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_OFFLINE";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+                    MODEL.Value = true;
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
 
-            }
+                }
 
-            if (Model.FullInstall || Settings.getSetting("SITE_OFFLINE") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_OFFLINE";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_OFFLINE";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-                MODEL.Value = true;
-                MODEL.ValueType = nValueType.ValueString;
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_URL_HTTP") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_URL_HTTP";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTP";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
 
-                Settings.AddSetting(MODEL);
+                    MODEL.Value = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
 
-            }
+                }
 
-            if (Model.FullInstall || Settings.getSetting("SITE_URL_HTTP") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_URL_HTTP";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTP";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("SITE_URL_HTTPS") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_URL_HTTPS";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTPS";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = string.Format("{0}://{1}{2}", "https", Request.Url.Authority, Url.Content("~"));
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("SITE_INSTALLATION_DIR") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "SITE_INSTALLATION_DIR";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_INSTALLATION_DIR";
-                MODEL.SettingRelation = "SITE_SETTINGS";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = Server.MapPath("~/");
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            //General
-            if (Model.FullInstall || Settings.getSetting("GENERAL_THEME") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "GENERAL_THEME";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_THEME";
-                MODEL.SettingRelation = "GENERAL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "ren.cms";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("GENERAL_DEFAULT_LANGUAGE") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "GENERAL_DEFAULT_LANGUAGE";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_DEFAULT_LANGUAGE";
-                MODEL.SettingRelation = "GENERAL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                BaseRepository<Ren.CMS.Persistence.Domain.LangCode> Repo = new BaseRepository<Ren.CMS.Persistence.Domain.LangCode>();
-                var list = Repo.GetMany();
-                if (list.Any(e => e.Code == "en-US"))
-                    MODEL.Value = "en-US";
+                if (Model.InstallationType == InstallTypeEnum.full  || Settings.getSetting("GLOBAL_DEFAULT_LANGUAGE") != null)
+                {
+                    var Setting = Settings.getSetting("GLOBAL_DEFAULT_LANGUAGE");
+                    if (Model.DefaultLanguageFile.EndsWith(".pre-installed"))
+                    {
+                        Setting.Value = Model.DefaultLanguageFile.Remove(Model.DefaultLanguageFile.IndexOf('.'));
+                    }
+                    else
+                        Setting.Value = new LanguageFileReader(Server.MapPath("~/Install/Languages/" + Model.DefaultLanguageFile)).GetHeader().LangCode;
+                    Setting.DefaultValue = Setting.Value;
+                    Settings.setValue(Setting);
+                }
                 else
-                    MODEL.Value = list.First().Code;
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "GLOBAL_DEFAULT_LANGUAGE";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_DEFAULT_LANGUAGE";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
 
-                MODEL.ValueType = nValueType.ValueString;
+                    MODEL.Value = new LanguageFileReader(Server.MapPath("~/Install/Languages/" + Model.DefaultLanguageFile)).GetHeader().LangCode;
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+                }
 
-                Settings.AddSetting(MODEL);
 
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_URL_HTTPS") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_URL_HTTPS";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_URL_HTTPS";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = string.Format("{0}://{1}{2}", "https", Request.Url.Authority, Url.Content("~"));
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("SITE_INSTALLATION_DIR") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "SITE_INSTALLATION_DIR";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_SITE_INSTALLATION_DIR";
+                    MODEL.SettingRelation = "SITE_SETTINGS";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = Server.MapPath("~/");
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                //General
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("GENERAL_THEME") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "GENERAL_THEME";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_THEME";
+                    MODEL.SettingRelation = "GENERAL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "ren.cms";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+                /*
+                            if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("GENERAL_DEFAULT_LANGUAGE") == null)
+                            {
+                                nSetting MODEL = new nSetting();
+                                MODEL.Name = "GENERAL_DEFAULT_LANGUAGE";
+                                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_DEFAULT_LANGUAGE";
+                                MODEL.SettingRelation = "GENERAL";
+                                MODEL.SettingType = nSettingType.SettingString;
+
+                                BaseRepository<Ren.CMS.Persistence.Domain.LangCode> Repo = new BaseRepository<Ren.CMS.Persistence.Domain.LangCode>();
+                                var list = Repo.GetMany();
+                                if (list.Any(e => e.Code == "en-US"))
+                                    MODEL.Value = "en-US";
+                                else
+                                    MODEL.Value = list.First().Code;
+
+                                MODEL.ValueType = nValueType.ValueString;
+                                MODEL.DefaultValue = MODEL.Value;
+                                Settings.AddSetting(MODEL);
+
+                            }
+                            */
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("GENERAL_FORCELANGUAGE") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "GENERAL_FORCELANGUAGE";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_FORCELANGUAGE";
+                    MODEL.SettingRelation = "GENERAL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = false;
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                //Mail Settings
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_FROM") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_FROM";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_FROM";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "ren.cms@" + Request.Url.Authority;
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_TO") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_TO";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_TO";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "ren.cms@" + Request.Url.Authority;
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_NAME") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_NAME";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_NAME";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "Ren.CMS Admin";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_SMTP_SERVER") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_SMTP_SERVER";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_SERVER";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_SMTP_PORT") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_SMTP_PORT";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PORT";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_SMTP_USER") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_SMTP_USER";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_USER";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                if (Model.InstallationType == InstallTypeEnum.full || Settings.getSetting("MAIL_SMTP_PASSWORD") == null)
+                {
+                    nSetting MODEL = new nSetting();
+                    MODEL.Name = "MAIL_SMTP_PASSWORD";
+                    MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PASSWORD";
+                    MODEL.SettingRelation = "MAIL";
+                    MODEL.SettingType = nSettingType.SettingString;
+
+                    MODEL.Value = "";
+                    MODEL.ValueType = nValueType.ValueString;
+                    MODEL.DefaultValue = MODEL.Value;
+                    Settings.AddSetting(MODEL);
+
+                }
+
+                return Json(new { success = true });
             }
-
-
-            if (Model.FullInstall || Settings.getSetting("GENERAL_FORCELANGUAGE") == null)
+            catch(Exception e)
             {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "GENERAL_FORCELANGUAGE";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_GENERAL_FORCELANGUAGE";
-                MODEL.SettingRelation = "GENERAL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = false;
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
+                return Json(new { success = false, message = e.Message });
             }
-            
-            //Mail Settings
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_FROM") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_FROM";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_FROM";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "ren.cms@" + Request.Url.Authority;
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_TO") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_TO";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_TO";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "ren.cms@" + Request.Url.Authority;
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_NAME") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_NAME";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_NAME";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "Ren.CMS Admin";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_SERVER") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_SMTP_SERVER";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_SERVER";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_PORT") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_SMTP_PORT";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PORT";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_USER") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_SMTP_USER";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_USER";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            if (Model.FullInstall || Settings.getSetting("MAIL_SMTP_PASSWORD") == null)
-            {
-                nSetting MODEL = new nSetting();
-                MODEL.Name = "MAIL_SMTP_PASSWORD";
-                MODEL.LabelLanguageLine = "LANG_GLOBALSETTINGS_MAIL_SMTP_PASSWORD";
-                MODEL.SettingRelation = "MAIL";
-                MODEL.SettingType = nSettingType.SettingString;
-
-                MODEL.Value = "";
-                MODEL.ValueType = nValueType.ValueString;
-
-                Settings.AddSetting(MODEL);
-
-            }
-
-            return Json(new {success =true});
 
         }
 
 
-        public JsonResult InstallPermissions(InstallModel Model)
+        public JsonResult InstallPermissions(InstallWizardModel Model)
         {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Required fields are empty" });
+
             Dictionary<string, bool> PermissionKeys = new Dictionary<string, bool>();
             PermissionKeys.Add("USR_CAN_ENTER_BACKEND", false);
             PermissionKeys.Add("USR_CAN_DELETE_CONTENTS", false);
@@ -767,7 +915,7 @@
             
             foreach(var entry in PermissionKeys)
             {
-                if(Model.FullInstall || !nPermissions.permissionKeyExists(entry.Key))
+                if(Model.InstallationType == InstallTypeEnum.full || !nPermissions.permissionKeyExists(entry.Key))
                 {
                     nPermissions.DeletePermissionKey(entry.Key);
                     nPermissions.RegisterPermissionKey(entry.Key, entry.Value, "LANG_PERMISSIONS_" + entry.Key);
@@ -776,7 +924,7 @@
 
 
             //Add Groups
-            if(Model.FullInstall)
+            if(Model.InstallationType == InstallTypeEnum.full)
             {
 
                 BaseRepository<Ren.CMS.Persistence.Domain.PermissionGroup> Groups = new BaseRepository<Ren.CMS.Persistence.Domain.PermissionGroup>();
@@ -846,10 +994,10 @@
         }
 
 
-        public JsonResult InstallFilemanagement(InstallModel Model)
+        public JsonResult InstallFilemanagement(InstallWizardModel Model)
         {
             //Add Filemanagement Cross Browser If needed
-            if(Model.FullInstall)
+            if(Model.InstallationType == InstallTypeEnum.full)
             {
                 Ren.CMS.Persistence.Repositories.FilemanagementCrossBrowsersRepository Repo = new Ren.CMS.Persistence.Repositories.FilemanagementCrossBrowsersRepository();
                 Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers Chrome = new Ren.CMS.Persistence.Domain.FilemanagementCrossBrowsers();
@@ -888,7 +1036,7 @@
         }
 
 
-        public JsonResult InstallContent(InstallModel Model)
+        public JsonResult InstallContent(InstallWizardModel Model)
         {
            //Attachment Types
             List<nContentAttachmenType> Types = new List<nContentAttachmenType>();
@@ -921,6 +1069,31 @@
 
             return Json(new { success = true });
              
+        }
+
+        [HttpPost]
+        public JsonResult InstallWidgets(InstallWizardModel Model)
+        {
+           
+            string folder = Server.MapPath("~/Install/BackendWidgets/");
+            BaseRepository<Ren.CMS.Persistence.Domain.BackendWidget> repo = new BaseRepository<Ren.CMS.Persistence.Domain.BackendWidget>();
+            foreach (string f in System.IO.Directory.GetFiles(folder, "*.wdgt.xml"))
+            {
+                string fname = Path.GetFileName(f);
+                string path = Server.MapPath("~/Install/BackendWidgets/" + fname);
+                System.Xml.Serialization.XmlSerializer s = new System.Xml.Serialization.XmlSerializer(typeof(Ren.CMS.CORE.Backend.BackendWidget));
+                FileStream FS = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                using (Stream reader = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+                {
+                    Ren.CMS.CORE.Backend.BackendWidget W = (Ren.CMS.CORE.Backend.BackendWidget)s.Deserialize(reader);
+                    repo.Add(new Ren.CMS.Persistence.Domain.BackendWidget() { WidgetName = W.widgetName, WidgetPartialView = W.widgetPartialView, DefinedHeight = W.definedHeight, DefinedWidth = W.definedWidth, Icon = W.Icon, NeededPermission = W.neededPermission });
+                }
+              
+            }
+
+
+            return Json(new { success = true });
+
         }
 
         #endregion 

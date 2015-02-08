@@ -20,6 +20,7 @@ namespace Ren.CMS.Persistence.Mapping
             Table(Ren.CMS.CORE.Config.RenConfig.DB.Prefix.Replace("dbo.", "") +"Links2Identfiers");
             Schema("dbo");
             Lazy(true);
+            Id(x => x.Id, map => map.Generator(Generators.Identity));
             Property(x => x.LinkID, map => map.NotNullable(true));
             Property(x => x.IdentifierID, map => map.NotNullable(true));
         }

@@ -9,6 +9,7 @@ namespace Ren.CMS.Persistence.Mapping
     using NHibernate.Mapping.ByCode.Conformist;
 
     using Ren.CMS.Persistence.Domain;
+    using NHibernate;
 
     [Ren.CMS.Persistence.Base.PersistenceMapping]
     public class LanguageMap : ClassMapping<tbLanguage>
@@ -22,7 +23,10 @@ namespace Ren.CMS.Persistence.Mapping
             Lazy(true);
             Property(x => x.Name, map => map.NotNullable(true));
             Id(x => x.Id, map => map.Generator(Generators.Identity));
-            Property(x => x.Content, map => map.NotNullable(true));
+            Property(x => x.Content, map => { 
+                map.NotNullable(true);
+                map.Type(NHibernateUtil.StringClob);
+            });
             Property(x => x.Package, map => map.NotNullable(true));
             Property(x => x.Code, map => map.NotNullable(true));
         }

@@ -1,0 +1,116 @@
+﻿@model InstallModule.Installer.Models.InstallWizardModel
+
+@{
+    Dictionary<string, LanguageFileReader> Languages = ViewBag.Languages as Dictionary<string, LanguageFileReader>;
+    List<InstallModule.Installer.Models.CurrentlyInstalledLanguages> Currently = ViewBag.Currently as List<InstallModule.Installer.Models.CurrentlyInstalledLanguages>;
+    List<string> checkeds = new List<string>();
+}
+
+<div id="warning" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closewarning no"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title text-warning"><span class="glyphicon glyphicon-exclamation-sign"></span> Warning</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="serverSelector">
+
+                    <div class="alert alert-warning">
+                        <input type="hidden" name="decisionID" value="" />
+                        <p>Installing this Language Pack will replace one of the allready installed languages and overwrite data. Are you sure you want to continue?</p>
+                    
+                    
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger closewarning no">No</button>
+                <button type="button" class="btn btn-success closewarning yes">Yes</button>
+
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="alert alert-block alert-info">
+    <p>
+        <strong>Keep in mind:</strong>
+        Selecting an Language with a same language code as an currently installed language will on <b>Update-Installation</b> require some action. The Wizard will ask you in the
+        installation-proccess if you want to Deinstall the current language and replace it with the new or skip the installation of language.
+
+    </p>
+</div>
+
+<table class="table table-hover">
+   <thead>
+       <tr>
+           <th>Select</th>
+           <th>Name</th>
+           <th>Language Code</th>
+           <th>Contents(Count)</th>
+           <th>As Default-Language</th>
+       </tr>
+   </thead>
+    <tbody>
+        
+        @if (Currently.Count > 0)
+        {
+            <tr><td colspan="5" class="text-center"><strong>Allready Installed</strong></td></tr>
+            foreach (var item in Currently)
+            {
+                <tr class="success">
+                    <td>-@Html.Hidden("pre_installed", item.LangCode, new { @class="pre-installed-lng" })</td>
+                    <td>@item.Name</td>
+                    <td>@item.LangCode</td>
+                    <td>@item.Count</td>
+                    <td>@Html.RadioButtonFor(e => e.DefaultLanguageFile, item.File)</td>
+                </tr>
+            }
+        }
+        <tr><td colspan="5" class="text-center"><strong>Install new</strong></td></tr>
+        @{
+         int i = 0;
+   
+            
+        }
+        @foreach (var item in Languages)
+        {
+           
+       
+                bool check = true;
+                if (checkeds.Any(e => e == item.Value.GetHeader().LangCode))
+                {
+                    check = false;
+                }
+                else
+                {
+                    checkeds.Add(item.Value.GetHeader().LangCode);
+                }
+                i++;
+            
+            <tr>
+                <td>
+                    @Html.CheckBox("Languages", check, new { id="lang_"+i, @class="install-new-lng", data_code = item.Value.GetHeader().LangCode, value = item.Key })
+                </td>
+                <td>
+                    @item.Value.GetHeader().Title
+                </td>
+                <td>
+                    @item.Value.GetHeader().LangCode
+                </td>
+                <td>
+                    @item.Value.GetLines().Count
+                </td>
+                <td>
+                    @Html.RadioButtonFor(e => e.DefaultLanguageFile, item.Key)
+                </td>
+            </tr>
+            
+        }
+
+    </tbody>
+</table>
